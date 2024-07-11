@@ -45,21 +45,21 @@ export class SaturationComponent {
     let saturationRec = this.saturation.nativeElement.getBoundingClientRect();
     if (position.x < 0) {
       this.x = 0;
-    } else if (position.x > saturationRec.width) {
-      this.x = saturationRec.width;
+    } else if (position.x > saturationRec.width - (thumbRec.width / 2 - 3)) {
+      this.x = saturationRec.width - (thumbRec.width / 2 - 3);
     } else {
       this.x = position.x;
     }
-   // this.x = this.x - thumbRec.width / 2;
+    // this.x = this.x - thumbRec.width / 2;
 
     if (position.y < 0) {
       this.y = 0;
-    } else if (position.y > saturationRec.height) {
-      this.y = saturationRec.height;
+    } else if (position.y > saturationRec.height - (thumbRec.height / 2 - 3)) {
+      this.y = saturationRec.height - (thumbRec.height / 2 - 3);
     } else {
       this.y = position.y;
     }
-  //  this.y = this.y - thumbRec.height / 2;
+    //  this.y = this.y - thumbRec.height / 2;
   }
 
   @HostListener('document:mouseup', ['$event'])
