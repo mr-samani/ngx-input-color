@@ -4,7 +4,7 @@ import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
 import { ColorHelper } from '../services/color.service';
-import { Hsla, Hsva } from '../models/formats';
+import { Hsla, Hsva, Rgba } from '../models/formats';
 
 @Component({
   selector: 'ngx-input-color',
@@ -21,46 +21,51 @@ export class NgxInputColorComponent implements OnInit {
 
   //--HSVA
   hue = 300;
-  alpha = 1;
   baseColor = '';
-
-  //--------------
   board: Position = { x: 1, y: 0 };
+  alpha = 1;
+  ///--- RGBA
+  rgba = new Rgba(0, 0, 0, 1);
+  redSliderBackground = '';
+  greenSliderBackground = '';
+  blueSliderBackground = '';
 
   color = '';
   constructor() {}
 
   ngOnInit(): void {
-   this.createBaseColor();
+    this.createBaseColor();
   }
 
   calcColor() {
-    let rgba = ColorHelper.hslaToRgba(this.hsla);
+    this.rgba = ColorHelper.hslaToRgba(this.hsla);
     //console.log(rgba);
-    this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
+    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
   }
 
-
-  createBaseColor(){
-    const hsva = new Hsva(this.hue, 1, 1,1);
-    let rgba = ColorHelper.hsvaToRgba(hsva);
-    this.baseColor = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
+  createBaseColor() {
+    const hsva = new Hsva(this.hue, 1, 1, 1);
+    this.rgba = ColorHelper.hsvaToRgba(hsva);
+    this.baseColor = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
     this.onChangeDimension();
   }
 
-
   onChangeDimension() {
-    const hsva = new Hsva(this.hue, this.board.x,1- this.board.y, this.alpha);
-    let rgba = ColorHelper.hsvaToRgba(hsva);
-    this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
+    const hsva = new Hsva(this.hue, this.board.x, 1 - this.board.y, this.alpha);
+    this.rgba = ColorHelper.hsvaToRgba(hsva);
+    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
   }
 
-  onChangeBoard() {
-    if (this.board) {
-      // this.saturation = this.board.x;
-      //this.lightness = 1- this.board.y;
-      //   let rgba = this.colorService.hslaToRgba(this.hsla);
-      //  this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
-    }
+  calcRGBA() {
+    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
+    this.updateRgbSliderColor();
+  }
+
+  updateRgbSliderColor() {
+    const { r, g, b } = this.rgba;
+
+    this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;
+    this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;
+    this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;
   }
 }
