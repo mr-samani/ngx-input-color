@@ -42,6 +42,8 @@ export interface Position {
   ],
 })
 export class SaturationComponent implements ControlValueAccessor {
+  @Input() width?: number;
+  @Input() height?: number;
   @Input() color = 'red';
   @Input() step = 1;
   @Input() min: Position = { x: 0, y: 0 };

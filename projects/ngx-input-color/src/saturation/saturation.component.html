@@ -1,4 +1,9 @@
-<div class="saturation-container" (mousedown)="dragStart($event)" (touchstart)="dragStart($event)">
+<div
+  class="saturation-container"
+  [style.width.px]="width"
+  [style.height.px]="height"
+  (mousedown)="dragStart($event)"
+  (touchstart)="dragStart($event)">
   <div class="saturation" #saturation>
     <div class="s-bg" [style.background]="color"></div>
     <div class="s-white"></div>
