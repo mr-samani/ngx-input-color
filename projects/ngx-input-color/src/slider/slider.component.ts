@@ -66,7 +66,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
   @ViewChild('slider', { static: true }) slider!: ElementRef<HTMLDivElement>;
   @ViewChild('thumb', { static: true }) thumb!: ElementRef<HTMLDivElement>;
   x = 0;
-  myControl = new FormControl<number | null>(null, [Validators.min(this.min), Validators.max(this.max)]);
+  myControl = new FormControl<number | null>(null);
   isDisabled = false;
   _onChange = (value: any) => {};
   _onTouched = () => {};

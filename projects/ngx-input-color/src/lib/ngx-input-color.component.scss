@@ -1,0 +1,15 @@
+.color-picker {
+  width: 768px;
+  border: 1px #353535 solid;
+  padding: 12px;
+  border-radius: 5px;
+  .color-sliders {
+    display: flex;
+    gap: 5px;
+    saturation {
+    }
+    .sliders {
+      flex: 1;
+    }
+  }
+}
