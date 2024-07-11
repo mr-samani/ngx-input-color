@@ -7,16 +7,7 @@
     height: 28px;
     border: 1px #000000 solid;
     border-radius: 10px;
-    background: linear-gradient(
-      to right,
-      red 0%,
-      #ff0 17%,
-      lime 33%,
-      cyan 50%,
-      blue 66%,
-      #f0f 83%,
-      red 100%
-    );
+    background: rgb(140, 51, 250);
     margin: 10px 0;
     box-shadow: 0 0 0px 2px #fff, 0 0 0px 2px #fff inset;
   }

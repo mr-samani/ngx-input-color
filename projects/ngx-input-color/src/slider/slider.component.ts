@@ -3,8 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
+  Output,
   ViewChild,
   forwardRef,
   type OnInit,
@@ -25,18 +27,20 @@ import {
   selector: 'slider',
   standalone: true,
   imports: [CommonModule],
-  template: `<div class="slider-container">
-      <ng-content></ng-content>{{ x }}
+  template: `
+    <div class="slider-container">
+      <ng-content></ng-content>
       <div
         #slider
         class="slider"
         (mousedown)="dragStart($event)"
         (touchstart)="dragStart($event)"
-      >
+        [style.background]="background">
         <div class="thumb" #thumb [style.left.px]="x"></div>
       </div>
     </div>
-    {{ myControl.value }}`,
+    {{ myControl.value }}
+  `,
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -52,31 +56,24 @@ import {
     },
   ],
 })
-export class SliderComponent
-  implements OnInit, ControlValueAccessor, Validator
-{
+export class SliderComponent implements OnInit, ControlValueAccessor, Validator {
   @Input() step = 1;
   @Input() min = 0;
   @Input() max = 100;
-
+  @Input() background?: string;
+  @Output() change = new EventEmitter<number>();
   isDragging = false;
   @ViewChild('slider', { static: true }) slider!: ElementRef<HTMLDivElement>;
   @ViewChild('thumb', { static: true }) thumb!: ElementRef<HTMLDivElement>;
   x = 0;
-  myControl = new FormControl<number | null>(null, [
-    Validators.min(this.min),
-    Validators.max(this.max),
-  ]);
+  myControl = new FormControl<number | null>(null, [Validators.min(this.min), Validators.max(this.max)]);
   isDisabled = false;
   _onChange = (value: any) => {};
   _onTouched = () => {};
   _validatorOnChange = () => {};
   constructor() {}
   ngOnInit(): void {
-    this.myControl.setValidators([
-      Validators.min(this.min),
-      Validators.max(this.max),
-    ]);
+    this.myControl.setValidators([Validators.min(this.min), Validators.max(this.max)]);
   }
 
   writeValue(val: any): void {
@@ -89,11 +86,9 @@ export class SliderComponent
     let sliderRec = this.slider.nativeElement.getBoundingClientRect();
     let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
 
-    this.x =
-      ((value - this.min) * (sliderRec.width - thumbRec.width)) /
-      (this.max - this.min);
+    this.x = ((value - this.min) * (sliderRec.width - thumbRec.width)) / (this.max - this.min);
     if (val !== value) {
-      this._onChange(value);
+      this.valueChanged(value);
     }
   }
   validate(control: AbstractControl): ValidationErrors | null {
@@ -150,13 +145,18 @@ export class SliderComponent
     let newValue = this.min + percentage * (this.max - this.min);
     newValue = Math.round(newValue / this.step) * this.step;
     let value = Math.min(Math.max(newValue, this.min), this.max);
-    this._onChange(value);
-    this.myControl.setValue(value);
+    this.valueChanged(value);
   }
 
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:touchend', ['$event'])
   onDragEnd(ev: MouseEvent | TouchEvent) {
     this.isDragging = false;
+  }
+
+  valueChanged(value: number) {
+    this.myControl.setValue(value);
+    this._onChange(value);
+    this.change.emit(value);
   }
 }
