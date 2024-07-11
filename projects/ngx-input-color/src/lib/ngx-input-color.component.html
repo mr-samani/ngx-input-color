@@ -16,7 +16,7 @@
 
     <div class="sliders">
       <slider
-        [(ngModel)]="hsva.h"
+        [(ngModel)]="hsla.h"
         [min]="0"
         [max]="360"
         [step]="1"
@@ -25,25 +25,25 @@
         H
       </slider>
       <slider
-        [(ngModel)]="hsva.s"
+        [(ngModel)]="hsla.s"
         [min]="0"
-        [max]="100"
-        [step]="1"
+        [max]="1"
+        [step]=".01"
         (change)="calcColor()"
         background="linear-gradient(to right,#808080,#ff0000)">
         S
       </slider>
       <slider
-        [(ngModel)]="hsva.v"
+        [(ngModel)]="hsla.l"
         [min]="0"
-        [max]="100"
-        [step]="1"
+        [max]="1"
+        [step]=".01"
         (change)="calcColor()"
         background="linear-gradient(to right,black,white)">
         L
       </slider>
       <slider
-        [(ngModel)]="hsva.a"
+        [(ngModel)]="hsla.a"
         [min]="0"
         [max]="1"
         [step]="0.1"

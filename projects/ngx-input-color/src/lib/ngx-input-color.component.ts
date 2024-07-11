@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
-import { ColorService } from '../services/color.service';
-import { Hsva } from '../models/formats';
+import { ColorHelper } from '../services/color.service';
+import { Hsla } from '../models/formats';
  
 @Component({
   selector: 'ngx-input-color',
@@ -12,18 +12,18 @@ import { Hsva } from '../models/formats';
   imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent],
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],
-  providers: [ColorService],
+  providers: [],
 })
 export class NgxInputColorComponent {
-  hsva = new Hsva(0.33, 0.5, 0.5, 1);
+  hsla = new Hsla(0.33, 0.5, 0.5, 1);
 
   //--------------
   board?: Position;
 
   color = '';
-  constructor(private colorService: ColorService) {}
-  calcColor() {
-    let rgba = this.colorService.hsvaToRgba(this.hsva);
+  constructor() {}
+  calcColor() { 
+    let rgba =ColorHelper.hslaToRgba(this.hsla);
     console.log(rgba);
     this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
   }
@@ -32,8 +32,8 @@ export class NgxInputColorComponent {
     if (this.board) {
       // this.saturation = this.board.x;
       //this.lightness = 1- this.board.y;
-      let rgba = this.colorService.hsvaToRgba(this.hsva);
-      this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
+   //   let rgba = this.colorService.hslaToRgba(this.hsla);
+    //  this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
     }
   }
 }
