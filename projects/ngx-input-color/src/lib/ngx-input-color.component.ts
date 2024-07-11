@@ -3,39 +3,37 @@ import { Component } from '@angular/core';
 import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
-import { hslToRgb } from '../helper/color';
-
+import { ColorService } from '../services/color.service';
+import { Hsva } from '../models/formats';
+ 
 @Component({
   selector: 'ngx-input-color',
   standalone: true,
   imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent],
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],
+  providers: [ColorService],
 })
 export class NgxInputColorComponent {
-  hue = 0.33; // یک مقدار بین 0 تا 1
-  saturation = 0.5; // یک مقدار بین 0 تا 1
-  lightness = 0.5; // یک مقدار بین 0 تا 1
-  alpha = 1;
+  hsva = new Hsva(0.33, 0.5, 0.5, 1);
+
   //--------------
   board?: Position;
 
   color = '';
+  constructor(private colorService: ColorService) {}
   calcColor() {
-    this.board = {
-      x: this.saturation,
-      y: this.lightness,
-    };
-    let rgb = hslToRgb(this.hue, this.saturation, this.lightness);
-    this.color = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + this.alpha + ')';
+    let rgba = this.colorService.hsvaToRgba(this.hsva);
+    console.log(rgba);
+    this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
   }
 
   onChangeBoard() {
     if (this.board) {
-      this.saturation = this.board.x;
-      this.lightness = this.board.y;
-      let rgb = hslToRgb(this.hue, this.saturation, this.lightness);
-      this.color = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + this.alpha + ')';
+      // this.saturation = this.board.x;
+      //this.lightness = 1- this.board.y;
+      let rgba = this.colorService.hsvaToRgba(this.hsva);
+      this.color = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
     }
   }
 }

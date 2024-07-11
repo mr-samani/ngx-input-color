@@ -129,6 +129,7 @@ export class SaturationComponent implements ControlValueAccessor {
       this.y = position.y;
     }
     //  this.y = this.y - thumbRec.height / 2;
+    this.setValueByPosition(thumbRec, saturationRec);
   }
 
   @HostListener('document:mouseup', ['$event'])
@@ -137,13 +138,13 @@ export class SaturationComponent implements ControlValueAccessor {
     this.isDragging = false;
   }
 
-  setValueByPosition(thumbRec: DOMRect, sliderRec: DOMRect) {
-    const percentageX = this.x / (sliderRec.width - thumbRec.width);
+  setValueByPosition(thumbRec: DOMRect, saturationRec: DOMRect) {
+    const percentageX = this.x / (saturationRec.width - thumbRec.width);
     let newValueX = this.min.x + percentageX * (this.max.x - this.min.x);
     newValueX = Math.round(newValueX / this.step) * this.step;
     let valueX = Math.min(Math.max(newValueX, this.min.x), this.max.x);
     //-----------------------------
-    const percentageY = this.y / (sliderRec.height - thumbRec.height);
+    const percentageY = this.y / (saturationRec.height - thumbRec.height);
     let newValueY = this.min.y + percentageY * (this.max.y - this.min.y);
     newValueY = Math.round(newValueY / this.step) * this.step;
     let valueY = Math.min(Math.max(newValueY, this.min.y), this.max.y);
