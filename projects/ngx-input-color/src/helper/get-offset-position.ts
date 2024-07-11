@@ -2,23 +2,23 @@ export function getOffsetPosition(
   evt: MouseEvent | TouchEvent,
   parent: HTMLElement
 ) {
-  if (evt instanceof MouseEvent) {
-    return {
-      x: evt.offsetX,
-      y: evt.offsetY,
-    };
-  }
-  var position = {
-    x: evt.targetTouches ? evt.targetTouches[0].pageX : evt.touches[0].clientX,
-    y: evt.targetTouches ? evt.targetTouches[0].pageY : evt.touches[0].clientY,
+  let position = {
+    x: 0,
+    y: 0,
   };
 
-  while (parent.offsetParent) {
-    position.x -= parent.offsetLeft - parent.scrollLeft;
-    position.y -= parent.offsetTop - parent.scrollTop;
-
-    parent = parent.offsetParent as any;
+  if (evt instanceof MouseEvent) {
+    position.x = evt.pageX;
+    position.y = evt.pageY;
+  } else if (evt.touches && evt.touches.length > 0) {
+    position.x = evt.touches[0].pageX;
+    position.y = evt.touches[0].pageY;
   }
+
+  // Adjust for the parent's offset
+  let parentRect = parent.getBoundingClientRect();
+  position.x -= parentRect.left + window.scrollX;
+  position.y -= parentRect.top + window.scrollY;
 
   return position;
 }

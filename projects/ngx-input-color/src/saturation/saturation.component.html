@@ -1,0 +1,12 @@
+<div
+  class="saturation-container"
+  (mousedown)="dragStart($event)"
+  (touchstart)="dragStart($event)"
+>
+  <div class="saturation" #saturation>
+    <div class="s-bg" [style.background]="color"></div>
+    <div class="s-white"></div>
+    <div class="s-black"></div>
+  </div>
+  <div class="thumb" #thumb [style.left.px]="x" [style.top.px]="y"></div>
+</div>
