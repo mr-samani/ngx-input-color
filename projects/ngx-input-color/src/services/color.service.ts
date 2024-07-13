@@ -6,7 +6,7 @@ export class ColorHelper {
   static hsvaToRgba(hsva: Hsva): Rgba {
     const { h, s, v, a } = hsva;
     const f = (n: number, k = (n + h / 60) % 6) => v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
-    return new Rgba(f(5) * 255, f(3) * 255, f(1) * 255, a * 255);
+    return new Rgba(Math.round(f(5) * 255), Math.round(f(3) * 255), Math.round(f(1) * 255), a);
   }
 
   // Convert HSLA to RGBA
@@ -14,7 +14,7 @@ export class ColorHelper {
     const { h, s, l, a } = hsla;
     const f = (n: number, k = (n + h / 30) % 12) =>
       l - s * Math.min(l, 1 - l) * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return new Rgba(f(0) * 255, f(8) * 255, f(4) * 255, a * 255);
+    return new Rgba(Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255), a);
   }
 
   //--------------------------------------------------

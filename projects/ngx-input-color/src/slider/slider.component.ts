@@ -35,11 +35,11 @@ import {
         class="slider"
         (mousedown)="dragStart($event)"
         (touchstart)="dragStart($event)"
-        [style.background]="background">
+        [style.background]="background"
+        [class.bg-transparent]="isBgTransparent">
         <div class="thumb" #thumb [style.left.px]="x"></div>
       </div>
     </div>
-    {{ myControl.value }}
   `,
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,6 +61,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
   @Input() min = 0;
   @Input() max = 100;
   @Input() background?: string;
+  @Input() isBgTransparent = false;
   @Output() change = new EventEmitter<number>();
   isDragging = false;
   @ViewChild('slider', { static: true }) slider!: ElementRef<HTMLDivElement>;
@@ -143,8 +144,16 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
   setValueByPosition(thumbRec: DOMRect, sliderRec: DOMRect) {
     const percentage = this.x / (sliderRec.width - thumbRec.width);
     let newValue = this.min + percentage * (this.max - this.min);
-    newValue = Math.round(newValue / this.step) * this.step;
+
+    // تعداد ارقام اعشاری step را محاسبه کنید
+    const stepDecimalPlaces = (this.step.toString().split('.')[1] || '').length;
+
+    // مقدار جدید را با دقت step تنظیم کنید
+    newValue = parseFloat((Math.round(newValue / this.step) * this.step).toFixed(stepDecimalPlaces));
+
+    // مقدار نهایی را در محدوده min و max تنظیم کنید
     let value = Math.min(Math.max(newValue, this.min), this.max);
+    console.log(newValue, value);
     this.valueChanged(value);
   }
 

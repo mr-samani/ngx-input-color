@@ -13,3 +13,17 @@
     }
   }
 }
+
+.color-preview {
+  border: 1px rgb(146, 146, 146) solid;
+  border-radius: 4px;
+  display: flex;
+  span {
+    flex: 1;
+  }
+  .color {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+  }
+}

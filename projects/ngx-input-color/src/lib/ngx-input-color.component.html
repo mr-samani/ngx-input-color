@@ -1,10 +1,16 @@
 <div class="color-picker">
-  <div [style.background]="color">
-    {{ color }}
-  </div>
-  <button type="button" (click)="format = 'hsva'">HSVA</button>
-  <button type="button" (click)="format = 'hsla'">HSLA</button>
+  <div class="color-preview">
+    <span>{{ color }}</span>
+    <div class="color" [style.background]="color"></div>
+  <button type="button" (click)="openEyeDrop()">
+    eye
+  </button>
+</div>
+
+  <button type="button" (click)="format = 'hsva'">HSV</button>
+  <button type="button" (click)="format = 'hsla'">HSL</button>
   <button type="button" (click)="format = 'rgba'">RGB</button>
+  <!-- ---------------------------HSV----------------------------------- -->
   <div class="color-sliders">
     <div *ngIf="format === 'hsva'">
       <slider
@@ -13,9 +19,15 @@
         [max]="360"
         [step]="1"
         (change)="createBaseColor()"
-        background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-        H
-      </slider>
+        background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)"></slider>
+      <slider
+        [(ngModel)]="alpha"
+        [min]="0"
+        [max]="1"
+        [step]="0.1"
+        (change)="onChangeDimension()"
+        [isBgTransparent]="true"
+        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'"></slider>
       <saturation
         [width]="300"
         [height]="220"
@@ -25,16 +37,9 @@
         [step]="0.01"
         [color]="baseColor"
         (change)="onChangeDimension()"></saturation>
-      <slider
-        [(ngModel)]="alpha"
-        [min]="0"
-        [max]="1"
-        [step]="0.1"
-        (change)="calcColor()"
-        background="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAQCAYAAAD06IYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AIWDwYQlZMa3gAAAWVJREFUaN7tmEGO6jAQRCsOArHgBpyAJYGjcGocxAm4A2IHpmoWE0eBH+ezmFlNvU06shJ3W6VEelWMUQAIIF9f6qZpimsA1LYtS2uF51/u27YVAFZVRUkEoGHdPV/sIcbIEIIkUdI/9Xa7neyv61+SWFUVAVCSct00TWn2fv6u3+Ecfd3tXzy/0+nEUu+SPjo/kqzrmiQpScN6v98XewfA8/lMkiLJ2WxGSUopcT6fM6U0NX9/frfbjev1WtfrlZfLhYfDQQHG/AIOlnGwjINlHCxjHCzjYJm/TJWdCwquJXseFFzGwDNNeiKMOJTO8xQdDQaeB29+K9efeLaBo9J7vdvtJj1RjFFjfiv7qv95tjx/7leSQgh93e1ffMeIp6O+YQjho/N791t1XVOSSI7N//K+4/GoxWLBx+PB5/Op5XLJ+/3OlJJWqxU3m83ovv5iGf8KjYNlHCxjHCzjYBkHy5gf5gusvQU7U37jTAAAAABJRU5ErkJggg==)">
-        A
-      </slider>
     </div>
+    <!-- ---------------------------HSV----------------------------------- -->
+    <!-- ---------------------------HSL----------------------------------- -->
 
     <div class="sliders" *ngIf="format === 'hsla'">
       <slider
@@ -70,13 +75,15 @@
         [max]="1"
         [step]="0.1"
         (change)="calcColor()"
-        background="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAQCAYAAAD06IYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AIWDwYQlZMa3gAAAWVJREFUaN7tmEGO6jAQRCsOArHgBpyAJYGjcGocxAm4A2IHpmoWE0eBH+ezmFlNvU06shJ3W6VEelWMUQAIIF9f6qZpimsA1LYtS2uF51/u27YVAFZVRUkEoGHdPV/sIcbIEIIkUdI/9Xa7neyv61+SWFUVAVCSct00TWn2fv6u3+Ecfd3tXzy/0+nEUu+SPjo/kqzrmiQpScN6v98XewfA8/lMkiLJ2WxGSUopcT6fM6U0NX9/frfbjev1WtfrlZfLhYfDQQHG/AIOlnGwjINlHCxjHCzjYJm/TJWdCwquJXseFFzGwDNNeiKMOJTO8xQdDQaeB29+K9efeLaBo9J7vdvtJj1RjFFjfiv7qv95tjx/7leSQgh93e1ffMeIp6O+YQjho/N791t1XVOSSI7N//K+4/GoxWLBx+PB5/Op5XLJ+/3OlJJWqxU3m83ovv5iGf8KjYNlHCxjHCzjYBkHy5gf5gusvQU7U37jTAAAAABJRU5ErkJggg==)">
+        [isBgTransparent]="true"
+        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
         A
       </slider>
-    </div> 
-    
-    
-    
+    </div>
+
+    <!-- ---------------------------HSL----------------------------------- -->
+    <!-- ---------------------------RGB----------------------------------- -->
+
     <div class="sliders" *ngIf="format === 'rgba'">
       <slider
         [(ngModel)]="rgba.r"
@@ -94,7 +101,7 @@
         [step]="1"
         (change)="calcRGBA()"
         [background]="greenSliderBackground">
-       G
+        G
       </slider>
       <slider
         [(ngModel)]="rgba.b"
@@ -103,7 +110,7 @@
         [step]="1"
         (change)="calcRGBA()"
         [background]="blueSliderBackground">
-       B
+        B
       </slider>
       <slider
         [(ngModel)]="rgba.a"
@@ -111,9 +118,11 @@
         [max]="1"
         [step]="0.1"
         (change)="calcRGBA()"
-        background="url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAQCAYAAAD06IYnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AIWDwYQlZMa3gAAAWVJREFUaN7tmEGO6jAQRCsOArHgBpyAJYGjcGocxAm4A2IHpmoWE0eBH+ezmFlNvU06shJ3W6VEelWMUQAIIF9f6qZpimsA1LYtS2uF51/u27YVAFZVRUkEoGHdPV/sIcbIEIIkUdI/9Xa7neyv61+SWFUVAVCSct00TWn2fv6u3+Ecfd3tXzy/0+nEUu+SPjo/kqzrmiQpScN6v98XewfA8/lMkiLJ2WxGSUopcT6fM6U0NX9/frfbjev1WtfrlZfLhYfDQQHG/AIOlnGwjINlHCxjHCzjYJm/TJWdCwquJXseFFzGwDNNeiKMOJTO8xQdDQaeB29+K9efeLaBo9J7vdvtJj1RjFFjfiv7qv95tjx/7leSQgh93e1ffMeIp6O+YQjho/N791t1XVOSSI7N//K+4/GoxWLBx+PB5/Op5XLJ+/3OlJJWqxU3m83ovv5iGf8KjYNlHCxjHCzjYBkHy5gf5gusvQU7U37jTAAAAABJRU5ErkJggg==)">
+        [isBgTransparent]="true"
+        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
         A
       </slider>
     </div>
+    <!-- ---------------------------RGB----------------------------------- -->
   </div>
 </div>

@@ -31,7 +31,10 @@ export class NgxInputColorComponent implements OnInit {
   blueSliderBackground = '';
 
   color = '';
-  constructor() {}
+  isSupportedEyeDrop: boolean;
+  constructor() {
+    this.isSupportedEyeDrop = 'EyeDropper' in window;
+  }
 
   ngOnInit(): void {
     this.createBaseColor();
@@ -67,5 +70,13 @@ export class NgxInputColorComponent implements OnInit {
     this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;
     this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;
     this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;
+  }
+
+  openEyeDrop() {
+    // if (this.isSupportedEyeDrop) {
+    //   let t=new EyeDropper().then(result=>{
+
+    //   });
+    // }
   }
 }
