@@ -10,7 +10,7 @@ import {
   ViewChild,
   forwardRef,
 } from '@angular/core';
-import { getOffsetPosition } from '../helper/get-offset-position';
+import { getOffsetPosition } from '../utils/get-offset-position';
 import {
   NG_VALUE_ACCESSOR,
   NG_VALIDATORS,

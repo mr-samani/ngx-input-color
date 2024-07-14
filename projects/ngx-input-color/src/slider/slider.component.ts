@@ -11,7 +11,7 @@ import {
   forwardRef,
   type OnInit,
 } from '@angular/core';
-import { getOffsetPosition } from '../helper/get-offset-position';
+import { getOffsetPosition } from '../utils/get-offset-position';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -153,7 +153,6 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
 
     // مقدار نهایی را در محدوده min و max تنظیم کنید
     let value = Math.min(Math.max(newValue, this.min), this.max);
-    console.log(newValue, value);
     this.valueChanged(value);
   }
 

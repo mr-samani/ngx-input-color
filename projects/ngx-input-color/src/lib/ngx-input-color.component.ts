@@ -3,8 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
-import { ColorHelper } from '../services/color.service';
-import { Hsla, Hsva, Rgba } from '../models/formats';
+import { ColorFormats } from '../models/color-formats';
+import { CMYK, HSLA, RGBA } from '../utils/interfaces';
+import { TinyColor } from '../utils/color-converter';
 
 @Component({
   selector: 'ngx-input-color',
@@ -15,68 +16,86 @@ import { Hsla, Hsva, Rgba } from '../models/formats';
   providers: [],
 })
 export class NgxInputColorComponent implements OnInit {
-  format = 'hsva';
+  format: ColorFormats = ColorFormats.HSVA;
 
-  hsla = new Hsla(0.33, 0.5, 0.5, 1);
+  hsla: HSLA;
 
   //--HSVA
   hue = 300;
-  baseColor = '';
+  baseColor = 'rgb(0,0,0)';
   board: Position = { x: 1, y: 0 };
   alpha = 1;
   ///--- RGBA
-  rgba = new Rgba(0, 0, 0, 1);
+  rgba: RGBA;
   redSliderBackground = '';
   greenSliderBackground = '';
   blueSliderBackground = '';
+  ///--- Cmyk
+  cmyk: CMYK;
 
-  color = '';
+  rgbaColor = '';
+  hexColor = '';
+
   isSupportedEyeDrop: boolean;
   constructor() {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
+    this.hsla = { h: 0, s: 0, l: 0, a: 1 };
+    this.rgba = { r: 0, g: 0, b: 0, a: 1 };
+    this.cmyk = { c: 0, m: 0, y: 0, k: 0 };
   }
 
-  ngOnInit(): void {
-    this.createBaseColor();
-  }
-
-  calcColor() {
-    this.rgba = ColorHelper.hslaToRgba(this.hsla);
-    //console.log(rgba);
-    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
-  }
-
-  createBaseColor() {
-    const hsva = new Hsva(this.hue, 1, 1, 1);
-    this.rgba = ColorHelper.hsvaToRgba(hsva);
-    this.baseColor = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
-    this.onChangeDimension();
-  }
-
-  onChangeDimension() {
-    const hsva = new Hsva(this.hue, this.board.x, 1 - this.board.y, this.alpha);
-    this.rgba = ColorHelper.hsvaToRgba(hsva);
-    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
-  }
-
-  calcRGBA() {
-    this.color = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
-    this.updateRgbSliderColor();
-  }
-
-  updateRgbSliderColor() {
-    const { r, g, b } = this.rgba;
-
-    this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;
-    this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;
-    this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;
+  ngOnInit(): void {}
+  public get ColorFormats(): typeof ColorFormats {
+    return ColorFormats;
   }
 
   openEyeDrop() {
     // if (this.isSupportedEyeDrop) {
     //   let t=new EyeDropper().then(result=>{
-
     //   });
     // }
+  }
+
+  regenerateColor() {
+    switch (this.format) {
+      case ColorFormats.HSVA:
+        const hsva = {
+          h: this.hue,
+          s: this.board.x,
+          v: 1 - this.board.y,
+          a: this.alpha,
+        };
+        this.rgba = TinyColor.hsvaToRgba(hsva);
+        break;
+      case ColorFormats.HSLA:
+        this.rgba = TinyColor.hslaToRgba(this.hsla);
+        break;
+      case ColorFormats.CMYK:
+        this.rgba = TinyColor.cmykToRgb(this.cmyk, this.alpha);
+        break;
+    }
+    this.rgbaColor = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
+
+    this.createBaseColor();
+    this.updateRgbSliderColor();
+    let color = new TinyColor(this.rgbaColor);
+    this.hexColor = color.toHex8();
+    this.hsla = color.toHsl();
+    let hsv = color.toHsv();
+    this.hue = +hsv.h;
+    this.alpha = hsv.a;
+    this.board = { x: +hsv.s, y: 1 - +hsv.v };
+    console.log(this.board);
+    this.cmyk = color.toCmyk();
+  }
+
+  createBaseColor() {
+    this.baseColor = 'rgb(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ')';
+  }
+  updateRgbSliderColor() {
+    const { r, g, b } = this.rgba;
+    this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;
+    this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;
+    this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;
   }
 }
