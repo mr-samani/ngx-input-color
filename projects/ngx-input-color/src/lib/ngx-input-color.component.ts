@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
 import { ColorFormats } from '../models/color-formats';
 import { CMYK, HSLA, RGBA } from '../utils/interfaces';
 import { TinyColor } from '../utils/color-converter';
-
+declare const EyeDropper: any;
 @Component({
   selector: 'ngx-input-color',
   standalone: true,
@@ -38,7 +38,7 @@ export class NgxInputColorComponent implements OnInit {
   hexColor = '';
 
   isSupportedEyeDrop: boolean;
-  constructor() {
+  constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
     this.hsla = { h: 0, s: 0, l: 0, a: 1 };
     this.rgba = { r: 0, g: 0, b: 0, a: 1 };
@@ -51,10 +51,16 @@ export class NgxInputColorComponent implements OnInit {
   }
 
   openEyeDrop() {
-    // if (this.isSupportedEyeDrop) {
-    //   let t=new EyeDropper().then(result=>{
-    //   });
-    // }
+    if (this.isSupportedEyeDrop) {
+      let t = new EyeDropper().open();
+      t.then((result: { sRGBHex: string }) => {
+        this.hexColor = result.sRGBHex;
+        this.convertColorToAll(this.hexColor);
+        this.createBaseColor();
+        this.updateRgbSliderColor();
+        this.cd.detectChanges();
+      });
+    }
   }
 
   regenerateColor() {
@@ -79,14 +85,7 @@ export class NgxInputColorComponent implements OnInit {
 
     this.createBaseColor();
     this.updateRgbSliderColor();
-    let color = new TinyColor(this.rgbaColor);
-    this.hexColor = color.toHex8();
-    this.hsla = color.toHsl();
-    let hsv = color.toHsv();
-    this.hue = Math.ceil(hsv.h);
-    this.alpha = hsv.a;
-    this.board = { x: +hsv.s, y: 1 - +hsv.v }; 
-    this.cmyk = color.toCmyk();
+    this.convertColorToAll(this.rgbaColor);
   }
 
   createBaseColor() {
@@ -98,5 +97,18 @@ export class NgxInputColorComponent implements OnInit {
     this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;
     this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;
     this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;
+  }
+
+  private convertColorToAll(c: string) {
+    let color = new TinyColor(c);
+    this.rgba = color;
+    this.rgbaColor = 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + this.rgba.a + ')';
+    this.hexColor = '#' + color.toHex8();
+    this.hsla = color.toHsl();
+    let hsv = color.toHsv();
+    this.hue = Math.ceil(hsv.h);
+    this.alpha = hsv.a;
+    this.board = { x: +hsv.s, y: 1 - +hsv.v };
+    this.cmyk = color.toCmyk();
   }
 }
