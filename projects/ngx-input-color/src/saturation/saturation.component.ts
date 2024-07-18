@@ -70,9 +70,9 @@ export class SaturationComponent implements ControlValueAccessor {
     this.myControl.setValue(value);
     let saturationRec = this.saturation.nativeElement.getBoundingClientRect();
     let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
+    this.x = ((value.x - this.min.x) * (saturationRec.width - thumbRec.width / 2)) / (this.max.x - this.min.x);
+    this.y = ((value.y - this.min.y) * (saturationRec.height - thumbRec.height / 2)) / (this.max.y - this.min.y);
 
-    this.x = ((value.x - this.min.x) * (saturationRec.width - thumbRec.width)) / (this.max.x - this.min.x);
-    this.y = ((value.y - this.min.y) * (saturationRec.height - thumbRec.height)) / (this.max.y - this.min.y);
     if (val !== value) {
       this.valueChanged(value);
     }

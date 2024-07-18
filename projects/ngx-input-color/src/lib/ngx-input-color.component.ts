@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { SliderComponent } from '../slider/slider.component';
 import { Position, SaturationComponent } from '../saturation/saturation.component';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { TinyColor } from '../utils/color-converter';
   imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent],
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
 })
 export class NgxInputColorComponent implements OnInit {
@@ -82,15 +83,15 @@ export class NgxInputColorComponent implements OnInit {
     this.hexColor = color.toHex8();
     this.hsla = color.toHsl();
     let hsv = color.toHsv();
-    this.hue = +hsv.h;
+    this.hue = Math.ceil(hsv.h);
     this.alpha = hsv.a;
-    this.board = { x: +hsv.s, y: 1 - +hsv.v };
-    console.log(this.board);
+    this.board = { x: +hsv.s, y: 1 - +hsv.v }; 
     this.cmyk = color.toCmyk();
   }
 
   createBaseColor() {
-    this.baseColor = 'rgb(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ')';
+    let rgba = TinyColor.hsvaToRgba({ h: this.hue, s: 1, v: 1, a: 1 });
+    this.baseColor = 'rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')';
   }
   updateRgbSliderColor() {
     const { r, g, b } = this.rgba;

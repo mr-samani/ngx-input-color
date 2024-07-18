@@ -27,20 +27,7 @@ import {
   selector: 'slider',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="slider-container">
-      <ng-content></ng-content>
-      <div
-        #slider
-        class="slider"
-        (mousedown)="dragStart($event)"
-        (touchstart)="dragStart($event)"
-        [style.background]="background"
-        [class.bg-transparent]="isBgTransparent">
-        <div class="thumb" #thumb [style.left.px]="x"></div>
-      </div>
-    </div>
-  `,
+  templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -145,13 +132,9 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     const percentage = this.x / (sliderRec.width - thumbRec.width);
     let newValue = this.min + percentage * (this.max - this.min);
 
-    // تعداد ارقام اعشاری step را محاسبه کنید
     const stepDecimalPlaces = (this.step.toString().split('.')[1] || '').length;
-
-    // مقدار جدید را با دقت step تنظیم کنید
     newValue = parseFloat((Math.round(newValue / this.step) * this.step).toFixed(stepDecimalPlaces));
-
-    // مقدار نهایی را در محدوده min و max تنظیم کنید
+ 
     let value = Math.min(Math.max(newValue, this.min), this.max);
     this.valueChanged(value);
   }
