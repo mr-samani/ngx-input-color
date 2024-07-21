@@ -18,7 +18,7 @@ declare const EyeDropper: any;
 })
 export class NgxInputColorComponent implements OnInit {
   format: ColorFormats = ColorFormats.HSVA;
-
+  isDarkColor = false;
   hsla: HSLA;
 
   //--HSVA
@@ -110,5 +110,6 @@ export class NgxInputColorComponent implements OnInit {
     this.alpha = hsv.a;
     this.board = { x: +hsv.s, y: 1 - +hsv.v };
     this.cmyk = color.toCmyk();
+    this.isDarkColor = color.isDark();
   }
 }

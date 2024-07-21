@@ -1,178 +1,182 @@
 <div class="color-picker">
-  <div class="color-preview">
-    <span>{{ rgbaColor }}</span>
-    <span>{{ hexColor }}</span>
-    <div class="color" [style.background]="rgbaColor"></div>
-    <button type="button" (click)="openEyeDrop()">eye</button>
+  <div class="color-preview" [style.background]="rgbaColor" [class.is-dark-color]="isDarkColor">
+    <div class="rgbacode">{{ rgbaColor | uppercase }}</div>
+    <div class="hexacode">{{ hexColor | uppercase }}</div>
+    <div class="color"></div>
   </div>
+  <div class="inner">
+    <button type="button" (click)="openEyeDrop()">eye</button>
 
-  <button type="button" (click)="format = ColorFormats.HSVA">HSV</button>
-  <button type="button" (click)="format = ColorFormats.HSLA">HSL</button>
-  <button type="button" (click)="format = ColorFormats.RGBA">RGB</button>
-  <button type="button" (click)="format = ColorFormats.CMYK">CMYK</button>
-  <!-- ---------------------------HSV----------------------------------- -->
-  <div class="color-sliders">
-    <div *ngIf="format === ColorFormats.HSVA">
-      <slider
-        [(ngModel)]="hue"
-        [min]="0"
-        [max]="360"
-        [step]="1"
-        (change)="regenerateColor()"
-        background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">{{hue}}</slider>
-      <slider
-        [(ngModel)]="alpha"
-        [min]="0"
-        [max]="1"
-        [step]="0.1"
-        (change)="regenerateColor()"
-        [isBgTransparent]="true"
-        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'"></slider>
-      <saturation
-        [width]="300"
-        [height]="220"
-        [(ngModel)]="board"
-        [min]="{ x: 0, y: 0 }"
-        [max]="{ x: 1, y: 1 }"
-        [step]="0.01"
-        [color]="baseColor"
-        (change)="regenerateColor()"></saturation>
-    </div>
+    <button type="button" (click)="format = ColorFormats.HSVA">HSV</button>
+    <button type="button" (click)="format = ColorFormats.HSLA">HSL</button>
+    <button type="button" (click)="format = ColorFormats.RGBA">RGB</button>
+    <button type="button" (click)="format = ColorFormats.CMYK">CMYK</button>
     <!-- ---------------------------HSV----------------------------------- -->
-    <!-- ---------------------------HSL----------------------------------- -->
+    <div class="color-sliders">
+      <div *ngIf="format === ColorFormats.HSVA">
+        <slider
+          [(ngModel)]="hue"
+          [min]="0"
+          [max]="360"
+          [step]="1"
+          (change)="regenerateColor()"
+          background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
+          {{ hue }}
+        </slider>
+        <slider
+          [(ngModel)]="alpha"
+          [min]="0"
+          [max]="1"
+          [step]="0.1"
+          (change)="regenerateColor()"
+          [isBgTransparent]="true"
+          [background]="'linear-gradient(to right,transparent,' + baseColor + ')'"></slider>
+        <saturation
+          [width]="300"
+          [height]="220"
+          [(ngModel)]="board"
+          [min]="{ x: 0, y: 0 }"
+          [max]="{ x: 1, y: 1 }"
+          [step]="0.01"
+          [color]="baseColor"
+          (change)="regenerateColor()"></saturation>
+      </div>
+      <!-- ---------------------------HSV----------------------------------- -->
+      <!-- ---------------------------HSL----------------------------------- -->
 
-    <div class="sliders" *ngIf="format === ColorFormats.HSLA">
-      <slider
-        [(ngModel)]="hsla.h"
-        [min]="0"
-        [max]="360"
-        [step]="1"
-        (change)="regenerateColor()"
-        background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-        H
-      </slider>
-      <slider
-        [(ngModel)]="hsla.s"
-        [min]="0"
-        [max]="1"
-        [step]="0.01"
-        (change)="regenerateColor()"
-        background="linear-gradient(to right,#808080,#ff0000)">
-        S
-      </slider>
-      <slider
-        [(ngModel)]="hsla.l"
-        [min]="0"
-        [max]="1"
-        [step]="0.01"
-        (change)="regenerateColor()"
-        background="linear-gradient(to right,black,white)">
-        L
-      </slider>
-      <slider
-        [(ngModel)]="hsla.a"
-        [min]="0"
-        [max]="1"
-        [step]="0.1"
-        (change)="regenerateColor()"
-        [isBgTransparent]="true"
-        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-        A
-      </slider>
-    </div>
+      <div class="sliders" *ngIf="format === ColorFormats.HSLA">
+        <slider
+          [(ngModel)]="hsla.h"
+          [min]="0"
+          [max]="360"
+          [step]="1"
+          (change)="regenerateColor()"
+          background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
+          H
+        </slider>
+        <slider
+          [(ngModel)]="hsla.s"
+          [min]="0"
+          [max]="1"
+          [step]="0.01"
+          (change)="regenerateColor()"
+          background="linear-gradient(to right,#808080,#ff0000)">
+          S
+        </slider>
+        <slider
+          [(ngModel)]="hsla.l"
+          [min]="0"
+          [max]="1"
+          [step]="0.01"
+          (change)="regenerateColor()"
+          background="linear-gradient(to right,black,white)">
+          L
+        </slider>
+        <slider
+          [(ngModel)]="hsla.a"
+          [min]="0"
+          [max]="1"
+          [step]="0.1"
+          (change)="regenerateColor()"
+          [isBgTransparent]="true"
+          [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+          A
+        </slider>
+      </div>
 
-    <!-- ---------------------------HSL----------------------------------- -->
-    <!-- ---------------------------RGB----------------------------------- -->
+      <!-- ---------------------------HSL----------------------------------- -->
+      <!-- ---------------------------RGB----------------------------------- -->
 
-    <div class="sliders" *ngIf="format === ColorFormats.RGBA">
-      <slider
-        [(ngModel)]="rgba.r"
-        [min]="0"
-        [max]="255"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="redSliderBackground">
-        R
-      </slider>
-      <slider
-        [(ngModel)]="rgba.g"
-        [min]="0"
-        [max]="255"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="greenSliderBackground">
-        G
-      </slider>
-      <slider
-        [(ngModel)]="rgba.b"
-        [min]="0"
-        [max]="255"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="blueSliderBackground">
-        B
-      </slider>
-      <slider
-        [(ngModel)]="rgba.a"
-        [min]="0"
-        [max]="1"
-        [step]="0.1"
-        (change)="regenerateColor()"
-        [isBgTransparent]="true"
-        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-        A
-      </slider>
+      <div class="sliders" *ngIf="format === ColorFormats.RGBA">
+        <slider
+          [(ngModel)]="rgba.r"
+          [min]="0"
+          [max]="255"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="redSliderBackground">
+          R
+        </slider>
+        <slider
+          [(ngModel)]="rgba.g"
+          [min]="0"
+          [max]="255"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="greenSliderBackground">
+          G
+        </slider>
+        <slider
+          [(ngModel)]="rgba.b"
+          [min]="0"
+          [max]="255"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="blueSliderBackground">
+          B
+        </slider>
+        <slider
+          [(ngModel)]="rgba.a"
+          [min]="0"
+          [max]="1"
+          [step]="0.1"
+          (change)="regenerateColor()"
+          [isBgTransparent]="true"
+          [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+          A
+        </slider>
+      </div>
+      <!-- ---------------------------RGB----------------------------------- -->
+      <!-- ---------------------------CMYK----------------------------------- -->
+      <div class="sliders" *ngIf="format === ColorFormats.CMYK">
+        <slider
+          [(ngModel)]="cmyk.c"
+          [min]="0"
+          [max]="100"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="redSliderBackground">
+          C
+        </slider>
+        <slider
+          [(ngModel)]="cmyk.m"
+          [min]="0"
+          [max]="100"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="redSliderBackground">
+          M
+        </slider>
+        <slider
+          [(ngModel)]="cmyk.y"
+          [min]="0"
+          [max]="100"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="redSliderBackground">
+          Y
+        </slider>
+        <slider
+          [(ngModel)]="cmyk.k"
+          [min]="0"
+          [max]="100"
+          [step]="1"
+          (change)="regenerateColor()"
+          [background]="redSliderBackground">
+          K
+        </slider>
+        <slider
+          [(ngModel)]="alpha"
+          [min]="0"
+          [max]="1"
+          [step]="0.1"
+          (change)="regenerateColor()"
+          [isBgTransparent]="true"
+          [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+          A
+        </slider>
+      </div>
+      <!-- ---------------------------CMYK----------------------------------- -->
     </div>
-    <!-- ---------------------------RGB----------------------------------- -->
-    <!-- ---------------------------CMYK----------------------------------- -->
-    <div class="sliders" *ngIf="format === ColorFormats.CMYK">
-      <slider
-        [(ngModel)]="cmyk.c"
-        [min]="0"
-        [max]="100"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="redSliderBackground">
-        C
-      </slider>
-      <slider
-        [(ngModel)]="cmyk.m"
-        [min]="0"
-        [max]="100"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="redSliderBackground">
-        M
-      </slider>
-      <slider
-        [(ngModel)]="cmyk.y"
-        [min]="0"
-        [max]="100"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="redSliderBackground">
-        Y
-      </slider>
-      <slider
-        [(ngModel)]="cmyk.k"
-        [min]="0"
-        [max]="100"
-        [step]="1"
-        (change)="regenerateColor()"
-        [background]="redSliderBackground">
-        K
-      </slider>
-      <slider
-        [(ngModel)]="alpha"
-        [min]="0"
-        [max]="1"
-        [step]="0.1"
-        (change)="regenerateColor()"
-        [isBgTransparent]="true"
-        [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-        A
-      </slider>
-    </div>
-    <!-- ---------------------------CMYK----------------------------------- -->
   </div>
 </div>
