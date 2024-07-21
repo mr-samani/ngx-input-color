@@ -9,8 +9,6 @@ import { TinyColor } from '../utils/color-converter';
 declare const EyeDropper: any;
 @Component({
   selector: 'ngx-input-color',
-  standalone: true,
-  imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent],
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

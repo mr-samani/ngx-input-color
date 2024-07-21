@@ -3,3 +3,6 @@
  */
 
 export * from './lib/ngx-input-color.component';
+
+export * from './ngx-input-color.module';
+
