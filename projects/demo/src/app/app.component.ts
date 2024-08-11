@@ -18,4 +18,9 @@ export class AppComponent {
   a = 63;
   b = 88;
   color = 'yellow';
+
+
+
+
+  color2='#3300ffff';
 }

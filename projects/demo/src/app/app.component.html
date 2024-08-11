@@ -9,3 +9,22 @@
 <input ngxInputColor [(ngModel)]="color"/>
 
 {{color}}
+
+
+<input type="color" eyedropper format="hex">
+
+{{1234.56789|number}}<br/>
+{{1234.56789|number:'1.1-2'}}<br/>
+{{1234.56789|number:'1.2-2'}}<br/>
+{{1234.56789|number:'1.0-2'}}<br/>
+{{1234.00|number:'1.2-2'}}<br/>
+{{1234.00|number:'1.0-2'}}<br/>
+{{1234.100020|number:'1.0-2'}}<br/>
+
+
+
+
+
+<input ngxInputColor [(ngModel)]="color2" #c="ngModel" type="color" [value]="color2"/>
+<pre>{{color2|json}}</pre>
+<pre>{{c.errors|json}}</pre>

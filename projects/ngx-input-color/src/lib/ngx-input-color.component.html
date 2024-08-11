@@ -1,5 +1,5 @@
-<div class="color-picker">
-  <div class="color-preview" [style.background]="rgbaColor" [class.is-dark-color]="isDarkColor">
+<div class="ngx-input-color-picker" (click)="stopPropagation($event)">
+  <div class="ngx-color-preview" [style.background]="rgbaColor" [class.is-dark-color]="isDarkColor">
     <div class="rgbacode">{{ rgbaColor | uppercase }}</div>
     <div class="hexacode">{{ hexColor | uppercase }}</div>
     <div class="color"></div>
@@ -21,7 +21,6 @@
           [step]="1"
           (change)="regenerateColor()"
           background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-          {{ hue }}
         </slider>
         <slider
           [(ngModel)]="alpha"
@@ -178,5 +177,10 @@
       </div>
       <!-- ---------------------------CMYK----------------------------------- -->
     </div>
+  </div>
+
+  <div class="actions">
+    <button class="close" (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
+    <button class="close" (click)="ok()">{{ confirmTitle }}</button>
   </div>
 </div>
