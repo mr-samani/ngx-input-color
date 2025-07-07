@@ -2,6 +2,14 @@
 
 **NgxInputColor** is a powerful, customizable Angular color picker input component. It supports multiple color formats, real-time preview, and seamless integration with Angular forms.
 
+
+
+## [Demo](https://mr-samani.github.io/ngx-input-color/)
+
+
+![](https://mr-samani.github.io/ngx-input-color/screenshot.png)
+
+
 ## Features
 
 - 🎨 **Multiple Color Formats**: Supports HEX, RGBA, HSLA, HSVA, and CMYK.

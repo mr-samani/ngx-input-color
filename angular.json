@@ -50,7 +50,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/demo",
+            "outputPath": "docs",
+            "baseHref": "/ngx-input-color/",
             "index": "projects/demo/src/index.html",
             "browser": "projects/demo/src/main.ts",
             "polyfills": [
@@ -62,7 +63,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "projects/demo/src/screenshot.png"
             ],
             "styles": [
               "projects/demo/src/styles.scss"
