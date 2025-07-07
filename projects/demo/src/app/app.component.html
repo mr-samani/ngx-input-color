@@ -1,8 +1,151 @@
 <h1>NGX-Input-Color</h1>
+
 <div class="input-group">
   <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" />
   <span class="input-group-text">{{ color }}</span>
 </div>
 <pre *ngIf="c.invalid">{{ c.errors | json }}</pre>
 
-<!-- <input type="color" eyedropper format="hex"> -->
+<section class="ngx-documents">
+  <h2>Documents</h2>
+  <div class="ngx-input-color-demo">
+    <h3>NgxInputColor Demo</h3>
+    <p>
+      <strong>NgxInputColor</strong>
+      is a powerful, customizable Angular color picker input component. It supports multiple color formats, real-time
+      preview, and seamless integration with Angular forms.
+    </p>
+    <ul>
+      <li>
+        🎨
+        <b>Multiple Color Formats:</b>
+        HEX, RGBA, HSLA, HSVA, CMYK
+      </li>
+      <li>
+        🖱️
+        <b>Interactive UI:</b>
+        Drag-and-drop sliders for hue, saturation, lightness, alpha, and more
+      </li>
+      <li>
+        🧩
+        <b>Angular Forms Integration:</b>
+        Works with
+        <code>ngModel</code>
+        and reactive forms
+      </li>
+      <li>
+        👁️
+        <b>EyeDropper API:</b>
+        Pick colors from anywhere on your screen (if supported)
+      </li>
+      <li>
+        🖌️
+        <b>Live Preview:</b>
+        Instantly see the selected color in HEX and RGBA
+      </li>
+      <li>
+        🛠️
+        <b>Customizable:</b>
+        Change button titles, show/hide close button, set input background color
+      </li>
+      <li>
+        🧪
+        <b>Unit Tested</b>
+      </li>
+    </ul>
+    <h4>Installation</h4>
+    <pre><code>npm install ngx-input-color
+# or
+yarn add ngx-input-color
+# or
+pnpm add ngx-input-color</code></pre>
+    <h4>Usage Example</h4>
+    <pre><code>&lt;input ngxInputColor [(ngModel)]="color" [closeTitle]="'Cancel'" [confirmTitle]="'Select'" /&gt;
+&lt;span&gt;Selected: {{ color }}&lt;/span&gt;</code></pre>
+    <h4>Inputs & Outputs</h4>
+    <table class="ngx-doc-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>closeTitle</td>
+          <td>string</td>
+          <td>'Close'</td>
+          <td>Text for the close button</td>
+        </tr>
+        <tr>
+          <td>confirmTitle</td>
+          <td>string</td>
+          <td>'Ok'</td>
+          <td>Text for the confirm button</td>
+        </tr>
+        <tr>
+          <td>showCloseButton</td>
+          <td>boolean</td>
+          <td>false</td>
+          <td>Show/hide the close button</td>
+        </tr>
+        <tr>
+          <td>setInputBackgroundColor</td>
+          <td>boolean</td>
+          <td>true</td>
+          <td>Set input background to selected color</td>
+        </tr>
+        <tr>
+          <td>[(ngModel)] / formControl</td>
+          <td>string</td>
+          <td></td>
+          <td>Two-way binding for the selected color</td>
+        </tr>
+        <tr>
+          <td>change (Output)</td>
+          <td>EventEmitter&lt;string&gt;</td>
+          <td></td>
+          <td>Emits the color value on change</td>
+        </tr>
+        <tr>
+          <td>confirm (Output)</td>
+          <td>EventEmitter&lt;string&gt;</td>
+          <td></td>
+          <td>Emits the color value when confirmed</td>
+        </tr>
+        <tr>
+          <td>cancel (Output)</td>
+          <td>EventEmitter&lt;void&gt;</td>
+          <td></td>
+          <td>Emits when the color picker is closed/canceled</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Supported Color Formats</h4>
+    <ul>
+      <li>
+        HEX (
+        <code>#RRGGBB</code>
+        or
+        <code>#RRGGBBAA</code>
+        )
+      </li>
+      <li>
+        RGBA (
+        <code>rgba(255,255,255,1)</code>
+        )
+      </li>
+      <li>
+        HSLA (
+        <code>hsla(360,100%,100%,1)</code>
+        )
+      </li>
+      <li>HSVA</li>
+      <li>CMYK</li>
+    </ul>
+    <h4>License</h4>
+    <p>MIT</p>
+  </div>
+</section>
