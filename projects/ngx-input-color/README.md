@@ -1,24 +1,85 @@
 # NgxInputColor
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.0.
+**NgxInputColor** is a powerful, customizable Angular color picker input component. It supports multiple color formats, real-time preview, and seamless integration with Angular forms.
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name --project ngx-input-color` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-input-color`.
-> Note: Don't forget to add `--project ngx-input-color` or else it will be added to the default project in your `angular.json` file. 
+- 🎨 **Multiple Color Formats**: Supports HEX, RGBA, HSLA, HSVA, and CMYK.
+- 🖱️ **Interactive UI**: Drag-and-drop sliders for hue, saturation, lightness, alpha, and more.
+- 🧩 **Angular Forms Integration**: Works with `ngModel` and reactive forms.
+- 👁️ **EyeDropper API**: Pick colors directly from anywhere on your screen (if supported by the browser).
+- 🖌️ **Live Preview**: Instantly see the selected color in HEX and RGBA.
+- 🛠️ **Customizable**: Change button titles, show/hide close button, and set input background color.
+- 🧪 **Unit Tested**: Includes comprehensive unit tests.
 
-## Build
+## Installation
 
-Run `ng build ngx-input-color` to build the project. The build artifacts will be stored in the `dist/` directory.
+With **npm**:
 
-## Publishing
+```bash
+npm install ngx-input-color
+```
 
-After building your library with `ng build ngx-input-color`, go to the dist folder `cd dist/ngx-input-color` and run `npm publish`.
+With **yarn**:
 
-## Running unit tests
+```bash
+yarn add ngx-input-color
+```
 
-Run `ng test ngx-input-color` to execute the unit tests via [Karma](https://karma-runner.github.io).
+With **pnpm**:
 
-## Further help
+```bash
+pnpm add ngx-input-color
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Usage
+
+1. **Import the Module:**
+
+   ```typescript
+   import { NgxInputColorModule } from 'ngx-input-color';
+   ```
+
+2. **Add to Your Template:**
+
+   ```html
+   <input ngxInputColor [(ngModel)]="color" name="myColor" />
+   ```
+
+3. **Use in Reactive Forms:**
+
+   ```html
+   <input ngxInputColor formControlName="color" />
+   ```
+
+## Inputs & Outputs
+
+| Name                          | Type                   | Default | Description                                    |
+| ----------------------------- | ---------------------- | ------- | ---------------------------------------------- |
+| `closeTitle`                  | `string`               | 'Close' | Text for the close button                      |
+| `confirmTitle`                | `string`               | 'Ok'    | Text for the confirm button                    |
+| `showCloseButton`             | `boolean`              | `false` | Show/hide the close button                     |
+| `setInputBackgroundColor`     | `boolean`              | `true`  | Set input background to selected color         |
+| `[(ngModel)]` / `formControl` | `string`               |         | Two-way binding for the selected color         |
+| `change` (Output)             | `EventEmitter<string>` |         | Emits the color value on change                |
+| `confirm` (Output)            | `EventEmitter<string>` |         | Emits the color value when confirmed           |
+| `cancel` (Output)             | `EventEmitter<void>`   |         | Emits when the color picker is closed/canceled |
+
+### Supported Color Formats
+
+- HEX (`#RRGGBB` or `#RRGGBBAA`)
+- RGBA (`rgba(255,255,255,1)`)
+- HSLA (`hsla(360,100%,100%,1)`)
+- HSVA
+- CMYK
+
+## Example
+
+```html
+<input ngxInputColor [(ngModel)]="color" [closeTitle]="'Cancel'" [confirmTitle]="'Select'" />
+<span>Selected: {{ color }}</span>
+```
+
+## License
+
+MIT

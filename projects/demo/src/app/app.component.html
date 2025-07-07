@@ -1,30 +1,8 @@
-<!-- <slider [(ngModel)]="a" #aa="ngModel">RGB</slider> =>a=[{{ a }}]
-<pre>{{ aa.errors | json }}</pre>
-<slider [(ngModel)]="b" #bb="ngModel" [min]="30" [max]="70">RGB</slider>
-=>b=[{{ b }}]
-<pre>{{ bb.errors | json }}</pre>
+<h1>NGX-Input-Color</h1>
+<div class="input-group">
+  <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" />
+  <span class="input-group-text">{{ color }}</span>
+</div>
+<pre *ngIf="c.invalid">{{ c.errors | json }}</pre>
 
-<saturation></saturation> -->
-
-<input ngxInputColor [(ngModel)]="color"/>
-
-{{color}}
-
-
-<input type="color" eyedropper format="hex">
-
-{{1234.56789|number}}<br/>
-{{1234.56789|number:'1.1-2'}}<br/>
-{{1234.56789|number:'1.2-2'}}<br/>
-{{1234.56789|number:'1.0-2'}}<br/>
-{{1234.00|number:'1.2-2'}}<br/>
-{{1234.00|number:'1.0-2'}}<br/>
-{{1234.100020|number:'1.0-2'}}<br/>
-
-
-
-
-
-<input ngxInputColor [(ngModel)]="color2" #c="ngModel" type="color" [value]="color2"/>
-<pre>{{color2|json}}</pre>
-<pre>{{c.errors|json}}</pre>
+<!-- <input type="color" eyedropper format="hex"> -->

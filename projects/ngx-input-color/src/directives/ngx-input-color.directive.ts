@@ -35,6 +35,8 @@ import { TinyColor } from '../utils/color-converter';
 export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, Validator {
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
+  @Input() setInputBackgroundColor = true;
+
   color?: TinyColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
   private backdrop?: HTMLDivElement;
@@ -81,6 +83,9 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   writeValue(value: any): void {
     if (value) {
       this.color = new TinyColor(value);
+      if (this.setInputBackgroundColor) {
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toString());
+      }
       this._onValidateChange();
     } else this.color = undefined;
   }
@@ -147,6 +152,9 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
 
   confirmColor(c: string) {
     this.color = new TinyColor(c);
+    if (this.setInputBackgroundColor) {
+      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);
+    }
     this._onChange(c);
     this.destroyColorPicker();
   }

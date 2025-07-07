@@ -1,0 +1,23 @@
+h1 {
+  text-align: center;
+}
+.input-group {
+  display: flex;
+  width: 150px;
+  border: 1px #ababab solid;
+  height: 38px;
+  border-radius: 6px;
+  overflow: hidden;
+  input {
+    border: none;
+    outline: none;
+    flex: 1;
+    width: 100%;
+    cursor: pointer;
+  }
+  .input-group-text {
+    background: #ebebeb;
+    border-left: 1px #c7c7c7 solid;
+    padding: 10px 6px;
+  }
+}
