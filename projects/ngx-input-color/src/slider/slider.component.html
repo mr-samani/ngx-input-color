@@ -7,6 +7,6 @@
     (touchstart)="dragStart($event)"
     [ngStyle]="{ '--ngx-slider-bg': background }"
     [class.bg-transparent]="isBgTransparent">
-    <div class="thumb" #thumb [style.left.px]="x"></div>
+    <div class="thumb" #thumb [style.left.px]="x" [title]="myControl.value"></div>
   </div>
 </div>
