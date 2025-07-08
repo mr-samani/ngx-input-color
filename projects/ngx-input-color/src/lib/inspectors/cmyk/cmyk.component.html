@@ -1,0 +1,36 @@
+<slider
+  [(ngModel)]="cyan"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="cyanSliderBackground">
+  Cyan
+</slider>
+<slider
+  [(ngModel)]="magenta"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="magentaSliderBackground">
+  Magenta
+</slider>
+<slider
+  [(ngModel)]="yellow"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="yellowSliderBackground">
+  Yellow
+</slider>
+<slider
+  [(ngModel)]="key"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="keySliderBackground">
+  Key
+</slider>

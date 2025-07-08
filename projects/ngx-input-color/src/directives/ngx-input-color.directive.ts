@@ -20,6 +20,7 @@ import {
   Validator,
 } from '@angular/forms';
 import { TinyColor } from '../utils/color-converter';
+import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 
 @Directive({
   selector: '[ngxInputColor]',
@@ -36,6 +37,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
   @Input() setInputBackgroundColor = true;
+  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
   color?: TinyColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
@@ -101,13 +103,14 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
     this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
 
     const instance = this.colorPickerComponentRef.instance;
+    instance.colorInspector = this.colorInspector;
     instance.showCloseButton = true;
     instance.closeTitle = this.closeTitle;
     instance.confirmTitle = this.confirmTitle;
 
     // مقدار اولیه رنگ
     if (this.color && typeof this.color === 'object' && 'isValid' in this.color && this.color.isValid) {
-      instance.initalColor(this.color);
+      instance.initColor(this.color);
     }
 
     // رویدادها

@@ -1,0 +1,23 @@
+<saturation
+  [height]="220"
+  [(ngModel)]="board"
+  [min]="{ x: 0, y: 0 }"
+  [max]="{ x: 1, y: 1 }"
+  [step]="0.01"
+  [color]="baseColor"
+  (change)="generateColor()"></saturation>
+<slider
+  [(ngModel)]="hue"
+  [min]="0"
+  [max]="360"
+  [step]="1"
+  (change)="generateColor()"
+  background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)"></slider>
+<slider
+  [(ngModel)]="alpha"
+  [min]="0"
+  [max]="1"
+  [step]="0.1"
+  (change)="generateColor()"
+  [isBgTransparent]="true"
+  [background]="'linear-gradient(to right,transparent,' + baseColor + ')'"></slider>

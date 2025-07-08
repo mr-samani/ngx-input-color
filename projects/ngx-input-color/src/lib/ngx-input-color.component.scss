@@ -11,13 +11,6 @@
   .inner {
     padding: 12px;
   }
-  .color-sliders {
-    display: flex;
-    gap: 5px;
-    .sliders {
-      flex: 1;
-    }
-  }
 }
 
 .ngx-color-preview {
@@ -117,13 +110,13 @@
       background: #8db6e4;
     }
   }
-  .btn-eyedroper {
-    padding: 2px;
-    min-width: 0;
-    width: 45px;
-    svg {
-      width: 22px;
-    }
-  }
 }
 /*------ button groups ---------*/
+.ngx-btn-eyedroper {
+  padding: 2px;
+  min-width: 0;
+  width: 45px;
+  svg {
+    width: 22px;
+  }
+}

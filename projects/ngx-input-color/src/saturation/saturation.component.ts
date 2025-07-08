@@ -99,6 +99,7 @@ export class SaturationComponent implements ControlValueAccessor {
   }
 
   private updatePosition(ev: MouseEvent | TouchEvent) {
+    if (!this.isDragging) return;
     let position = getOffsetPosition(ev, this.saturation.nativeElement);
     let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
     let saturationRec = this.saturation.nativeElement.getBoundingClientRect();

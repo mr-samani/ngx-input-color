@@ -1,0 +1,37 @@
+<slider
+  [(ngModel)]="red"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="redSliderBackground">
+  Red
+</slider>
+<slider
+  [(ngModel)]="green"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="greenSliderBackground">
+  Green
+</slider>
+<slider
+  [(ngModel)]="blue"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="blueSliderBackground">
+  Blue
+</slider>
+<slider
+  [(ngModel)]="alpha"
+  [min]="0"
+  [max]="1"
+  [step]="0.1"
+  (change)="generateColor()"
+  [isBgTransparent]="true"
+  [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+  Alpha
+</slider>
