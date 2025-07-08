@@ -26,8 +26,8 @@ export class RgbComponent implements OnInit {
     this.red = rgba.r;
     this.green = rgba.g;
     this.blue = rgba.b;
-    this.alpha = rgba.a;
-    this.updateRgbSliderColor(rgba);
+    this.alpha = rgba.a ?? 1;
+    this.updateRgbSliderColor(rgba as any);
   }
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}

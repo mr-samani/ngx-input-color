@@ -5,7 +5,7 @@
   [step]="1"
   (change)="generateColor()"
   [background]="cyanSliderBackground">
-  Cyan
+  Cyan = {{ cyan }}
 </slider>
 <slider
   [(ngModel)]="magenta"
@@ -14,7 +14,7 @@
   [step]="1"
   (change)="generateColor()"
   [background]="magentaSliderBackground">
-  Magenta
+  Magenta = {{ magenta }}
 </slider>
 <slider
   [(ngModel)]="yellow"
@@ -23,7 +23,7 @@
   [step]="1"
   (change)="generateColor()"
   [background]="yellowSliderBackground">
-  Yellow
+  Yellow = {{ yellow }}
 </slider>
 <slider
   [(ngModel)]="key"
@@ -32,5 +32,5 @@
   [step]="1"
   (change)="generateColor()"
   [background]="keySliderBackground">
-  Key
+  Key = {{ key }}
 </slider>

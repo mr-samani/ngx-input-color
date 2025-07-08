@@ -22,12 +22,13 @@ export class CmykComponent implements OnInit {
   @Input() set color(c: NgxColor) {
     if (!c) return;
     const cmyk = c.toCmyk();
+    console.log('inputedColor', cmyk);
     this.inputColorCmyk = cmyk;
     this.cyan = cmyk.c;
     this.magenta = cmyk.m;
     this.yellow = cmyk.y;
     this.key = cmyk.k;
-    this.updateSliderBackgrounds(cmyk);
+    // this.updateSliderBackgrounds(cmyk);
   }
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}
@@ -37,8 +38,9 @@ export class CmykComponent implements OnInit {
     try {
       const cmyk: CMYK = { c: this.cyan, m: this.magenta, y: this.yellow, k: this.key };
       const color = new NgxColor(cmyk);
-      this.updateSliderBackgrounds(cmyk);
+      // this.updateSliderBackgrounds(cmyk);
       if (this.isCmykEqual(this.inputColorCmyk, cmyk) == false) {
+        console.log('outputedColor', cmyk);
         this.colorChange.emit(color);
       }
     } catch (error) {
@@ -56,10 +58,10 @@ export class CmykComponent implements OnInit {
   private getChannelGradient(channel: keyof CMYK, cmyk: CMYK): string {
     let baseColor = this.cloneColor(cmyk);
     baseColor[channel] = channel == 'k' ? 1 : 0;
-    let startColor = NgxColor.cmykToRgb(baseColor, 1);
+    let startColor = NgxColor.cmykToRgb(baseColor);
     let s = `rgb(${startColor.r}, ${startColor.g}, ${startColor.b})`;
     baseColor[channel] = 100;
-    let endColor = NgxColor.cmykToRgb(baseColor, 1);
+    let endColor = NgxColor.cmykToRgb(baseColor);
     let e = `rgb(${endColor.r}, ${endColor.g}, ${endColor.b})`;
 
     return `linear-gradient(to right,  ${s},${e})`;

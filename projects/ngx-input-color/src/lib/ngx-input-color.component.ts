@@ -53,10 +53,10 @@ export class NgxInputColorComponent implements OnInit {
   openEyeDrop() {
     if (this.isSupportedEyeDrop) {
       let t = new EyeDropper().open();
-      t.then((result: { sRGBHex: string }) => {
+      t.then(async (result: { sRGBHex: string }) => {
         this.hexColor = result.sRGBHex;
         this.color = new NgxColor(this.hexColor);
-        this.name = this.color.name;
+        this.name = await this.color.name();
         this.cd.detectChanges();
       });
     }
@@ -65,13 +65,13 @@ export class NgxInputColorComponent implements OnInit {
   /**
    *  call from directive
    */
-  initColor(c?: NgxColor) {
+  async initColor(c?: NgxColor) {
     if (!c) return;
     this.color = c;
     this.rgbaColor = this.color.toRgbString();
-    this.hexColor = this.color.toHex8String();
+    this.hexColor = this.color.toHexString();
     this.isDarkColor = this.color.isDark();
-    this.name = this.color.name;
+    this.name = await this.color.name();
     // console.log('emit color', this.hexColor);
     this.change.emit(this.hexColor);
   }

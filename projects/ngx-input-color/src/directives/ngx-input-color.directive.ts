@@ -87,7 +87,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
     if (value) {
       this.color = new NgxColor(value);
       if (this.setInputBackgroundColor) {
-        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toHex8String());
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toHexString());
       }
       this._onValidateChange();
     } else this.color = undefined;
