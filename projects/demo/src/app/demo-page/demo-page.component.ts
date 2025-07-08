@@ -12,6 +12,9 @@ import { NgxInputColorModule } from '@ngx-input-color/ngx-input-color.module';
 })
 export class DemoPageComponent implements OnInit {
   color = 'blueviolet';
+
+  inlineColor = '';
+
   constructor() {}
 
   ngOnInit() {}

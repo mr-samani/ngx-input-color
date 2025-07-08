@@ -5,7 +5,7 @@
     class="slider"
     (mousedown)="dragStart($event)"
     (touchstart)="dragStart($event)"
-    [style.background]="background"
+    [ngStyle]="{ '--ngx-slider-bg': background }"
     [class.bg-transparent]="isBgTransparent">
     <div class="thumb" #thumb [style.left.px]="x"></div>
   </div>

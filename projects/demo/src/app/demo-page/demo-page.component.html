@@ -6,6 +6,9 @@
 </div>
 <pre *ngIf="c.invalid">{{ c.errors | json }}</pre>
 
+Inline mode
+<ngx-input-color [(ngModel)]="inlineColor"></ngx-input-color>
+
 <section class="ngx-documents">
   <h2>Documents</h2>
   <div class="ngx-input-color-demo">
@@ -63,66 +66,69 @@ pnpm add ngx-input-color</code></pre>
     <pre><code>&lt;input ngxInputColor [(ngModel)]="color" [closeTitle]="'Cancel'" [confirmTitle]="'Select'" /&gt;
 &lt;span&gt;Selected: {{ color }}&lt;/span&gt;</code></pre>
     <h4>Inputs & Outputs</h4>
-    <table class="ngx-doc-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>closeTitle</td>
-          <td>string</td>
-          <td>'Close'</td>
-          <td>Text for the close button</td>
-        </tr>
-        <tr>
-          <td>confirmTitle</td>
-          <td>string</td>
-          <td>'Ok'</td>
-          <td>Text for the confirm button</td>
-        </tr>
-        <tr>
-          <td>showCloseButton</td>
-          <td>boolean</td>
-          <td>false</td>
-          <td>Show/hide the close button</td>
-        </tr>
-        <tr>
-          <td>setInputBackgroundColor</td>
-          <td>boolean</td>
-          <td>true</td>
-          <td>Set input background to selected color</td>
-        </tr>
-        <tr>
-          <td>[(ngModel)] / formControl</td>
-          <td>string</td>
-          <td></td>
-          <td>Two-way binding for the selected color</td>
-        </tr>
-        <tr>
-          <td>change (Output)</td>
-          <td>EventEmitter&lt;string&gt;</td>
-          <td></td>
-          <td>Emits the color value on change</td>
-        </tr>
-        <tr>
-          <td>confirm (Output)</td>
-          <td>EventEmitter&lt;string&gt;</td>
-          <td></td>
-          <td>Emits the color value when confirmed</td>
-        </tr>
-        <tr>
-          <td>cancel (Output)</td>
-          <td>EventEmitter&lt;void&gt;</td>
-          <td></td>
-          <td>Emits when the color picker is closed/canceled</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="ngx-doc-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>closeTitle</td>
+            <td>string</td>
+            <td>'Close'</td>
+            <td>Text for the close button</td>
+          </tr>
+          <tr>
+            <td>confirmTitle</td>
+            <td>string</td>
+            <td>'Ok'</td>
+            <td>Text for the confirm button</td>
+          </tr>
+          <tr>
+            <td>showCloseButton</td>
+            <td>boolean</td>
+            <td>false</td>
+            <td>Show/hide the close button</td>
+          </tr>
+          <tr>
+            <td>setInputBackgroundColor</td>
+            <td>boolean</td>
+            <td>true</td>
+            <td>Set input background to selected color</td>
+          </tr>
+          <tr>
+            <td>[(ngModel)] / formControl</td>
+            <td>string</td>
+            <td></td>
+            <td>Two-way binding for the selected color</td>
+          </tr>
+          <tr>
+            <td>change (Output)</td>
+            <td>EventEmitter&lt;string&gt;</td>
+            <td></td>
+            <td>Emits the color value on change</td>
+          </tr>
+          <tr>
+            <td>confirm (Output)</td>
+            <td>EventEmitter&lt;string&gt;</td>
+            <td></td>
+            <td>Emits the color value when confirmed</td>
+          </tr>
+          <tr>
+            <td>cancel (Output)</td>
+            <td>EventEmitter&lt;void&gt;</td>
+            <td></td>
+            <td>Emits when the color picker is closed/canceled</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <h4>Supported Color Formats</h4>
     <ul>
       <li>
