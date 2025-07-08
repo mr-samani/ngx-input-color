@@ -40,8 +40,9 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   color?: TinyColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
   private backdrop?: HTMLDivElement;
+  private colorPickerEl?: HTMLElement;
   isDisabled = false;
-  _onChange = (value: any) => {};
+  _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
   constructor(
@@ -93,51 +94,92 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   toggleColorPicker() {
     if (this.colorPickerComponentRef) {
       this.destroyColorPicker();
-    } else {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(NgxInputColorComponent);
-      this.colorPickerComponentRef = this.viewContainerRef.createComponent<NgxInputColorComponent>(componentFactory);
-      this.colorPickerComponentRef.instance.showCloseButton = true;
-      this.colorPickerComponentRef.instance.closeTitle = this.closeTitle;
-      this.colorPickerComponentRef.instance.confirmTitle = this.confirmTitle;
-      if (this.color && this.color.isValid) {
-        this.colorPickerComponentRef.instance.initalColor(this.color);
-      }
-      this.colorPickerComponentRef.instance.confirm.subscribe((c) => this.confirmColor(c));
-      this.colorPickerComponentRef.instance.cancel.subscribe(() => this.destroyColorPicker());
+      return;
+    }
 
-      this.backdrop = this.renderer.createElement('div') as HTMLDivElement;
+    // ایجاد کامپوننت
+    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
+
+    const instance = this.colorPickerComponentRef.instance;
+    instance.showCloseButton = true;
+    instance.closeTitle = this.closeTitle;
+    instance.confirmTitle = this.confirmTitle;
+
+    // مقدار اولیه رنگ
+    if (this.color && typeof this.color === 'object' && 'isValid' in this.color && this.color.isValid) {
+      instance.initalColor(this.color);
+    }
+
+    // رویدادها
+    const sub1 = instance.confirm.subscribe((c: any) => {
+      this.confirmColor(c);
+      this.destroyColorPicker(); // بستن بعد از تایید
+    });
+
+    const sub2 = instance.cancel.subscribe(() => {
+      this.destroyColorPicker();
+    });
+
+    // بک‌دراپ
+    this.backdrop = this.renderer.createElement('div');
+    if (this.backdrop) {
       this.backdrop.className = 'ngx-color-picker-backdrop';
       this.backdrop.onclick = () => this.destroyColorPicker();
-
-      const colorPicker = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
-      this.renderer.appendChild(this.backdrop, colorPicker);
-      this.renderer.appendChild(document.body, this.backdrop);
-
-      const rect = this.el.nativeElement.getBoundingClientRect();
-      const bodyRect = document.body.getBoundingClientRect();
-
-      let top = rect.bottom;
-      let left = rect.left;
-      this.renderer.setStyle(colorPicker, 'position', 'absolute');
-      if (top + colorPicker.offsetHeight > window.innerHeight) {
-        top = rect.top - colorPicker.offsetHeight;
-      }
-
-      if (left + colorPicker.offsetWidth > window.innerWidth) {
-        left = rect.right - colorPicker.offsetWidth;
-      }
-
-      if (top < bodyRect.top) {
-        top = rect.bottom;
-      }
-
-      if (left < bodyRect.left) {
-        left = rect.right;
-      }
-
-      this.renderer.setStyle(colorPicker, 'top', `${top}px`);
-      this.renderer.setStyle(colorPicker, 'left', `${left}px`);
     }
+    // گرفتن المنت کامپوننت واقعی
+    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
+    this.renderer.appendChild(this.backdrop, this.colorPickerEl);
+    this.renderer.appendChild(document.body, this.backdrop);
+    this.setPosition();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  setPosition() {
+    setTimeout(() => {
+      if (!this.colorPickerEl || !this.colorPickerComponentRef) return;
+      const hostRect = this.el.nativeElement.getBoundingClientRect();
+      const pickerEl = this.colorPickerEl;
+
+      // اعمال موقتی برای گرفتن سایز دقیق
+      this.renderer.setStyle(pickerEl, 'position', 'absolute');
+      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');
+      this.renderer.setStyle(pickerEl, 'top', '0px');
+      this.renderer.setStyle(pickerEl, 'left', '0px');
+      this.renderer.setStyle(pickerEl, 'z-index', '9999');
+
+      document.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
+
+      const pickerRect = pickerEl.getBoundingClientRect();
+
+      // وسط‌چین کردن افقی
+      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
+      let top = hostRect.bottom;
+
+      // جلوگیری از بیرون زدن از راست
+      if (left + pickerRect.width > window.innerWidth) {
+        left = window.innerWidth - pickerRect.width - 8;
+      }
+
+      // جلوگیری از بیرون زدن از چپ
+      if (left < 8) {
+        left = 8;
+      }
+
+      // اگر از پایین بیرون زد، ببر بالا
+      if (top + pickerRect.height > window.innerHeight) {
+        top = hostRect.top - pickerRect.height;
+      }
+
+      // جلوگیری از بیرون زدن از بالا
+      if (top < 8) {
+        top = 8;
+      }
+
+      // اعمال نهایی
+      this.renderer.setStyle(pickerEl, 'visibility', 'visible');
+      this.renderer.setStyle(pickerEl, 'top', `${top}px`);
+      this.renderer.setStyle(pickerEl, 'left', `${left}px`);
+    });
   }
 
   destroyColorPicker() {
@@ -145,9 +187,11 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
       this.colorPickerComponentRef.destroy();
       this.colorPickerComponentRef = undefined;
     }
-    if (this.backdrop) {
-      this.backdrop.remove();
+    if (this.backdrop && this.backdrop.parentNode) {
+      this.renderer.removeChild(document.body, this.backdrop);
+      this.backdrop = undefined;
     }
+    this.colorPickerEl = undefined;
   }
 
   confirmColor(c: string) {
