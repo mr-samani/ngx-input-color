@@ -1,31 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  forwardRef,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef } from '@angular/core';
 import { getOffsetPosition } from '../utils/get-offset-position';
 import {
   NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
   ControlValueAccessor,
-  Validator,
   FormControl,
-  Validators,
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-
-export interface Position {
-  x: number;
-  y: number;
-}
+import { IPosition } from '../models/IPosition';
 
 @Component({
   selector: 'saturation',
@@ -46,16 +29,16 @@ export class SaturationComponent implements ControlValueAccessor {
   @Input() height?: number;
   @Input() color = 'red';
   @Input() step = 1;
-  @Input() min: Position = { x: 0, y: 0 };
+  @Input() min: IPosition = { x: 0, y: 0 };
   @Input() max = { x: 100, y: 100 };
-  @Output() change = new EventEmitter<Position>();
+  @Output() change = new EventEmitter<IPosition>();
 
   isDragging = false;
   @ViewChild('saturation', { static: true }) saturation!: ElementRef<HTMLDivElement>;
   @ViewChild('thumb', { static: true }) thumb!: ElementRef<HTMLDivElement>;
   x = 0;
   y = 0;
-  myControl = new FormControl<Position | null>(null);
+  myControl = new FormControl<IPosition | null>(null);
   isDisabled = false;
   _onChange = (value: any) => {};
   _onTouched = () => {};
@@ -63,9 +46,9 @@ export class SaturationComponent implements ControlValueAccessor {
 
   constructor() {}
 
-  writeValue(val: Position): void {
-    if (!val) return;
-    let value: Position = val;
+  writeValue(val?: IPosition | null): void {
+    if (!val) val = { x: 0, y: 0 };
+    let value: IPosition = val;
     // TODO: validate val
     this.myControl.setValue(value);
     let saturationRec = this.saturation.nativeElement.getBoundingClientRect();
@@ -101,6 +84,11 @@ export class SaturationComponent implements ControlValueAccessor {
     ev.preventDefault();
     this.isDragging = true;
     this.updatePosition(ev);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.writeValue(this.myControl.value);
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -157,7 +145,7 @@ export class SaturationComponent implements ControlValueAccessor {
     });
   }
 
-  valueChanged(value: Position) {
+  valueChanged(value: IPosition) {
     this.myControl.setValue(value);
     this._onChange(value);
     this.change.emit(value);

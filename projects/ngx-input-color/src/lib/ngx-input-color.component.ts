@@ -9,10 +9,10 @@ import {
   ViewEncapsulation,
   input,
 } from '@angular/core';
-import { Position } from '../saturation/saturation.component';
 import { ColorFormats } from '../models/color-formats';
 import { CMYK, HSLA, RGBA } from '../utils/interfaces';
 import { TinyColor } from '../utils/color-converter';
+import { IPosition } from '@ngx-input-color/models/IPosition';
 declare const EyeDropper: any;
 @Component({
   selector: 'ngx-input-color',
@@ -36,7 +36,7 @@ export class NgxInputColorComponent implements OnInit {
   //--HSVA
   hue = 300;
   baseColor = 'rgb(0,0,0)';
-  board: Position = { x: 1, y: 0 };
+  board: IPosition = { x: 1, y: 0 };
   alpha = 1;
   ///--- RGBA
   rgba: RGBA;

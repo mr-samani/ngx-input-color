@@ -8,4 +8,5 @@ export * from './ngx-input-color.module';
 
 export * from './directives/ngx-input-color.directive';
 
+export * from './models/IPosition';
 

@@ -1,3 +1,15 @@
-<p>
-  components works!
-</p>
+<saturation [(ngModel)]="s" [height]="200" [color]="'blue'"></saturation>
+<pre>{{ s | json }}</pre>
+
+<slider [(ngModel)]="slider" [min]="20" [max]="80" [isBgTransparent]="true"></slider>
+<pre>
+  min=20
+  max=80
+  slider={{ slider }}
+</pre>
+<slider [(ngModel)]="slider" [min]="0" [max]="100"></slider>
+<pre>
+  min=0
+  max=100
+  slider={{ slider }}
+</pre>

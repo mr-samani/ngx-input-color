@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgxInputColorModule } from 'ngx-input-color';
+import { NgxInputColorModule } from '@ngx-input-color/ngx-input-color.module';
 
 @Component({
   selector: 'app-demo-page',

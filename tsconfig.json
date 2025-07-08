@@ -10,9 +10,7 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "paths": {
-      "ngx-input-color": [
-        "./dist/ngx-input-color"
-      ]
+       "@ngx-input-color/*": ["./projects/ngx-input-color/src/*"],
     },
     "esModuleInterop": true,
     "sourceMap": true,
