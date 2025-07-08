@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPosition } from '@ngx-input-color/models/IPosition';
-import { TinyColor } from '@ngx-input-color/utils/color-converter';
+import { NgxColor } from '@ngx-input-color/utils/color-helper';
 import { HSVA } from '@ngx-input-color/utils/interfaces';
 
 @Component({
@@ -13,9 +13,9 @@ export class PickerComponent implements OnInit {
   baseColor = 'rgb(0,0,0)';
   board: IPosition = { x: 1, y: 0 };
   alpha = 1;
-  private inputColor?: TinyColor;
+  private inputColor?: NgxColor;
 
-  @Input() set color(c: TinyColor) {
+  @Input() set color(c: NgxColor) {
     this.inputColor = c;
     if (!c) return;
     const shva = c.toHsv();
@@ -24,7 +24,7 @@ export class PickerComponent implements OnInit {
     this.alpha = shva.a;
     this.baseColor = c.toHex8String();
   }
-  @Output() colorChange = new EventEmitter<TinyColor | undefined>();
+  @Output() colorChange = new EventEmitter<NgxColor | undefined>();
 
   constructor() {}
 
@@ -33,7 +33,7 @@ export class PickerComponent implements OnInit {
   generateColor() {
     try {
       const hsva: HSVA = { h: this.hue, s: this.board.x, v: 1 - this.board.y, a: this.alpha };
-      const color = new TinyColor(hsva);
+      const color = new NgxColor(hsva);
       this.baseColor = color.toHex8String();
       if (color.equals(this.inputColor) == false) {
         this.colorChange.emit(color);

@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorFormats } from '../models/ColorFormats.enum';
-import { TinyColor } from '../utils/color-converter';
+import { NgxColor } from '../utils/color-helper';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 declare const EyeDropper: any;
 @Component({
@@ -34,10 +34,11 @@ export class NgxInputColorComponent implements OnInit {
 
   rgbaColor = '';
   hexColor = '';
+  name = '';
 
   isSupportedEyeDrop: boolean;
 
-  color = new TinyColor();
+  color = new NgxColor();
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
   }
@@ -54,7 +55,8 @@ export class NgxInputColorComponent implements OnInit {
       let t = new EyeDropper().open();
       t.then((result: { sRGBHex: string }) => {
         this.hexColor = result.sRGBHex;
-        this.color = new TinyColor(this.hexColor);
+        this.color = new NgxColor(this.hexColor);
+        this.name = this.color.name;
         this.cd.detectChanges();
       });
     }
@@ -63,13 +65,13 @@ export class NgxInputColorComponent implements OnInit {
   /**
    *  call from directive
    */
-  initColor(c?: TinyColor) {
+  initColor(c?: NgxColor) {
     if (!c) return;
-
     this.color = c;
     this.rgbaColor = this.color.toRgbString();
-    this.hexColor = '#' + this.color.toHex8();
+    this.hexColor = this.color.toHex8String();
     this.isDarkColor = this.color.isDark();
+    this.name = this.color.name;
     // console.log('emit color', this.hexColor);
     this.change.emit(this.hexColor);
   }

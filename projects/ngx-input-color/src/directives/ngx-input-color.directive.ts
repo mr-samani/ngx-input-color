@@ -19,7 +19,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { TinyColor } from '../utils/color-converter';
+import { NgxColor } from '../utils/color-helper';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 
 @Directive({
@@ -39,7 +39,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   @Input() setInputBackgroundColor = true;
   @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
-  color?: TinyColor;
+  color?: NgxColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
   private backdrop?: HTMLDivElement;
   private colorPickerEl?: HTMLElement;
@@ -85,9 +85,9 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
 
   writeValue(value: any): void {
     if (value) {
-      this.color = new TinyColor(value);
+      this.color = new NgxColor(value);
       if (this.setInputBackgroundColor) {
-        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toString());
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toHex8String());
       }
       this._onValidateChange();
     } else this.color = undefined;
@@ -198,7 +198,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   }
 
   confirmColor(c: string) {
-    this.color = new TinyColor(c);
+    this.color = new NgxColor(c);
     if (this.setInputBackgroundColor) {
       this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);
     }

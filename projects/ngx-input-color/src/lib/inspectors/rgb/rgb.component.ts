@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TinyColor } from '@ngx-input-color/utils/color-converter';
+import { NgxColor } from '@ngx-input-color/utils/color-helper';
 import { RGBA } from '@ngx-input-color/utils/interfaces';
 
 @Component({
@@ -18,8 +18,8 @@ export class RgbComponent implements OnInit {
   blue: number = 0;
   alpha: number = 1;
 
-  private inputColor?: TinyColor;
-  @Input() set color(c: TinyColor) {
+  private inputColor?: NgxColor;
+  @Input() set color(c: NgxColor) {
     this.inputColor = c;
     if (!c) return;
     const rgba = c.toRgb();
@@ -29,7 +29,7 @@ export class RgbComponent implements OnInit {
     this.alpha = rgba.a;
     this.updateRgbSliderColor(rgba);
   }
-  @Output() colorChange = new EventEmitter<TinyColor | undefined>();
+  @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}
 
   ngOnInit() {}
@@ -37,7 +37,7 @@ export class RgbComponent implements OnInit {
   generateColor() {
     try {
       const rgba: RGBA = { r: this.red, g: this.green, b: this.blue, a: this.alpha };
-      const color = new TinyColor(rgba);
+      const color = new NgxColor(rgba);
       this.updateRgbSliderColor(rgba);
       if (color.equals(this.inputColor) == false) {
         this.colorChange.emit(color);

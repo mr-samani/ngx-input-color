@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TinyColor } from '@ngx-input-color/utils/color-converter';
+import { NgxColor } from '@ngx-input-color/utils/color-helper';
 import { CMYK } from '@ngx-input-color/utils/interfaces';
 
 @Component({
@@ -17,28 +17,28 @@ export class CmykComponent implements OnInit {
   magenta: number = 0;
   yellow: number = 0;
   key: number = 0;
-  private inputColor?: TinyColor;
+  private inputColorCmyk?: CMYK;
 
-  @Input() set color(c: TinyColor) {
-    this.inputColor = c;
+  @Input() set color(c: NgxColor) {
     if (!c) return;
     const cmyk = c.toCmyk();
+    this.inputColorCmyk = cmyk;
     this.cyan = cmyk.c;
     this.magenta = cmyk.m;
     this.yellow = cmyk.y;
     this.key = cmyk.k;
     this.updateSliderBackgrounds(cmyk);
   }
-  @Output() colorChange = new EventEmitter<TinyColor | undefined>();
+  @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}
 
   ngOnInit() {}
   generateColor() {
     try {
       const cmyk: CMYK = { c: this.cyan, m: this.magenta, y: this.yellow, k: this.key };
-      const color = new TinyColor(cmyk);
+      const color = new NgxColor(cmyk);
       this.updateSliderBackgrounds(cmyk);
-      if (color.equals(this.inputColor) == false) {
+      if (this.isCmykEqual(this.inputColorCmyk, cmyk) == false) {
         this.colorChange.emit(color);
       }
     } catch (error) {
@@ -47,34 +47,30 @@ export class CmykComponent implements OnInit {
   }
 
   private updateSliderBackgrounds(cmyk: CMYK) {
-    let baseColor = JSON.parse(JSON.stringify(cmyk));
-    this.cyanSliderBackground = this.getChannelGradient('c', baseColor);
-    this.magentaSliderBackground = this.getChannelGradient('m', baseColor);
-    this.yellowSliderBackground = this.getChannelGradient('y', baseColor);
-    this.keySliderBackground = this.getChannelGradient('k', baseColor);
+    this.cyanSliderBackground = this.getChannelGradient('c', cmyk);
+    this.magentaSliderBackground = this.getChannelGradient('m', cmyk);
+    this.yellowSliderBackground = this.getChannelGradient('y', cmyk);
+    this.keySliderBackground = this.getChannelGradient('k', cmyk);
   }
 
   private getChannelGradient(channel: keyof CMYK, cmyk: CMYK): string {
-    const steps = 5;
-    const colors: string[] = [];
+    let baseColor = this.cloneColor(cmyk);
+    baseColor[channel] = channel == 'k' ? 1 : 0;
+    let startColor = NgxColor.cmykToRgb(baseColor, 1);
+    let s = `rgb(${startColor.r}, ${startColor.g}, ${startColor.b})`;
+    baseColor[channel] = 100;
+    let endColor = NgxColor.cmykToRgb(baseColor, 1);
+    let e = `rgb(${endColor.r}, ${endColor.g}, ${endColor.b})`;
 
-    // رنگ سفید دقیق
-    const white = { r: 255, g: 255, b: 255 };
-    // رنگ انتهایی کانال
-    const cmykEnd = { c: 0, m: 0, y: 0, k: 0, [channel]: 1 } as CMYK;
-    const rgbEnd = TinyColor.cmykToRgb(cmykEnd, 1);
+    return `linear-gradient(to right,  ${s},${e})`;
+  }
+  private isCmykEqual(a?: CMYK, b?: CMYK): boolean {
+    if (!a || !b) return false;
+    return a.c === b.c && a.m === b.m && a.y === b.y && a.k === b.k;
+  }
 
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-
-      // اینجا میان رنگ رو خطی بین سفید و rgbEnd بدست میاریم
-      const r = Math.round(white.r + t * (+rgbEnd.r - white.r));
-      const g = Math.round(white.g + t * (+rgbEnd.g - white.g));
-      const b = Math.round(white.b + t * (+rgbEnd.b - white.b));
-
-      colors.push(`rgb(${r},${g},${b})`);
-    }
-
-    return `linear-gradient(to right, ${colors.join(', ')})`;
+  private cloneColor(cmyk: CMYK): CMYK {
+    return JSON.parse(JSON.stringify(cmyk));
+    // return Object.assign({}, cmyk);
   }
 }
