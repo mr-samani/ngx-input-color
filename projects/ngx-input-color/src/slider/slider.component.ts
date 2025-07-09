@@ -59,9 +59,16 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
   _onChange = (value: any) => {};
   _onTouched = () => {};
   _validatorOnChange = () => {};
+  private sliderRect?: DOMRect;
+  private thumbRect?: DOMRect;
   constructor() {}
   ngOnInit(): void {
     this.myControl.setValidators([Validators.min(this.min), Validators.max(this.max)]);
+  }
+
+  private updateRects() {
+    this.sliderRect = this.slider.nativeElement.getBoundingClientRect();
+    this.thumbRect = this.thumb.nativeElement.getBoundingClientRect();
   }
 
   writeValue(val?: number | string | null): void {
@@ -70,10 +77,10 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     else if (+val < +this.min) value = +this.min;
     else if (+val > +this.max) value = +this.max;
     else value = +val;
-    this.myControl.setValue(value);
-    let sliderRec = this.slider.nativeElement.getBoundingClientRect();
-    let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
-
+    this.myControl.setValue(value, { emitEvent: false });
+    this.updateRects();
+    const sliderRec = this.sliderRect!;
+    const thumbRec = this.thumbRect!;
     this.x = ((value - this.min) * (sliderRec.width - thumbRec.width)) / (this.max - this.min);
     if (val !== value) {
       this.valueChanged(value);
@@ -102,6 +109,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     ev.stopPropagation();
     ev.preventDefault();
     this.isDragging = true;
+    this.updateRects();
     this.updatePosition(ev);
   }
 
@@ -119,10 +127,11 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
 
   private updatePosition(ev: MouseEvent | TouchEvent) {
     if (!this.isDragging) return;
+    if (!this.sliderRect || !this.thumbRect) this.updateRects();
     let position = getOffsetPosition(ev, this.slider.nativeElement);
-    let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
+    let thumbRec = this.thumbRect!;
     position.x -= thumbRec.width / 2;
-    let sliderRec = this.slider.nativeElement.getBoundingClientRect();
+    let sliderRec = this.sliderRect!;
     if (position.x < 0) {
       this.x = 0;
     } else if (position.x > sliderRec.width - thumbRec.width) {
@@ -130,19 +139,18 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     } else {
       this.x = position.x;
     }
-
     this.setValueByPosition(thumbRec, sliderRec);
   }
 
   setValueByPosition(thumbRec: DOMRect, sliderRec: DOMRect) {
     const percentage = this.x / (sliderRec.width - thumbRec.width);
     let newValue = this.min + percentage * (this.max - this.min);
-
     const stepDecimalPlaces = (this.step.toString().split('.')[1] || '').length;
     newValue = parseFloat((Math.round(newValue / this.step) * this.step).toFixed(stepDecimalPlaces));
-
     let value = Math.min(Math.max(newValue, this.min), this.max);
-    this.valueChanged(value);
+    if (this.myControl.value !== value) {
+      this.valueChanged(value);
+    }
   }
 
   @HostListener('document:mouseup', ['$event'])
@@ -152,7 +160,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
   }
 
   valueChanged(value: number) {
-    this.myControl.setValue(value);
+    this.myControl.setValue(value, { emitEvent: false });
     this._onChange(value);
     this.change.emit(value);
   }
