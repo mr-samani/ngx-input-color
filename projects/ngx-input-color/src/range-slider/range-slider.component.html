@@ -1,0 +1,22 @@
+<div class="slider-container">
+  <ng-content></ng-content>
+  <div
+    #slider
+    class="slider"
+    [class.add-range-cursor]="addNewRangeOnClick"
+    [ngStyle]="{ '--ngx-slider-bg': background }"
+    [class.bg-transparent]="isBgTransparent"
+    (mousedown)="addnewRangeOnSliderClick($event)"
+    (touchstart)="addnewRangeOnSliderClick($event)">
+    <div
+      class="thumb"
+      #thumb
+      *ngFor="let item of values; let i = index"
+      [style.left.px]="item.x"
+      [title]="item.value"
+      (mousedown)="dragStart($event, i)"
+      (touchstart)="dragStart($event, i)"></div>
+  </div>
+</div>
+
+{{ activeThumbIndex }}

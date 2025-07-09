@@ -1,7 +1,7 @@
-<saturation [(ngModel)]="s" [height]="200" [color]="'blue'"></saturation>
-<pre>{{ s | json }}</pre>
+<!-- <saturation [(ngModel)]="s" [height]="200" [color]="'blue'"></saturation>
+<pre>{{ s | json }}</pre> -->
 
-<slider [(ngModel)]="slider" [min]="20" [max]="80"></slider>
+<!-- <slider [(ngModel)]="slider" [min]="20" [max]="80"></slider> -->
 <!-- <pre>
   min=20
   max=80
@@ -18,3 +18,13 @@
   max=100
   slider={{ slider }}
 </pre> -->
+
+<range-slider
+  [(ngModel)]="rangeValues"
+  [min]="0"
+  [max]="100"
+  [step]="1"
+  [addNewRangeOnClick]="true"
+  background="linear-gradient(to right, transparent, rgb(255, 0, 98))"></range-slider>
+
+<pre>{{ rangeValues | json }}</pre>

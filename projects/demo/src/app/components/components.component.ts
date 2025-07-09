@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IPosition } from '@ngx-input-color/public-api';
 import { SaturationComponent } from '@ngx-input-color/saturation/saturation.component';
 import { SliderComponent } from '@ngx-input-color/slider/slider.component';
+import { RangeSliderComponent } from '@ngx-input-color/range-slider/range-slider.component';
 
 @Component({
   selector: 'app-components',
   templateUrl: './components.component.html',
   styleUrls: ['./components.component.scss'],
   standalone: true,
-  imports: [CommonModule, SaturationComponent, SliderComponent, FormsModule],
+  imports: [CommonModule, SaturationComponent, SliderComponent, FormsModule, RangeSliderComponent],
 })
 export class ComponentsComponent implements OnInit {
   s: IPosition = {
@@ -19,7 +20,7 @@ export class ComponentsComponent implements OnInit {
   };
 
   slider = 50;
-
+  rangeValues = [];
   constructor() {}
 
   ngOnInit() {}
