@@ -5,10 +5,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SaturationComponent } from './saturation/saturation.component';
 import { SliderComponent } from './slider/slider.component';
+import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
+import { PickerComponent } from './lib/inspectors/picker/picker.component';
+import { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';
+import { HslComponent } from './lib/inspectors/hsl/hsl.component';
+import { RgbComponent } from './lib/inspectors/rgb/rgb.component';
 
 @NgModule({
-  declarations: [NgxInputColorComponent, NgxInputColorDirective],
-  imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent],
+  declarations: [
+    NgxInputColorComponent,
+    NgxInputColorDirective,
+
+    PickerComponent,
+    CmykComponent,
+    HslComponent,
+    RgbComponent,
+  ],
+  imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent, EnumToArrayPipe],
   exports: [NgxInputColorComponent, NgxInputColorDirective],
   providers: [],
 })

@@ -1,0 +1,49 @@
+<slider
+  [(ngModel)]="red"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="redSliderBackground">
+  <div class="slider-title">
+    <span>Red</span>
+    <input type="number" [(ngModel)]="red" min="0" max="255" step="1" />
+  </div>
+</slider>
+<slider
+  [(ngModel)]="green"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="greenSliderBackground">
+  <div class="slider-title">
+    <span>Green</span>
+    <input type="number" [(ngModel)]="green" min="0" max="255" step="1" />
+  </div>
+</slider>
+<slider
+  [(ngModel)]="blue"
+  [min]="0"
+  [max]="255"
+  [step]="1"
+  (change)="generateColor()"
+  [background]="blueSliderBackground">
+  <div class="slider-title">
+    <span>Blue</span>
+    <input type="number" [(ngModel)]="blue" min="0" max="255" step="1" />
+  </div>
+</slider>
+<slider
+  [(ngModel)]="alpha"
+  [min]="0"
+  [max]="1"
+  [step]="0.1"
+  (change)="generateColor()"
+  [isBgTransparent]="true"
+  [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+  <div class="slider-title">
+    <span>Alpha</span>
+    <input type="number" [(ngModel)]="alpha" min="0" max="1" step="0.1" />
+  </div>
+</slider>

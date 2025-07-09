@@ -64,7 +64,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     this.myControl.setValidators([Validators.min(this.min), Validators.max(this.max)]);
   }
 
-  writeValue(val: any): void {
+  writeValue(val?: number | string | null): void {
     let value = 0;
     if (!val) value = 0;
     else if (+val < +this.min) value = +this.min;
@@ -112,7 +112,13 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     this.updatePosition(ev);
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.writeValue(this.myControl.value);
+  }
+
   private updatePosition(ev: MouseEvent | TouchEvent) {
+    if (!this.isDragging) return;
     let position = getOffsetPosition(ev, this.slider.nativeElement);
     let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
     position.x -= thumbRec.width / 2;
@@ -134,7 +140,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
 
     const stepDecimalPlaces = (this.step.toString().split('.')[1] || '').length;
     newValue = parseFloat((Math.round(newValue / this.step) * this.step).toFixed(stepDecimalPlaces));
- 
+
     let value = Math.min(Math.max(newValue, this.min), this.max);
     this.valueChanged(value);
   }

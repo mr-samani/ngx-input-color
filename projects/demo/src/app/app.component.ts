@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgxInputColorModule } from '../../../ngx-input-color/src/ngx-input-color.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxInputColorModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  color = 'blueviolet';
-}
+export class AppComponent {}
