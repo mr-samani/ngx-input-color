@@ -1,13 +1,14 @@
 <h1>NGX-Input-Color</h1>
 
 <div class="input-group">
-  <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" [defaultInspector]="1" />
+  <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" />
   <span class="input-group-text">{{ color }}</span>
 </div>
 <pre *ngIf="c.invalid">{{ c.errors | json }}</pre>
 
-Inline mode
-<!-- <ngx-input-color [(ngModel)]="inlineColor"></ngx-input-color> -->
+<!-- Inline mode (commin soon)
+ 
+<ngx-input-color [(ngModel)]="inlineColor"></ngx-input-color> -->
 
 <section class="ngx-documents">
   <h2>Documents</h2>
