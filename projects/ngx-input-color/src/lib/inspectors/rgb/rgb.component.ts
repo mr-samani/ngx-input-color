@@ -20,8 +20,8 @@ export class RgbComponent implements OnInit {
 
   private inputColor?: NgxColor;
   @Input() set color(c: NgxColor) {
+    if (c.equals(this.inputColor)) return;
     this.inputColor = c;
-    if (!c) return;
     const rgba = c.toRgb();
     this.red = rgba.r;
     this.green = rgba.g;
@@ -35,11 +35,13 @@ export class RgbComponent implements OnInit {
   ngOnInit() {}
 
   generateColor() {
+    console.log('Generating color...');
     try {
       const rgba: RGBA = { r: this.red, g: this.green, b: this.blue, a: this.alpha };
       const color = new NgxColor(rgba);
       this.updateRgbSliderColor(rgba);
       if (color.equals(this.inputColor) == false) {
+        this.inputColor = color;
         this.colorChange.emit(color);
       }
     } catch (error) {

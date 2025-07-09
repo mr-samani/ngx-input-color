@@ -16,8 +16,8 @@ export class PickerComponent implements OnInit {
   private inputColor?: NgxColor;
 
   @Input() set color(c: NgxColor) {
+    if (c.equals(this.inputColor)) return;
     this.inputColor = c;
-    if (!c) return;
     const shva = c.toHsv();
     this.hue = shva.h;
     this.board = { x: shva.s, y: 100 - shva.v };
@@ -36,6 +36,7 @@ export class PickerComponent implements OnInit {
       const color = new NgxColor(hsva);
       this.baseColor = color.toHexString();
       if (color.equals(this.inputColor) == false) {
+        this.inputColor = color;
         this.colorChange.emit(color);
       }
     } catch (error) {

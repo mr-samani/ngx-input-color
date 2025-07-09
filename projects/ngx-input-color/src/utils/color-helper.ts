@@ -18,36 +18,30 @@ export type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;
 
 export class NgxColor {
   private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };
-  private _format: 'rgb' | 'hsl' | 'hsv' | 'cmyk' | 'name' = 'rgb';
   private _name: string = '';
 
   constructor(input?: ColorInput) {
     if (!input) return;
     if (input instanceof NgxColor) {
       this._rgb = { ...input._rgb };
-      this._format = input._format;
       this._name = input._name;
       return;
     }
     if (typeof input === 'object') {
       if ('r' in input && 'g' in input && 'b' in input) {
         this._rgb = { r: +input.r, g: +input.g, b: +input.b, a: (input as any).a !== undefined ? +input.a : 1 };
-        this._format = 'rgb';
         return;
       }
       if ('h' in input && 's' in input && 'l' in input) {
         this._rgb = NgxColor.hslaToRgba(input as HSLA);
-        this._format = 'hsl';
         return;
       }
       if ('h' in input && 's' in input && 'v' in input) {
         this._rgb = NgxColor.hsvaToRgba(input as HSVA);
-        this._format = 'hsv';
         return;
       }
       if ('c' in input && 'm' in input && 'y' in input && 'k' in input) {
         this._rgb = NgxColor.cmykToRgba(input as CMYK);
-        this._format = 'cmyk';
         return;
       }
     }
@@ -55,32 +49,26 @@ export class NgxColor {
       const name = input.trim().toLowerCase();
       if (colorNames[name]) {
         this._rgb = hexToRgb(colorNames[name]);
-        this._format = 'name';
         this._name = name;
         return;
       } else if (/^#?[0-9a-f]{3,8}$/i.test(name)) {
         this._rgb = hexToRgb(name);
-        this._format = 'rgb';
         return;
       }
       if (name.includes('rgb')) {
         this._rgb = parseRgbString(name);
-        this._format = 'rgb';
         return;
       }
       if (name.includes('hsl')) {
         this._rgb = NgxColor.hslaToRgba(parseHslString(name));
-        this._format = 'hsl';
         return;
       }
       if (name.includes('hsv')) {
         this._rgb = NgxColor.hsvaToRgba(parseHsvString(name));
-        this._format = 'hsv';
         return;
       }
       if (name.includes('cmyk')) {
         this._rgb = NgxColor.cmykToRgba(parseCmykString(name));
-        this._format = 'cmyk';
         return;
       }
       throw new Error('Unknown color string: ' + input);
@@ -137,11 +125,11 @@ export class NgxColor {
 
   static cmykToRgba(cmyk: CMYK): RGBA {
     const { c, m, y, k } = cmyk;
-    return { ...cmykToRgb(c, m, y, k), a: 1 };
+    return { ...cmykToRgb(c, m, y, k), a: (cmyk as any).a !== undefined ? +(cmyk as any).a : 1 };
   }
- 
+
   static rgbToCmyk(rgba: RGBA): CMYK {
-    const { r, g, b, a } = rgba;
+    const { r, g, b } = rgba;
     return rgbToCmyk(r, g, b);
   }
 
@@ -157,13 +145,12 @@ export class NgxColor {
 
   static hsvaToRgba(hsva: HSVA): RGBA {
     const { h, s, v, a } = hsva;
-    return { ...hsvToRgb(h, s, v), a };
+    return { ...hsvToRgb(h, s, v), a: a !== undefined ? a : 1 };
   }
 
-  // Convert HSLA to RGBA
   static hslaToRgba(hsla: HSLA): RGBA {
     const { h, s, l, a } = hsla;
-    return { ...hslToRgb(h, s, l), a };
+    return { ...hslToRgb(h, s, l), a: a !== undefined ? a : 1 };
   }
 
   equals(other?: NgxColor): boolean {

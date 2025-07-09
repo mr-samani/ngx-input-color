@@ -5,7 +5,10 @@
   [step]="1"
   (change)="generateColor()"
   [background]="cyanSliderBackground">
-  Cyan = {{ cyan }}
+  <div class="slider-title">
+    <span>Cyan</span>
+    <input type="number" [(ngModel)]="cyan" min="0" max="100" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="magenta"
@@ -14,7 +17,10 @@
   [step]="1"
   (change)="generateColor()"
   [background]="magentaSliderBackground">
-  Magenta = {{ magenta }}
+  <div class="slider-title">
+    <span>Magenta</span>
+    <input type="number" [(ngModel)]="magenta" min="0" max="100" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="yellow"
@@ -23,7 +29,10 @@
   [step]="1"
   (change)="generateColor()"
   [background]="yellowSliderBackground">
-  Yellow = {{ yellow }}
+  <div class="slider-title">
+    <span>Yellow</span>
+    <input type="number" [(ngModel)]="yellow" min="0" max="100" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="key"
@@ -32,5 +41,8 @@
   [step]="1"
   (change)="generateColor()"
   [background]="keySliderBackground">
-  Key = {{ key }}
+  <div class="slider-title">
+    <span>Key</span>
+    <input type="number" [(ngModel)]="key" min="0" max="100" step="1" />
+  </div>
 </slider>

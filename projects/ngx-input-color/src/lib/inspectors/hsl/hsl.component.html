@@ -5,7 +5,10 @@
   [step]="1"
   (change)="generateColor()"
   background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-  Hue{{hue}}
+  <div class="slider-title">
+    <span>Hue</span>
+    <input type="number" [(ngModel)]="hue" min="0" max="360" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="saturation"
@@ -14,7 +17,10 @@
   [step]="1"
   (change)="generateColor()"
   [background]="'linear-gradient(to right,#808080,' + baseColor + ')'">
-  Saturation{{saturation}}
+  <div class="slider-title">
+    <span>Saturation</span>
+    <input type="number" [(ngModel)]="saturation" min="0" max="100" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="luminance"
@@ -23,7 +29,10 @@
   [step]="1"
   (change)="generateColor()"
   [background]="'linear-gradient(to right,black,' + baseColor + ',white)'">
-  Luminance{{luminance}}
+  <div class="slider-title">
+    <span>Luminance</span>
+    <input type="number" [(ngModel)]="luminance" min="0" max="100" step="1" />
+  </div>
 </slider>
 <slider
   [(ngModel)]="alpha"
@@ -33,5 +42,8 @@
   (change)="generateColor()"
   [isBgTransparent]="true"
   [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-  Alpha{{alpha}}
+  <div class="slider-title">
+    <span>Alpha</span>
+    <input type="number" [(ngModel)]="alpha" min="0" max="1" step="0.1" />
+  </div>
 </slider>

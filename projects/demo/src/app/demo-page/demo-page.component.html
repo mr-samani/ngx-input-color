@@ -1,7 +1,7 @@
 <h1>NGX-Input-Color</h1>
 
 <div class="input-group">
-  <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" />
+  <input ngxInputColor [(ngModel)]="color" name="myColor" #c="ngModel" [defaultInspector]="1" />
   <span class="input-group-text">{{ color }}</span>
 </div>
 <pre *ngIf="c.invalid">{{ c.errors | json }}</pre>

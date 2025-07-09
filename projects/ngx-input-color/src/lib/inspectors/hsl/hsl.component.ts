@@ -16,8 +16,8 @@ export class HslComponent implements OnInit {
   private inputColor?: NgxColor;
 
   @Input() set color(c: NgxColor) {
+    if (c.equals(this.inputColor)) return;
     this.inputColor = c;
-    if (!c) return;
     const hsla = c.toHsl();
     this.hue = hsla.h;
     this.saturation = hsla.s;
@@ -36,6 +36,7 @@ export class HslComponent implements OnInit {
       const color = new NgxColor(hsla);
       this.baseColor = color.toHexString();
       if (color.equals(this.inputColor) == false) {
+        this.inputColor = color;
         this.colorChange.emit(color);
       }
     } catch (error) {

@@ -17,18 +17,18 @@ export class CmykComponent implements OnInit {
   magenta: number = 0;
   yellow: number = 0;
   key: number = 0;
-  private inputColorCmyk?: CMYK;
+  private inputColor?: NgxColor;
 
   @Input() set color(c: NgxColor) {
-    if (!c) return;
+    if (c.equals(this.inputColor)) return;
+    this.inputColor = c;
     const cmyk = c.toCmyk();
     console.log('inputedColor', cmyk);
-    this.inputColorCmyk = cmyk;
     this.cyan = cmyk.c;
     this.magenta = cmyk.m;
     this.yellow = cmyk.y;
     this.key = cmyk.k;
-    // this.updateSliderBackgrounds(cmyk);
+    this.updateSliderBackgrounds(cmyk);
   }
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}
@@ -38,9 +38,10 @@ export class CmykComponent implements OnInit {
     try {
       const cmyk: CMYK = { c: this.cyan, m: this.magenta, y: this.yellow, k: this.key };
       const color = new NgxColor(cmyk);
-      // this.updateSliderBackgrounds(cmyk);
-      if (this.isCmykEqual(this.inputColorCmyk, cmyk) == false) {
+      this.updateSliderBackgrounds(cmyk);
+      if (color.equals(this.inputColor) == false) {
         console.log('outputedColor', cmyk);
+        this.inputColor = color;
         this.colorChange.emit(color);
       }
     } catch (error) {
