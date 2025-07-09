@@ -32,6 +32,7 @@ export class ValueModel {
   value!: number;
   x?: number;
   thumb?: HTMLElement;
+  color?: string;
 }
 
 @Component({
@@ -240,10 +241,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   valueChanged() {
-    let v = this.values.map((item) => ({
-      id: item.id,
-      value: item.value,
-    }));
+    const v = this.values; // this.values.map(({ x, thumb, ...rest }) => ({ ...rest }));
     this._onChange(v);
     this.change.emit(v);
   }

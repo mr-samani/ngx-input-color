@@ -13,6 +13,7 @@
       #thumb
       *ngFor="let item of values; let i = index"
       [style.left.px]="item.x"
+      [style.background]="item.color"
       [title]="item.value"
       (mousedown)="dragStart($event, i)"
       (touchstart)="dragStart($event, i)"></div>

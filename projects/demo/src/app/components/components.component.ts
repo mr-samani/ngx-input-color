@@ -5,6 +5,8 @@ import { IPosition } from '@ngx-input-color/public-api';
 import { SaturationComponent } from '@ngx-input-color/saturation/saturation.component';
 import { SliderComponent } from '@ngx-input-color/slider/slider.component';
 import { RangeSliderComponent } from '@ngx-input-color/range-slider/range-slider.component';
+import { buildGradientFromStops, generateRandomColor } from '@ngx-input-color/utils/build-gradient';
+import { GradientStop } from '@ngx-input-color/models/GradientStop';
 
 @Component({
   selector: 'app-components',
@@ -20,8 +22,21 @@ export class ComponentsComponent implements OnInit {
   };
 
   slider = 50;
-  rangeValues = [];
+  rangeValues: GradientStop[] = [];
+
+  baseBg = '';
+  resultGradient = '';
+
   constructor() {}
 
   ngOnInit() {}
+
+  generateGradient() {
+    for (let item of this.rangeValues) {
+      item.color ??= generateRandomColor();
+      item.rotation ??= 0;
+    }
+    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear');
+    this.resultGradient = buildGradientFromStops(this.rangeValues, 'radial');
+  }
 }

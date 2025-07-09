@@ -25,6 +25,9 @@
   [max]="100"
   [step]="1"
   [addNewRangeOnClick]="true"
-  background="linear-gradient(to right, transparent, rgb(255, 0, 98))"></range-slider>
+  [background]="baseBg"
+  (change)="generateGradient()"></range-slider>
+
+<div class="result-gradient" [style.background]="resultGradient"></div>
 
 <pre>{{ rangeValues | json }}</pre>
