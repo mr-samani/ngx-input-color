@@ -23,7 +23,6 @@ export class CmykComponent implements OnInit {
     if (c.equals(this.inputColor)) return;
     this.inputColor = c;
     const cmyk = c.toCmyk();
-    console.log('inputedColor', cmyk);
     this.cyan = cmyk.c;
     this.magenta = cmyk.m;
     this.yellow = cmyk.y;
@@ -40,7 +39,6 @@ export class CmykComponent implements OnInit {
       const color = new NgxColor(cmyk);
       this.updateSliderBackgrounds(cmyk);
       if (color.equals(this.inputColor) == false) {
-        console.log('outputedColor', cmyk);
         this.inputColor = color;
         this.colorChange.emit(color);
       }

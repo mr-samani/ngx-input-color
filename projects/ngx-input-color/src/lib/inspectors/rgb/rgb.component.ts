@@ -35,7 +35,6 @@ export class RgbComponent implements OnInit {
   ngOnInit() {}
 
   generateColor() {
-    console.log('Generating color...');
     try {
       const rgba: RGBA = { r: this.red, g: this.green, b: this.blue, a: this.alpha };
       const color = new NgxColor(rgba);

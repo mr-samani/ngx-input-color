@@ -55,8 +55,7 @@ export class NgxInputColorComponent implements OnInit {
       let t = new EyeDropper().open();
       t.then(async (result: { sRGBHex: string }) => {
         this.hexColor = result.sRGBHex;
-        this.color = new NgxColor(this.hexColor);
-        this.name = await this.color.name();
+        this.initColor(new NgxColor(this.hexColor));
         this.cd.detectChanges();
       });
     }
@@ -72,7 +71,6 @@ export class NgxInputColorComponent implements OnInit {
     this.hexColor = this.color.toHexString();
     this.isDarkColor = this.color.isDark();
     this.name = await this.color.name();
-    // console.log('emit color', this.hexColor);
     this.change.emit(this.hexColor);
   }
 
