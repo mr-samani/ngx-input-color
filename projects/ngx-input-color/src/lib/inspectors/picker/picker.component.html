@@ -2,8 +2,8 @@
   [height]="220"
   [(ngModel)]="board"
   [min]="{ x: 0, y: 0 }"
-  [max]="{ x: 1, y: 1 }"
-  [step]="0.01"
+  [max]="{ x: 100, y: 100 }"
+  [step]="1"
   [color]="baseColor"
   (change)="generateColor()"></saturation>
 <slider

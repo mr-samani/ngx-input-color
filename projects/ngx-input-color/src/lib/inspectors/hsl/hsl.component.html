@@ -5,25 +5,25 @@
   [step]="1"
   (change)="generateColor()"
   background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-  Hue
+  Hue{{hue}}
 </slider>
 <slider
   [(ngModel)]="saturation"
   [min]="0"
-  [max]="1"
-  [step]="0.01"
+  [max]="100"
+  [step]="1"
   (change)="generateColor()"
   [background]="'linear-gradient(to right,#808080,' + baseColor + ')'">
-  Saturation
+  Saturation{{saturation}}
 </slider>
 <slider
   [(ngModel)]="luminance"
   [min]="0"
-  [max]="1"
-  [step]="0.01"
+  [max]="100"
+  [step]="1"
   (change)="generateColor()"
   [background]="'linear-gradient(to right,black,' + baseColor + ',white)'">
-  Luminance
+  Luminance{{luminance}}
 </slider>
 <slider
   [(ngModel)]="alpha"
@@ -33,5 +33,5 @@
   (change)="generateColor()"
   [isBgTransparent]="true"
   [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-  Alpha
+  Alpha{{alpha}}
 </slider>

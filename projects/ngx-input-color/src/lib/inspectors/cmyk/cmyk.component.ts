@@ -58,10 +58,10 @@ export class CmykComponent implements OnInit {
   private getChannelGradient(channel: keyof CMYK, cmyk: CMYK): string {
     let baseColor = this.cloneColor(cmyk);
     baseColor[channel] = channel == 'k' ? 1 : 0;
-    let startColor = NgxColor.cmykToRgb(baseColor);
+    let startColor = NgxColor.cmykToRgba(baseColor);
     let s = `rgb(${startColor.r}, ${startColor.g}, ${startColor.b})`;
     baseColor[channel] = 100;
-    let endColor = NgxColor.cmykToRgb(baseColor);
+    let endColor = NgxColor.cmykToRgba(baseColor);
     let e = `rgb(${endColor.r}, ${endColor.g}, ${endColor.b})`;
 
     return `linear-gradient(to right,  ${s},${e})`;
