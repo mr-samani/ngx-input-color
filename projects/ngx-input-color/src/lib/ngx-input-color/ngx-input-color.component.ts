@@ -8,8 +8,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColorFormats } from '../models/ColorFormats.enum';
-import { NgxColor } from '../utils/color-helper';
+import { ColorFormats } from '../../models/ColorFormats.enum';
+import { NgxColor } from '../../utils/color-helper';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 declare const EyeDropper: any;
 @Component({

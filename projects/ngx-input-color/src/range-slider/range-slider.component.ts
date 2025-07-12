@@ -86,6 +86,8 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
    * The current value of the slider
    */
   @Output() change = new EventEmitter<IValue[]>();
+  @Output() selectedIndex = new EventEmitter<number>();
+
   private isDragging = false;
   activeThumbIndex?: number;
 
@@ -127,6 +129,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
       if (newVal < +this.min) newVal = +this.min;
       else if (newVal > +this.max) newVal = +this.max;
       this.values.push({
+        ...val,
         id: val.id ?? this.generateId(),
         value: newVal,
       });
@@ -173,6 +176,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
     this.activeThumbIndex = index;
     this.updateRects();
     this.updateThumbPosition(ev);
+    this.selectedIndex.emit(this.activeThumbIndex);
   }
 
   addnewRangeOnSliderClick(event: MouseEvent | TouchEvent) {
@@ -237,7 +241,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
   @HostListener('document:touchend', ['$event'])
   onDragEnd(ev: MouseEvent | TouchEvent) {
     this.isDragging = false;
-    this.activeThumbIndex = undefined;
+    // this.activeThumbIndex = undefined;
   }
 
   valueChanged() {

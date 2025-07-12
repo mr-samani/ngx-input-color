@@ -11,12 +11,12 @@ import { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';
 import { HslComponent } from './lib/inspectors/hsl/hsl.component';
 import { RgbComponent } from './lib/inspectors/rgb/rgb.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
+import { NgxInputGradientComponent } from './lib/ngx-input-gradient/ngx-input-gradient.component';
 
 @NgModule({
   declarations: [
-    NgxInputColorComponent,
     NgxInputColorDirective,
-
+    NgxInputColorComponent,
     PickerComponent,
     CmykComponent,
     HslComponent,

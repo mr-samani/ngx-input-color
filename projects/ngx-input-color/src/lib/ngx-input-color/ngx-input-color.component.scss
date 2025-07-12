@@ -1,0 +1,168 @@
+.ngx-input-color-picker {
+  width: 330px;
+  max-width: 100%;
+  border: 1px #bfbfbf solid;
+  border-radius: 15px;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);
+  direction: ltr;
+
+  .inner {
+    padding: 0 12px 12px;
+  }
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.ngx-color-preview {
+  min-height: 120px;
+  padding: 10px 36px;
+  line-height: 2.2;
+  font-size: 14px;
+  font-family: arial, tahoma;
+  font-weight: 700;
+  position: relative;
+  color: #353535;
+  &.is-dark-color {
+    color: #ffff;
+  }
+  &:after {
+    content: ' ';
+    position: absolute;
+    background-color: white;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 30px;
+    border-radius: 30px 30px 0 0;
+  }
+  &::before {
+    content: ' ';
+    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
+.ngx-color-picker-backdrop {
+  background: #5e5e5e1e;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  transition: all 300ms;
+}
+
+/*------ button groups ---------*/
+.button-groups {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px #d3d3d3 solid;
+
+  button {
+    cursor: pointer;
+    background: #f9f9f9;
+    outline: none;
+    border: none;
+    transition: all 300ms;
+    border-left: 1px #d3d3d3 solid;
+    padding: 10px 12px;
+    flex: auto;
+    &:hover {
+      background: #8db6e4;
+    }
+    &:first-child {
+      border-left-width: 0;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  justify-content: space-between;
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  button {
+    cursor: pointer;
+    background: #f9f9f9;
+    outline: none;
+    transition: all 300ms;
+    border: 1px #d3d3d3 solid;
+    padding: 10px 12px;
+    min-width: 90px;
+    border-radius: 6px;
+    &:hover {
+      background: #8db6e4;
+    }
+  }
+}
+/*------ button groups ---------*/
+.ngx-btn-eyedroper {
+  padding: 2px;
+  min-width: 0;
+  width: 45px;
+  svg {
+    width: 22px;
+  }
+}
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 12px;
+  select {
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background: none;
+    &:focus {
+      cursor: pointer;
+      background: hsl(216, 100%, 95%);
+      color: hsl(216, 100%, 50%);
+    }
+    option {
+      padding: 10px 20px;
+      background-color: #fff;
+      transition: all 300ms;
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+}
+
+.slider-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  input {
+    transition: box-shadow 0.1s;
+    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;
+    border: none;
+    width: 40px;
+    color: hsl(250, 3%, 0%);
+    font-family: 'Inter', sans-serif;
+    padding: 5px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+}
