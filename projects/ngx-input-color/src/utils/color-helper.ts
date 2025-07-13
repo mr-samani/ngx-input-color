@@ -1,14 +1,14 @@
 import {
   cmykToRgb,
   hexToRgb,
-  hslToRgb,
+  hslToRgba,
   hsvToRgb,
   parseCmykString,
   parseHslString,
   parseHsvString,
   parseRgbString,
+  rgbaToHex,
   rgbToCmyk,
-  rgbToHex,
   rgbToHsl,
   rgbToHsv,
 } from './conversion';
@@ -108,7 +108,7 @@ export class NgxColor {
 
   toHexString(): string {
     const { r, g, b, a } = this.toRgb();
-    return '#' + rgbToHex(r, g, b, a < 1);
+    return rgbaToHex(r, g, b, a, a < 1);
   }
 
   toHsl(): HSLA {
@@ -150,7 +150,7 @@ export class NgxColor {
 
   static hslaToRgba(hsla: HSLA): RGBA {
     const { h, s, l, a } = hsla;
-    return { ...hslToRgb(h, s, l), a: a !== undefined ? a : 1 };
+    return { ...hslToRgba(h, s, l), a: a !== undefined ? a : 1 };
   }
 
   equals(other?: NgxColor): boolean {

@@ -28,39 +28,51 @@ export function parseRgbString(str: string): RGBA {
     a: parts[3] !== undefined ? parts[3] : 1,
   };
 }
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
 export function parseHslString(str: string): HSLA {
-  const m = str.match(/hsla?\(([^)]+)\)/);
-  if (!m) throw new Error('Invalid hsl string');
-  const parts = m[1].split(',').map((x) => +x.trim());
-  return {
-    h: (parts[0], 0, 360),
-    s: (parts[1], 0, 100),
-    l: (parts[2], 0, 100),
-    a: parts[3] !== undefined ? parts[3] : 1,
-  };
+  const m = str.match(/hsla?\(([^)]+)\)/i);
+  if (!m) throw new Error('Invalid hsl/hsla string');
+
+  const parts = m[1].split(',').map((x) => x.trim());
+
+  const h = clamp(parseFloat(parts[0]), 0, 360);
+  const s = clamp(parseFloat(parts[1]), 0, 100);
+  const l = clamp(parseFloat(parts[2]), 0, 100);
+  const a = parts[3] !== undefined ? clamp(parseFloat(parts[3]), 0, 1) : 1;
+
+  return { h, s, l, a };
 }
 export function parseHsvString(str: string): HSVA {
-  const m = str.match(/hsva?\(([^)]+)\)/);
-  if (!m) throw new Error('Invalid hsv string');
-  const parts = m[1].split(',').map((x) => +x.trim());
-  return {
-    h: (parts[0], 0, 360),
-    s: (parts[1], 0, 100),
-    v: (parts[2], 0, 100),
-    a: parts[3] !== undefined ? parts[3] : 1,
-  };
+  const m = str.match(/hsva?\(([^)]+)\)/i);
+  if (!m) throw new Error('Invalid hsv(a) string');
+
+  const parts = m[1].split(',').map((x) => x.trim());
+
+  const h = clamp(parseFloat(parts[0]), 0, 360);
+  const s = clamp(parseFloat(parts[1]), 0, 100);
+  const v = clamp(parseFloat(parts[2]), 0, 100);
+  const a = parts[3] !== undefined ? clamp(parseFloat(parts[3]), 0, 1) : 1;
+
+  return { h, s, v, a };
 }
+
 export function parseCmykString(str: string): CMYK {
-  const m = str.match(/cmyk\(([^)]+)\)/);
+  const m = str.match(/cmyk\(([^)]+)\)/i);
   if (!m) throw new Error('Invalid cmyk string');
-  const parts = m[1].split(',').map((x) => +x.trim());
+
+  const parts = m[1].split(',').map((x) => x.trim());
+
   return {
-    c: (parts[0], 0, 100),
-    m: (parts[1], 0, 100),
-    y: (parts[2], 0, 100),
-    k: (parts[3], 0, 100),
+    c: clamp(parseFloat(parts[0]), 0, 100),
+    m: clamp(parseFloat(parts[1]), 0, 100),
+    y: clamp(parseFloat(parts[2]), 0, 100),
+    k: clamp(parseFloat(parts[3]), 0, 100),
   };
 }
+
 
 /**
  * Take input from [0, n] and return it as [0, 1]
@@ -196,7 +208,7 @@ export function rgbToHsl(r: number, g: number, b: number): Numberify<HSL> {
   return {
     h: max === min ? 0 : h,
     s: l === 0 || l === 1 ? 0 : s * 100,
-    l: l * 100
+    l: l * 100,
   };
 }
 
@@ -205,7 +217,7 @@ export function rgbToHsl(r: number, g: number, b: number): Numberify<HSL> {
  * *Assumes:* h in [0, 360], s and l in [0, 100]
  * *Returns:* { r, g, b } in [0, 255]
  */
-export function hslToRgb(h: number | string, s: number | string, l: number | string): Numberify<RGB> {
+export function hslToRgba(h: number | string, s: number | string, l: number | string, a: number = 1): RGBA {
   h = +h;
   s = +s;
   l = +l;
@@ -215,11 +227,13 @@ export function hslToRgb(h: number | string, s: number | string, l: number | str
   h = h / 360;
   s = s / 100;
   l = l / 100;
+
   let r: number, g: number, b: number;
+
   if (s === 0) {
-    r = g = b = l;
+    r = g = b = l; // achromatic
   } else {
-    const hue2rgb = (p: number, q: number, t: number) => {
+    const hue2rgb = (p: number, q: number, t: number): number => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
       if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -233,10 +247,12 @@ export function hslToRgb(h: number | string, s: number | string, l: number | str
     g = hue2rgb(p, q, h);
     b = hue2rgb(p, q, h - 1 / 3);
   }
+
   return {
-    r: Math.max(0, Math.min(255, Math.round(r * 255))),
-    g: Math.max(0, Math.min(255, Math.round(g * 255))),
-    b: Math.max(0, Math.min(255, Math.round(b * 255)))
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255),
+    a: Math.max(0, Math.min(1, a)),
   };
 }
 
@@ -277,7 +293,7 @@ export function rgbToHsv(r: number, g: number, b: number): Numberify<HSV> {
   return {
     h: max === min ? 0 : h,
     s: max === 0 ? 0 : s * 100,
-    v: v * 100
+    v: v * 100,
   };
 }
 
@@ -295,7 +311,9 @@ export function hsvToRgb(h: number | string, s: number | string, v: number | str
   v = Math.max(0, Math.min(100, v));
   s = s / 100;
   v = v / 100;
-  let r = 0, g = 0, b = 0;
+  let r = 0,
+    g = 0,
+    b = 0;
   const hi = Math.floor(h / 60) % 6;
   const f = h / 60 - Math.floor(h / 60);
   const p = v * (1 - s);
@@ -303,80 +321,72 @@ export function hsvToRgb(h: number | string, s: number | string, v: number | str
   const t = v * (1 - (1 - f) * s);
   switch (hi) {
     case 0:
-      r = v; g = t; b = p;
+      r = v;
+      g = t;
+      b = p;
       break;
     case 1:
-      r = q; g = v; b = p;
+      r = q;
+      g = v;
+      b = p;
       break;
     case 2:
-      r = p; g = v; b = t;
+      r = p;
+      g = v;
+      b = t;
       break;
     case 3:
-      r = p; g = q; b = v;
+      r = p;
+      g = q;
+      b = v;
       break;
     case 4:
-      r = t; g = p; b = v;
+      r = t;
+      g = p;
+      b = v;
       break;
     case 5:
-      r = v; g = p; b = q;
+      r = v;
+      g = p;
+      b = q;
       break;
   }
   return {
     r: Math.max(0, Math.min(255, Math.round(r * 255))),
     g: Math.max(0, Math.min(255, Math.round(g * 255))),
-    b: Math.max(0, Math.min(255, Math.round(b * 255)))
+    b: Math.max(0, Math.min(255, Math.round(b * 255))),
   };
 }
 
 /**
- * Converts an RGB color to hex
- *
- * *Assumes:* r, g, and b are contained in the set [0, 255]
- * *Returns:* a 3 or 6 character hex
+ * Converts an RGB/RGBA color to hex
  */
-export function rgbToHex(r: number, g: number, b: number, allow3Char: boolean): string {
-  const hex = [pad2(Math.round(r).toString(16)), pad2(Math.round(g).toString(16)), pad2(Math.round(b).toString(16))];
+export function rgbaToHex(
+  r: number,
+  g: number,
+  b: number,
+  a: number = 1,
+  allowAlpha: boolean = true,
+  allow3Char: boolean = false
+): string {
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
 
-  // Return a 3 character hex if possible
-  if (
-    allow3Char &&
-    hex[0].startsWith(hex[0].charAt(1)) &&
-    hex[1].startsWith(hex[1].charAt(1)) &&
-    hex[2].startsWith(hex[2].charAt(1))
-  ) {
-    return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
+  const rHex = toHex(Math.round(r));
+  const gHex = toHex(Math.round(g));
+  const bHex = toHex(Math.round(b));
+  const aHex = toHex(Math.round(a * 255));
+
+  // Try compressing to #rgb or #rgba if allowed and all characters are duplicated
+  if (allow3Char && (!allowAlpha || aHex === 'ff')) {
+    const canShorten =
+      rHex[0] === rHex[1] && gHex[0] === gHex[1] && bHex[0] === bHex[1] && (!allowAlpha || aHex[0] === aHex[1]);
+
+    if (canShorten) {
+      return '#' + rHex[0] + gHex[0] + bHex[0] + (allowAlpha && aHex !== 'ff' ? aHex[0] : '');
+    }
   }
 
-  return hex.join('');
-}
-
-/**
- * Converts an RGBA color plus alpha transparency to hex
- *
- * *Assumes:* r, g, b are contained in the set [0, 255] and a in [0, 1]
- * *Returns:* a 4 or 8 character rgba hex
- */
-// eslint-disable-next-line max-params
-export function rgbaToHex(r: number, g: number, b: number, a: number, allow4Char: boolean): string {
-  const hex = [
-    pad2(Math.round(r).toString(16)),
-    pad2(Math.round(g).toString(16)),
-    pad2(Math.round(b).toString(16)),
-    pad2(convertDecimalToHex(a)),
-  ];
-
-  // Return a 4 character hex if possible
-  if (
-    allow4Char &&
-    hex[0].startsWith(hex[0].charAt(1)) &&
-    hex[1].startsWith(hex[1].charAt(1)) &&
-    hex[2].startsWith(hex[2].charAt(1)) &&
-    hex[3].startsWith(hex[3].charAt(1))
-  ) {
-    return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
-  }
-
-  return hex.join('');
+  return '#' + rHex + gHex + bHex + (allowAlpha && aHex !== 'ff' ? aHex : '');
 }
 
 /**
