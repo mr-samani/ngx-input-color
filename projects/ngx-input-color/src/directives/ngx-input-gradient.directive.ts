@@ -20,39 +20,33 @@ import {
 } from '@angular/forms';
 import { NgxColor } from '../utils/color-helper';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
-import { NgxInputColorComponent } from '@ngx-input-color/lib/ngx-input-color/ngx-input-color.component';
+import { NgxInputGradientComponent } from '@ngx-input-color/lib/ngx-input-gradient/ngx-input-gradient.component';
 
 @Directive({
-  selector: '[ngxInputColor]',
+  selector: '[ngxInputGradient]',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputColorDirective,
+      useExisting: NgxInputGradientDirective,
     },
   ],
 })
-export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
-  @Input() setInputBackgroundColor = true;
+  @Input() setInputBackground = true;
   @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
-  color?: NgxColor;
-  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
+  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
   private backdrop?: HTMLDivElement;
   private colorPickerEl?: HTMLElement;
   isDisabled = false;
   _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
-  constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private viewContainerRef: ViewContainerRef
-  ) {}
+  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}
 
   @HostListener('click', ['$event']) onClick(ev: Event) {
     ev.stopPropagation();
@@ -73,9 +67,6 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
     this._onValidateChange = fn;
   }
   validate(control: AbstractControl): ValidationErrors | null {
-    if (this.color && this.color.isValid == false) {
-      return { inValid: true };
-    }
     return null;
   }
 
@@ -85,33 +76,26 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
 
   writeValue(value: any): void {
     if (value) {
-      this.color = new NgxColor(value);
-      if (this.setInputBackgroundColor) {
-        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toHexString());
+      if (this.setInputBackground) {
+        this.renderer.setStyle(this.el.nativeElement, 'background', value);
       }
       this._onValidateChange();
-    } else this.color = undefined;
+    }
   }
 
   toggleColorPicker() {
-    if (this.colorPickerComponentRef) {
+    if (this.pickerComponentRef) {
       this.destroyColorPicker();
       return;
     }
 
     // ایجاد کامپوننت
-    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
+    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);
 
-    const instance = this.colorPickerComponentRef.instance;
-    instance.colorInspector = this.colorInspector;
+    const instance = this.pickerComponentRef.instance;
     instance.showCloseButton = true;
     instance.closeTitle = this.closeTitle;
     instance.confirmTitle = this.confirmTitle;
-
-    // مقدار اولیه رنگ
-    if (this.color && typeof this.color === 'object' && 'isValid' in this.color && this.color.isValid) {
-      instance.initColor(this.color);
-    }
 
     // رویدادها
     const sub1 = instance.confirm.subscribe((c: any) => {
@@ -130,7 +114,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
       this.backdrop.onclick = () => this.destroyColorPicker();
     }
     // گرفتن المنت کامپوننت واقعی
-    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
+    this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
     this.renderer.appendChild(this.backdrop, this.colorPickerEl);
     this.renderer.appendChild(document.body, this.backdrop);
     this.setPosition();
@@ -139,7 +123,7 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   @HostListener('window:resize', ['$event'])
   setPosition() {
     setTimeout(() => {
-      if (!this.colorPickerEl || !this.colorPickerComponentRef) return;
+      if (!this.colorPickerEl || !this.pickerComponentRef) return;
       const hostRect = this.el.nativeElement.getBoundingClientRect();
       const pickerEl = this.colorPickerEl;
 
@@ -186,9 +170,9 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   }
 
   destroyColorPicker() {
-    if (this.colorPickerComponentRef) {
-      this.colorPickerComponentRef.destroy();
-      this.colorPickerComponentRef = undefined;
+    if (this.pickerComponentRef) {
+      this.pickerComponentRef.destroy();
+      this.pickerComponentRef = undefined;
     }
     if (this.backdrop && this.backdrop.parentNode) {
       this.renderer.removeChild(document.body, this.backdrop);
@@ -198,9 +182,8 @@ export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, 
   }
 
   confirmColor(c: string) {
-    this.color = new NgxColor(c);
-    if (this.setInputBackgroundColor) {
-      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);
+    if (this.setInputBackground) {
+      this.renderer.setStyle(this.el.nativeElement, 'background', c);
     }
     this._onChange(c);
     this.destroyColorPicker();
