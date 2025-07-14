@@ -45,8 +45,8 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   @Input() setInputBackgroundColor = true;
   @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
-  @Input() showCloseButton = false;
-  @Input() showConfirmButton = false;
+  @Input() showCloseButton = true;
+  @Input() showConfirmButton = true;
   @Input() simpleMode = false;
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
@@ -76,7 +76,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   private backdrop?: HTMLDivElement;
   private colorPickerEl?: HTMLElement;
   private isHostInput = false;
-  isValid: boolean = true;
+  inValid: boolean = false;
   isDisabled = false;
   _onChange = (value: string) => {};
   _onTouched = () => {};
@@ -86,11 +86,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      const el = this.el.nativeElement;
-      this.isHostInput = el.tagName.toLowerCase() === 'input';
-      if (this.isHostInput) {
-        this.writeValue(el.value); // مقدار اولیه input را بخوان
-      } else if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
+      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
         this.writeValue(this._targetInput.value);
       }
     });
@@ -127,11 +123,11 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
         this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);
       }
 
-      this.isValid = this.color?.isValid === true;
+      this.inValid = false;
       this._onValidateChange();
     } catch (e) {
       this.color = new NgxColor('#000'); // مقدار پیش‌فرض
-      this.isValid = false;
+      this.inValid = true;
     }
   }
 
@@ -152,7 +148,10 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.color?.isValid === false || !this.isValid ? { invalid: true } : null;
+    if ((this.color && this.color.isValid === false) || this.inValid === true) {
+      return { invalid: true };
+    }
+    return null;
   }
 
   private toggleColorPicker() {
