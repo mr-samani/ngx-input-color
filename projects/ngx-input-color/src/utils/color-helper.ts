@@ -106,9 +106,9 @@ export class NgxColor {
       : `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${+a.toFixed(3)})`;
   }
 
-  toHexString(): string {
+  toHexString(allowAlpha = true): string {
     const { r, g, b, a } = this.toRgb();
-    return rgbaToHex(r, g, b, a, a < 1);
+    return rgbaToHex(r, g, b, a, allowAlpha && a < 1);
   }
 
   toHsl(): HSLA {
