@@ -167,3 +167,17 @@
     }
   }
 }
+
+.text-end {
+  text-align: end;
+}
+.remove-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: #0077ff;
+  transition: color 300ms;
+  &:hover {
+    color: #0462cc;
+  }
+}

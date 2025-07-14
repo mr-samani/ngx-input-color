@@ -213,6 +213,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   remove() {
     if (this.rangeValues.length > 2) {
       this.rangeValues.splice(this.selectedIndex, 1);
+      this.selectedIndex = 0;
       this.generateGradient();
     }
   }
