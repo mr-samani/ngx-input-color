@@ -1,208 +1,268 @@
 import {
-  ComponentFactoryResolver,
-  ComponentRef,
   Directive,
-  ElementRef,
-  HostListener,
-  Input,
+  forwardRef,
   OnDestroy,
+  Input,
+  ComponentRef,
+  ElementRef,
   Renderer2,
   ViewContainerRef,
-  forwardRef,
+  HostListener,
+  OnInit,
+  AfterViewInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-import { NgxInputColorComponent } from '../public-api';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  ValidationErrors,
+  NG_VALIDATORS,
+  ControlValueAccessor,
   Validator,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
-import { NgxColor } from '../utils/color-helper';
+import { NgxInputColorComponent } from '@ngx-input-color/lib/ngx-input-color/ngx-input-color.component';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
+import { NgxColor } from '@ngx-input-color/utils/color-helper';
 
 @Directive({
   selector: '[ngxInputColor]',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorDirective), multi: true },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NgxInputColorDirective),
+      multi: true,
+    },
     {
       provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => NgxInputColorDirective),
       multi: true,
-      useExisting: NgxInputColorDirective,
     },
   ],
 })
-export class NgxInputColorDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
   @Input() setInputBackgroundColor = true;
   @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
-  color?: NgxColor;
+  @Input() showCloseButton = false;
+  @Input() showConfirmButton = false;
+  @Input() simpleMode = false;
+  private boundInputHandler = (e: Event) => {
+    this.writeValue((e.target as HTMLInputElement).value);
+  };
+  private _targetInput?: HTMLInputElement;
+
+  @Input('ngxInputColor') set ngxInputColor(
+    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''
+  ) {
+    if (el instanceof ElementRef) {
+      this._targetInput = el.nativeElement;
+    } else if (el instanceof HTMLInputElement) {
+      this._targetInput = el;
+    } else {
+      this._targetInput = undefined;
+    }
+
+    if (this._targetInput) {
+      this._targetInput.addEventListener('input', this.boundInputHandler);
+    }
+  }
+  @Output() change = new EventEmitter<string>();
+  @Output() confirm = new EventEmitter<string>();
+  @Output() cancel = new EventEmitter<void>();
+  private color?: NgxColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
   private backdrop?: HTMLDivElement;
   private colorPickerEl?: HTMLElement;
+  private isHostInput = false;
+  isValid: boolean = true;
   isDisabled = false;
   _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
-  constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private viewContainerRef: ViewContainerRef
-  ) {}
 
-  @HostListener('click', ['$event']) onClick(ev: Event) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const el = this.el.nativeElement;
+      this.isHostInput = el.tagName.toLowerCase() === 'input';
+      if (this.isHostInput) {
+        this.writeValue(el.value); // مقدار اولیه input را بخوان
+      } else if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
+        this.writeValue(this._targetInput.value);
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    this.destroyColorPicker();
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(ev: Event) {
     ev.stopPropagation();
     ev.preventDefault();
     this.toggleColorPicker();
   }
 
+  writeValue(value: any): void {
+    try {
+      this.color = value ? new NgxColor(value) : undefined;
+
+      const colorStr = this.color?.toHexString() ?? '';
+
+      // اگر دایرکتیو روی input باشه (ControlValueAccessor)
+      if (this.isHostInput) {
+        const input = this.el.nativeElement as HTMLInputElement;
+        input.value = colorStr;
+      }
+
+      // اگر input خارجی مشخص شده
+      if (this._targetInput instanceof HTMLInputElement) {
+        this._targetInput.value = colorStr;
+      }
+
+      if (this.setInputBackgroundColor && colorStr) {
+        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);
+      }
+
+      this.isValid = this.color?.isValid === true;
+      this._onValidateChange();
+    } catch (e) {
+      this.color = new NgxColor('#000'); // مقدار پیش‌فرض
+      this.isValid = false;
+    }
+  }
+
   registerOnChange(fn: any): void {
     this._onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
   }
+
   setDisabledState(disabled: boolean): void {
     this.isDisabled = disabled;
   }
+
   registerOnValidatorChange(fn: () => void): void {
     this._onValidateChange = fn;
   }
+
   validate(control: AbstractControl): ValidationErrors | null {
-    if (this.color && this.color.isValid == false) {
-      return { inValid: true };
-    }
-    return null;
+    return this.color?.isValid === false || !this.isValid ? { invalid: true } : null;
   }
 
-  ngOnDestroy(): void {
-    this.destroyColorPicker();
-  }
-
-  writeValue(value: any): void {
-    if (value) {
-      this.color = new NgxColor(value);
-      if (this.setInputBackgroundColor) {
-        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', this.color.toHexString());
-      }
-      this._onValidateChange();
-    } else this.color = undefined;
-  }
-
-  toggleColorPicker() {
+  private toggleColorPicker() {
     if (this.colorPickerComponentRef) {
       this.destroyColorPicker();
       return;
     }
 
-    // ایجاد کامپوننت
     this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
-
     const instance = this.colorPickerComponentRef.instance;
+
     instance.colorInspector = this.colorInspector;
     instance.showCloseButton = true;
     instance.closeTitle = this.closeTitle;
     instance.confirmTitle = this.confirmTitle;
+    instance.showCloseButton = this.showCloseButton;
+    instance.showConfirmButton = this.showConfirmButton;
+    instance.simpleMode = this.simpleMode;
 
-    // مقدار اولیه رنگ
-    if (this.color && typeof this.color === 'object' && 'isValid' in this.color && this.color.isValid) {
-      instance.initColor(this.color);
-    }
-
-    // رویدادها
-    const sub1 = instance.confirm.subscribe((c: any) => {
-      this.confirmColor(c);
-      this.destroyColorPicker(); // بستن بعد از تایید
+    if (this.color?.isValid) instance.initColor(this.color);
+    instance.change.subscribe((c: string) => {
+      this.change.emit(c);
     });
-
-    const sub2 = instance.cancel.subscribe(() => {
+    instance.confirm.subscribe((c: string) => {
+      this.confirm.emit(c);
+      this.confirmColor(c);
       this.destroyColorPicker();
     });
 
-    // بک‌دراپ
+    instance.cancel.subscribe(() => {
+      this.cancel.emit();
+      this.destroyColorPicker();
+    });
+
     this.backdrop = this.renderer.createElement('div');
     if (this.backdrop) {
       this.backdrop.className = 'ngx-color-picker-backdrop';
       this.backdrop.onclick = () => this.destroyColorPicker();
     }
-    // گرفتن المنت کامپوننت واقعی
     this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
     this.renderer.appendChild(this.backdrop, this.colorPickerEl);
     this.renderer.appendChild(document.body, this.backdrop);
     this.setPosition();
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   setPosition() {
     setTimeout(() => {
-      if (!this.colorPickerEl || !this.colorPickerComponentRef) return;
+      if (!this.colorPickerEl) return;
+
       const hostRect = this.el.nativeElement.getBoundingClientRect();
       const pickerEl = this.colorPickerEl;
 
-      // اعمال موقتی برای گرفتن سایز دقیق
       this.renderer.setStyle(pickerEl, 'position', 'absolute');
       this.renderer.setStyle(pickerEl, 'visibility', 'hidden');
       this.renderer.setStyle(pickerEl, 'top', '0px');
       this.renderer.setStyle(pickerEl, 'left', '0px');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
-      document.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
-
+      document.body.appendChild(pickerEl);
       const pickerRect = pickerEl.getBoundingClientRect();
 
-      // وسط‌چین کردن افقی
       let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
       let top = hostRect.bottom;
 
-      // جلوگیری از بیرون زدن از راست
-      if (left + pickerRect.width > window.innerWidth) {
-        left = window.innerWidth - pickerRect.width - 8;
-      }
+      if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;
+      if (left < 8) left = 8;
+      if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;
+      if (top < 8) top = 8;
 
-      // جلوگیری از بیرون زدن از چپ
-      if (left < 8) {
-        left = 8;
-      }
-
-      // اگر از پایین بیرون زد، ببر بالا
-      if (top + pickerRect.height > window.innerHeight) {
-        top = hostRect.top - pickerRect.height;
-      }
-
-      // جلوگیری از بیرون زدن از بالا
-      if (top < 8) {
-        top = 8;
-      }
-
-      // اعمال نهایی
       this.renderer.setStyle(pickerEl, 'visibility', 'visible');
       this.renderer.setStyle(pickerEl, 'top', `${top}px`);
       this.renderer.setStyle(pickerEl, 'left', `${left}px`);
     });
   }
 
-  destroyColorPicker() {
-    if (this.colorPickerComponentRef) {
-      this.colorPickerComponentRef.destroy();
-      this.colorPickerComponentRef = undefined;
-    }
-    if (this.backdrop && this.backdrop.parentNode) {
+  private destroyColorPicker() {
+    this.colorPickerComponentRef?.destroy();
+    this.colorPickerComponentRef = undefined;
+
+    if (this.backdrop) {
       this.renderer.removeChild(document.body, this.backdrop);
       this.backdrop = undefined;
     }
+
     this.colorPickerEl = undefined;
   }
 
-  confirmColor(c: string) {
+  private confirmColor(c: string) {
     this.color = new NgxColor(c);
+
     if (this.setInputBackgroundColor) {
       this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);
     }
+
+    // اگر روی input باشیم، مقدار رو در input قرار بده
+    if (this.isHostInput) {
+      const input = this.el.nativeElement as HTMLInputElement;
+      input.value = c;
+    }
+
+    // اگر targetInput وجود داره، در اونم مقدار ست کن
+    if (this._targetInput instanceof HTMLInputElement) {
+      this._targetInput.value = c;
+      const event = new Event('input', { bubbles: true });
+      this._targetInput.dispatchEvent(event);
+    }
+
     this._onChange(c);
-    this.destroyColorPicker();
+    this._onTouched();
   }
 }

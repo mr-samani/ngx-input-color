@@ -44,18 +44,25 @@ export class SaturationComponent implements ControlValueAccessor {
   _onTouched = () => {};
   _validatorOnChange = () => {};
 
+  private saturationRect?: DOMRect;
+  private thumbRect?: DOMRect;
+
   constructor() {}
+
+  private updateRects() {
+    this.saturationRect = this.saturation.nativeElement.getBoundingClientRect();
+    this.thumbRect = this.thumb.nativeElement.getBoundingClientRect();
+  }
 
   writeValue(val?: IPosition | null): void {
     if (!val) val = { x: 0, y: 0 };
     let value: IPosition = val;
-    // TODO: validate val
-    this.myControl.setValue(value);
-    let saturationRec = this.saturation.nativeElement.getBoundingClientRect();
-    let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
+    this.myControl.setValue(value, { emitEvent: false });
+    this.updateRects();
+    const saturationRec = this.saturationRect!;
+    const thumbRec = this.thumbRect!;
     this.x = ((value.x - this.min.x) * (saturationRec.width - thumbRec.width / 2)) / (this.max.x - this.min.x);
     this.y = ((value.y - this.min.y) * (saturationRec.height - thumbRec.height / 2)) / (this.max.y - this.min.y);
-
     if (val !== value) {
       this.valueChanged(value);
     }
@@ -83,6 +90,7 @@ export class SaturationComponent implements ControlValueAccessor {
     ev.stopPropagation();
     ev.preventDefault();
     this.isDragging = true;
+    this.updateRects();
     this.updatePosition(ev);
   }
 
@@ -100,9 +108,10 @@ export class SaturationComponent implements ControlValueAccessor {
 
   private updatePosition(ev: MouseEvent | TouchEvent) {
     if (!this.isDragging) return;
+    if (!this.saturationRect || !this.thumbRect) this.updateRects();
     let position = getOffsetPosition(ev, this.saturation.nativeElement);
-    let thumbRec = this.thumb.nativeElement.getBoundingClientRect();
-    let saturationRec = this.saturation.nativeElement.getBoundingClientRect();
+    let thumbRec = this.thumbRect!;
+    let saturationRec = this.saturationRect!;
     if (position.x < 0) {
       this.x = 0;
     } else if (position.x > saturationRec.width - (thumbRec.width / 2 - 3)) {
@@ -139,15 +148,14 @@ export class SaturationComponent implements ControlValueAccessor {
     let newValueY = this.min.y + percentageY * (this.max.y - this.min.y);
     newValueY = Math.round(newValueY / this.step) * this.step;
     let valueY = Math.min(Math.max(newValueY, this.min.y), this.max.y);
-    //-----------------------------
-    this.valueChanged({
-      x: valueX,
-      y: valueY,
-    });
+    const newValue = { x: valueX, y: valueY };
+    if (!this.myControl.value || this.myControl.value.x !== valueX || this.myControl.value.y !== valueY) {
+      this.valueChanged(newValue);
+    }
   }
 
   valueChanged(value: IPosition) {
-    this.myControl.setValue(value);
+    this.myControl.setValue(value, { emitEvent: false });
     this._onChange(value);
     this.change.emit(value);
   }

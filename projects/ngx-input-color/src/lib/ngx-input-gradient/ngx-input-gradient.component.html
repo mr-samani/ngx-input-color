@@ -1,0 +1,70 @@
+<div class="ngx-input-color-picker" (click)="stopPropagation($event)">
+  <div class="ngx-color-preview" [style.background]="resultGradient"></div>
+  <div class="inner">
+    <range-slider
+      [(ngModel)]="rangeValues"
+      [min]="0"
+      [max]="100"
+      [step]="1"
+      [addNewRangeOnClick]="true"
+      [background]="baseBg"
+      [(selectedIndex)]="selectedIndex"
+      (change)="generateGradient()"
+      #rangeSlider></range-slider>
+
+    <div class="text-end">
+      <button class="remove-btn" type="button" (click)="remove()">remove</button>
+    </div>
+    <div class="ngx-row" *ngIf="rangeValues[selectedIndex]">
+      <div class="ngx-input-group ngx-col-6">
+        <div class="label">Color</div>
+        <div class="input-color">
+          <input
+            type="text"
+            [(ngModel)]="rangeValues[selectedIndex].color"
+            name="color"
+            #ngxGradColor
+            (ngModelChange)="generateGradient()" />
+          <span
+            class="color"
+            [style.backgroundColor]="rangeValues[selectedIndex].color"
+            [ngxInputColor]="ngxGradColor"
+            [showCloseButton]="false"
+            [showConfirmButton]="false"
+            [simpleMode]="true"
+            (change)="generateGradient($event)"></span>
+        </div>
+      </div>
+      <div class="ngx-col-6">
+        <div class="label">Position</div>
+        <input
+          type="number"
+          [(ngModel)]="rangeValues[selectedIndex].value"
+          min="0"
+          max="100"
+          name="posiition"
+          (change)="generateGradient(); updateRangeSlider()" />
+      </div>
+      <div class="ngx-col-6">
+        <div class="label">Rotation</div>
+        <select [(ngModel)]="rotation" (change)="generateGradient()" name="rotation">
+          <option [value]="item" *ngFor="let item of rotationList">{{ item + '°' }}</option>
+        </select>
+      </div>
+      <div class="ngx-col-6">
+        <div class="label">Type</div>
+        <select [(ngModel)]="type" (change)="generateGradient()" name="type">
+          <option value="linear">linear</option>
+          <option value="radial">radial</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <div class="action-buttons">
+      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
+      <button (click)="ok()">{{ confirmTitle }}</button>
+    </div>
+  </div>
+</div>

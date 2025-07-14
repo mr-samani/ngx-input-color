@@ -11,12 +11,22 @@
   .inner {
     padding: 0 12px 12px;
   }
+  * {
+    box-sizing: border-box;
+  }
+  &.simple-mode {
+    width: 220px;
+    --ngx-thumb-size: 24px;
+    .inner {
+      padding: 12px;
+    }
+  }
 }
 
 .ngx-color-preview {
   min-height: 120px;
   padding: 10px 36px;
-  line-height: 2.2;
+  line-height: 2;
   font-size: 14px;
   font-family: arial, tahoma;
   font-weight: 700;
@@ -116,6 +126,12 @@
   padding: 2px;
   min-width: 0;
   width: 45px;
+  cursor: pointer;
+  background: #f9f9f9;
+  outline: none;
+  transition: all 300ms;
+  border: 1px #d3d3d3 solid;
+  border-radius: 6px;
   svg {
     width: 22px;
   }
@@ -147,19 +163,4 @@
   }
 }
 
-.slider-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  input {
-    transition: box-shadow 0.1s;
-    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;
-    border: none;
-    width: 40px;
-    color: hsl(250, 3%, 0%);
-    font-family: 'Inter', sans-serif;
-    padding: 5px 6px;
-    border-radius: 5px;
-    font-size: 12px;
-  }
-}
+

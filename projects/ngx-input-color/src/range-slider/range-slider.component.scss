@@ -37,6 +37,10 @@ $sliderHeight: 12px;
         background: var(--ngx-slider-bg);
       }
     }
+
+    &.add-range-cursor {
+      cursor: copy;
+    }
   }
 
   .thumb {
@@ -50,5 +54,8 @@ $sliderHeight: 12px;
     position: absolute;
     cursor: grab;
     z-index: 100;
+    &.is-active {
+      outline: 1px rgb(89, 0, 255) solid;
+    }
   }
 }

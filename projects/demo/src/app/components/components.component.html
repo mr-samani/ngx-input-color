@@ -1,13 +1,13 @@
-<saturation [(ngModel)]="s" [height]="200" [color]="'blue'"></saturation>
-<pre>{{ s | json }}</pre>
+<!-- <saturation [(ngModel)]="s" [height]="200" [color]="'blue'"></saturation>
+<pre>{{ s | json }}</pre> -->
 
-<slider [(ngModel)]="slider" [min]="20" [max]="80"></slider>
-<pre>
+<!-- <slider [(ngModel)]="slider" [min]="20" [max]="80"></slider> -->
+<!-- <pre>
   min=20
   max=80
   slider={{ slider }}
-</pre>
-<slider
+</pre> -->
+<!-- <slider
   [(ngModel)]="slider"
   [min]="0"
   [max]="100"
@@ -17,4 +17,9 @@
   min=0
   max=100
   slider={{ slider }}
-</pre>
+</pre> -->
+
+<ngx-input-gradient [(ngModel)]="resultGradient"></ngx-input-gradient>
+
+
+<pre>{{ resultGradient | json }}</pre>
