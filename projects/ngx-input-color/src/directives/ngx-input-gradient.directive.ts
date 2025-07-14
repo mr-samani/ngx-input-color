@@ -1,5 +1,4 @@
 import {
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   ElementRef,
@@ -18,7 +17,6 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { NgxColor } from '../utils/color-helper';
 import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 import { NgxInputGradientComponent } from '@ngx-input-color/lib/ngx-input-gradient/ngx-input-gradient.component';
 

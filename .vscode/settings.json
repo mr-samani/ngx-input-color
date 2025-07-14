@@ -1,4 +1,14 @@
 {
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/dist": true,
+        "**/node_modules": true,
+        "**/.angular": true,
+    },
     "search.exclude": {
         "**/node_modules": true,
         "**/bower_components": true,

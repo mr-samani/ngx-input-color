@@ -8,7 +8,6 @@ import {
   Renderer2,
   ViewContainerRef,
   HostListener,
-  OnInit,
   AfterViewInit,
   Output,
   EventEmitter,

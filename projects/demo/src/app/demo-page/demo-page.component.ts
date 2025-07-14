@@ -12,8 +12,9 @@ import { NgxInputColorModule } from '@ngx-input-color/ngx-input-color.module';
 })
 export class DemoPageComponent implements OnInit {
   color = '#4E1782';
-
+  gradient = '';
   inlineColor = '';
+  inlineGradient = '';
 
   constructor() {}
 

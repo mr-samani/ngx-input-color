@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxInputColorDirective } from './directives/ngx-input-color.directive';
-import { NgxInputColorComponent } from './public-api';
+import { NgxInputColorComponent, NgxInputGradientComponent } from './public-api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SaturationComponent } from './saturation/saturation.component';
@@ -23,8 +23,16 @@ import { NgxInputGradientDirective } from './directives/ngx-input-gradient.direc
     HslComponent,
     RgbComponent,
   ],
-  imports: [CommonModule, FormsModule, SliderComponent, SaturationComponent, RangeSliderComponent, EnumToArrayPipe],
-  exports: [NgxInputColorComponent, NgxInputColorDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SliderComponent,
+    SaturationComponent,
+    RangeSliderComponent,
+    EnumToArrayPipe,
+    NgxInputGradientComponent,
+  ],
+  exports: [NgxInputColorComponent, NgxInputGradientComponent, NgxInputColorDirective, NgxInputGradientDirective],
   providers: [],
 })
 export class NgxInputColorModule {}
