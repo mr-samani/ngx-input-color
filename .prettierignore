@@ -14,7 +14,7 @@ dist/
 *.css
 # *.less
 *.min.*
-package.json
+# package.json
 package-lock.json
 yarn.lock
-*.json
+# *.json

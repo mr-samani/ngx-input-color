@@ -1,0 +1,2551 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ngx-input-color documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">ngx-input-color documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  NgxInputGradientComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>OnDestroy</code>
+                <code>ControlValueAccessor</code>
+                <code>Validator</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                                <code><a href="../components/NgxInputGradientComponent.html" target="_self" >{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputGradientComponent), multi: true }</a></code>
+                                <code><a href="../components/NgxInputGradientComponent.html" target="_self" >{
+    provide: NG_VALIDATORS, multi: true, useExisting: NgxInputGradientComponent,
+}</a></code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>ngx-input-gradient</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                                <code><a href="../modules/NgxInputColorModule.html" target="_self" >NgxInputColorModule</a></code>
+                                <code><a href="../components/RangeSliderComponent.html" target="_self" >RangeSliderComponent</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./ngx-input-gradient.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./ngx-input-gradient.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#_onChange" >_onChange</a>
+                            </li>
+                            <li>
+                                <a href="#_onTouched" >_onTouched</a>
+                            </li>
+                            <li>
+                                <a href="#_onValidateChange" >_onValidateChange</a>
+                            </li>
+                            <li>
+                                <a href="#baseBg" >baseBg</a>
+                            </li>
+                            <li>
+                                <a href="#isDisabled" >isDisabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#rangeSlider" >rangeSlider</a>
+                            </li>
+                            <li>
+                                <a href="#rangeValues" >rangeValues</a>
+                            </li>
+                            <li>
+                                <a href="#resultGradient" >resultGradient</a>
+                            </li>
+                            <li>
+                                <a href="#rotation" >rotation</a>
+                            </li>
+                            <li>
+                                <a href="#rotationList" >rotationList</a>
+                            </li>
+                            <li>
+                                <a href="#selectedIndex" >selectedIndex</a>
+                            </li>
+                            <li>
+                                <a href="#type" >type</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#close" >close</a>
+                            </li>
+                            <li>
+                                <a href="#emitChange" >emitChange</a>
+                            </li>
+                            <li>
+                                <a href="#generateGradient" >generateGradient</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#generateId" >generateId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isValidGradient" >isValidGradient</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#ok" >ok</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseGradient" >parseGradient</a>
+                            </li>
+                            <li>
+                                <a href="#registerOnChange" >registerOnChange</a>
+                            </li>
+                            <li>
+                                <a href="#registerOnTouched" >registerOnTouched</a>
+                            </li>
+                            <li>
+                                <a href="#registerOnValidatorChange" >registerOnValidatorChange</a>
+                            </li>
+                            <li>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                <a href="#setDisabledState" >setDisabledState</a>
+                            </li>
+                            <li>
+                                <a href="#stopPropagation" >stopPropagation</a>
+                            </li>
+                            <li>
+                                <a href="#updateRangeSlider" >updateRangeSlider</a>
+                            </li>
+                            <li>
+                                <a href="#validate" >validate</a>
+                            </li>
+                            <li>
+                                <a href="#writeValue" >writeValue</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#closeTitle" >closeTitle</a>
+                            </li>
+                            <li>
+                                <a href="#confirmTitle" >confirmTitle</a>
+                            </li>
+                            <li>
+                                <a href="#showCloseButton" >showCloseButton</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cancel" >cancel</a>
+                            </li>
+                            <li>
+                                <a href="#change" >change</a>
+                            </li>
+                            <li>
+                                <a href="#confirm" >confirm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(cd: ChangeDetectorRef)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:67</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>cd</td>
+                                                  
+                                                        <td>
+                                                                    <code>ChangeDetectorRef</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="closeTitle"></a>
+                        <b>closeTitle</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Close&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:46</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="confirmTitle"></a>
+                        <b>confirmTitle</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Ok&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:47</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="showCloseButton"></a>
+                        <b>showCloseButton</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:48</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="cancel"></a>
+                        <b>cancel</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:52</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="change"></a>
+                        <b>change</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:50</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="confirm"></a>
+                        <b>confirm</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:51</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="close"></a>
+                    <span class="name">
+                        <span ><b>close</b></span>
+                        <a href="#close"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>close()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="202"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:202</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="emitChange"></a>
+                    <span class="name">
+                        <span ><b>emitChange</b></span>
+                        <a href="#emitChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>emitChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="237"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:237</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateGradient"></a>
+                    <span class="name">
+                        <span ><b>generateGradient</b></span>
+                        <a href="#generateGradient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateGradient(ev?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="221"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:221</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ev</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>generateId</b></span>
+                        <a href="#generateId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateId()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValidGradient"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isValidGradient</b></span>
+                        <a href="#isValidGradient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isValidGradient(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ok"></a>
+                    <span class="name">
+                        <span ><b>ok</b></span>
+                        <a href="#ok"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ok()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseGradient"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseGradient</b></span>
+                        <a href="#parseGradient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseGradient(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:97</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="registerOnChange"></a>
+                    <span class="name">
+                        <span ><b>registerOnChange</b></span>
+                        <a href="#registerOnChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>registerOnChange(fn: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="72"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fn</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="registerOnTouched"></a>
+                    <span class="name">
+                        <span ><b>registerOnTouched</b></span>
+                        <a href="#registerOnTouched"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>registerOnTouched(fn: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fn</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="registerOnValidatorChange"></a>
+                    <span class="name">
+                        <span ><b>registerOnValidatorChange</b></span>
+                        <a href="#registerOnValidatorChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>registerOnValidatorChange(fn: () => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fn</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remove"></a>
+                    <span class="name">
+                        <span ><b>remove</b></span>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>remove()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDisabledState"></a>
+                    <span class="name">
+                        <span ><b>setDisabledState</b></span>
+                        <a href="#setDisabledState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setDisabledState(disabled: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>disabled</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stopPropagation"></a>
+                    <span class="name">
+                        <span ><b>stopPropagation</b></span>
+                        <a href="#stopPropagation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>stopPropagation(ev: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="209"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:209</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ev</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateRangeSlider"></a>
+                    <span class="name">
+                        <span ><b>updateRangeSlider</b></span>
+                        <a href="#updateRangeSlider"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateRangeSlider()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="232"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:232</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validate"></a>
+                    <span class="name">
+                        <span ><b>validate</b></span>
+                        <a href="#validate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validate(control: AbstractControl)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>control</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidationErrors | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="writeValue"></a>
+                    <span class="name">
+                        <span ><b>writeValue</b></span>
+                        <a href="#writeValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>writeValue(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:166</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_onChange"></a>
+                    <span class="name">
+                        <span ><b>_onChange</b></span>
+                        <a href="#_onChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_onTouched"></a>
+                    <span class="name">
+                        <span ><b>_onTouched</b></span>
+                        <a href="#_onTouched"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_onValidateChange"></a>
+                    <span class="name">
+                        <span ><b>_onValidateChange</b></span>
+                        <a href="#_onValidateChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="baseBg"></a>
+                    <span class="name">
+                        <span ><b>baseBg</b></span>
+                        <a href="#baseBg"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDisabled"></a>
+                    <span class="name">
+                        <span ><b>isDisabled</b></span>
+                        <a href="#isDisabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rangeSlider"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>rangeSlider</b></span>
+                        <a href="#rangeSlider"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/RangeSliderComponent.html" target="_self" >RangeSliderComponent</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;rangeSlider&#x27;, {static: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rangeValues"></a>
+                    <span class="name">
+                        <span ><b>rangeValues</b></span>
+                        <a href="#rangeValues"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/GradientStop.html" target="_self" >GradientStop[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resultGradient"></a>
+                    <span class="name">
+                        <span ><b>resultGradient</b></span>
+                        <a href="#resultGradient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rotation"></a>
+                    <span class="name">
+                        <span ><b>rotation</b></span>
+                        <a href="#rotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>90</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rotationList"></a>
+                    <span class="name">
+                        <span ><b>rotationList</b></span>
+                        <a href="#rotationList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[0, 45, 90, 135, 180, 225, 270, 315, 360]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedIndex"></a>
+                    <span class="name">
+                        <span ><b>selectedIndex</b></span>
+                        <a href="#selectedIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="type"></a>
+                    <span class="name">
+                        <span ><b>type</b></span>
+                        <a href="#type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#GradientType" target="_self" >GradientType</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;linear&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from &#x27;@angular/core&#x27;;
+import {
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  ControlValueAccessor,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
+  FormsModule,
+} from &#x27;@angular/forms&#x27;;
+import { GradientStop, GradientType } from &#x27;@ngx-input-color/models/GradientStop&#x27;;
+import { NgxInputColorModule } from &#x27;@ngx-input-color/public-api&#x27;;
+import { RangeSliderComponent } from &#x27;@ngx-input-color/range-slider/range-slider.component&#x27;;
+import { buildGradientFromStops, generateRandomColor } from &#x27;@ngx-input-color/utils/build-gradient&#x27;;
+
+@Component({
+  standalone: true,
+  selector: &#x27;ngx-input-gradient&#x27;,
+  templateUrl: &#x27;./ngx-input-gradient.component.html&#x27;,
+  styleUrls: [&#x27;./ngx-input-gradient.component.scss&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputGradientComponent), multi: true },
+    {
+      provide: NG_VALIDATORS,
+      multi: true,
+      useExisting: NgxInputGradientComponent,
+    },
+  ],
+  imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],
+})
+export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+  @Input() closeTitle &#x3D; &#x27;Close&#x27;;
+  @Input() confirmTitle &#x3D; &#x27;Ok&#x27;;
+  @Input() showCloseButton &#x3D; true;
+
+  @Output() change &#x3D; new EventEmitter&lt;string&gt;();
+  @Output() confirm &#x3D; new EventEmitter&lt;string&gt;();
+  @Output() cancel &#x3D; new EventEmitter&lt;void&gt;();
+
+  resultGradient &#x3D; &#x27;&#x27;;
+  baseBg &#x3D; &#x27;&#x27;;
+  rangeValues: GradientStop[] &#x3D; [];
+  type: GradientType &#x3D; &#x27;linear&#x27;;
+  rotation: number &#x3D; 90;
+  rotationList &#x3D; [0, 45, 90, 135, 180, 225, 270, 315, 360];
+  selectedIndex &#x3D; 0;
+
+  isDisabled &#x3D; false;
+  _onChange &#x3D; (value: string) &#x3D;&gt; {};
+  _onTouched &#x3D; () &#x3D;&gt; {};
+  _onValidateChange &#x3D; () &#x3D;&gt; {};
+
+  @ViewChild(&#x27;rangeSlider&#x27;, { static: true }) rangeSlider?: RangeSliderComponent;
+  constructor(private cd: ChangeDetectorRef) {}
+
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
+  registerOnChange(fn: any): void {
+    this._onChange &#x3D; fn;
+  }
+  registerOnTouched(fn: any): void {
+    this._onTouched &#x3D; fn;
+  }
+  setDisabledState(disabled: boolean): void {
+    this.isDisabled &#x3D; disabled;
+  }
+  registerOnValidatorChange(fn: () &#x3D;&gt; void): void {
+    this._onValidateChange &#x3D; fn;
+  }
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.resultGradient) return { required: true };
+    const parsed &#x3D; this.parseGradient(this.resultGradient);
+    if (!parsed.valid) return { invalid: true };
+    if (parsed.stops.length &lt; 2) return { stops: &#x27;at least 2 color stops required&#x27; };
+    return null;
+  }
+
+  private isValidGradient(value: string): boolean {
+    // Accepts linear-gradient or radial-gradient with any color format
+    return /^(\s*)(linear|radial)-gradient\s*\(/i.test(value);
+  }
+
+  private parseGradient(value: string): {
+    type: GradientType;
+    rotation: number;
+    stops: GradientStop[];
+    valid: boolean;
+  } {
+    let type: GradientType &#x3D; &#x27;linear&#x27;;
+    let rotation &#x3D; 90;
+    let stops: GradientStop[] &#x3D; [];
+    let valid &#x3D; false;
+    let match &#x3D; value.match(/^(\s*)(linear|radial)-gradient\s*\((.*)\)$/i);
+    if (!match) return { type, rotation, stops, valid };
+    type &#x3D; match[2] as GradientType;
+    let content &#x3D; match[3];
+    // Split by commas, but ignore commas inside parentheses (for rgb, hsl, etc)
+    let parts &#x3D; [];
+    let buf &#x3D; &#x27;&#x27;,
+      depth &#x3D; 0;
+    for (let c of content) {
+      if (c &#x3D;&#x3D;&#x3D; &#x27;(&#x27;) depth++;
+      if (c &#x3D;&#x3D;&#x3D; &#x27;)&#x27;) depth--;
+      if (c &#x3D;&#x3D;&#x3D; &#x27;,&#x27; &amp;&amp; depth &#x3D;&#x3D;&#x3D; 0) {
+        parts.push(buf.trim());
+        buf &#x3D; &#x27;&#x27;;
+      } else {
+        buf +&#x3D; c;
+      }
+    }
+    if (buf) parts.push(buf.trim());
+    // First part may be angle/direction (for linear) or shape/position (for radial)
+    let first &#x3D; parts[0];
+    let colorStopStart &#x3D; 0;
+    if (type &#x3D;&#x3D;&#x3D; &#x27;linear&#x27;) {
+      let angleMatch &#x3D; first.match(/^(\d+)(deg)?$/i);
+      if (angleMatch) {
+        rotation &#x3D; parseInt(angleMatch[1], 10);
+        colorStopStart &#x3D; 1;
+      } else if (/to /.test(first)) {
+        // e.g. &#x27;to right&#x27;, &#x27;to bottom left&#x27; (optional: map to degree)
+        // You can add mapping if needed
+        colorStopStart &#x3D; 1;
+      }
+    } else if (type &#x3D;&#x3D;&#x3D; &#x27;radial&#x27;) {
+      // e.g. &#x27;circle at center&#x27;, &#x27;ellipse at top left&#x27;, etc
+      if (!/^(#|rgb|hsl|[a-z])/i.test(first)) colorStopStart &#x3D; 1;
+    }
+    // Color stop regex: supports hex, rgb(a), hsl(a), color names, with optional position
+    const colorStopRegex &#x3D;
+      /((#([0-9a-fA-F]{3,8}))|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))(\s+([\d.]+%?|[\d.]+px|[\d.]+em))?/;
+    for (let i &#x3D; colorStopStart; i &lt; parts.length; i++) {
+      let stopPart &#x3D; parts[i];
+      let m &#x3D; stopPart.match(colorStopRegex);
+      if (m) {
+        let color &#x3D; m[1];
+        let posStr &#x3D; m[8];
+        let value &#x3D; 0;
+        if (posStr) {
+          if (posStr.endsWith(&#x27;%&#x27;)) value &#x3D; parseFloat(posStr);
+          else value &#x3D; parseFloat(posStr); // px/em: you may want to normalize or keep as is
+        } else {
+          value &#x3D; i &#x3D;&#x3D;&#x3D; colorStopStart ? 0 : 100;
+        }
+        stops.push({ color, value, id: this.generateId() });
+      }
+    }
+    valid &#x3D; stops.length &gt;&#x3D; 2;
+    return { type, rotation, stops, valid };
+  }
+
+  writeValue(value: any): void {
+    if (value &amp;&amp; this.isValidGradient(value)) {
+      const parsed &#x3D; this.parseGradient(value);
+      if (parsed.valid) {
+        this.resultGradient &#x3D; value;
+        this.type &#x3D; parsed.type;
+        this.rotation &#x3D; parsed.rotation;
+        this.rangeValues &#x3D; parsed.stops;
+      } else {
+        this.resultGradient &#x3D; &#x27;&#x27;;
+        this.rangeValues &#x3D; [
+          { color: generateRandomColor(), value: 0, id: this.generateId() },
+          { color: generateRandomColor(), value: 100, id: this.generateId() },
+        ];
+        this.type &#x3D; &#x27;linear&#x27;;
+        this.rotation &#x3D; 90;
+      }
+    } else {
+      this.resultGradient &#x3D; &#x27;&#x27;;
+      this.rangeValues &#x3D; [
+        { color: generateRandomColor(), value: 0, id: this.generateId() },
+        { color: generateRandomColor(), value: 100, id: this.generateId() },
+      ];
+      this.type &#x3D; &#x27;linear&#x27;;
+      this.rotation &#x3D; 90;
+    }
+    this.generateGradient();
+  }
+  private generateId(): string {
+    let id &#x3D; &#x27;ngx-thumb-&#x27; + Math.random().toString(36).substring(2, 9);
+    if (this.rangeValues.findIndex((x) &#x3D;&gt; x.id &#x3D;&#x3D; id) &gt;&#x3D; 0) {
+      return this.generateId();
+    }
+    return id;
+  }
+
+  close() {
+    this.cancel.emit();
+  }
+
+  ok() {
+    this.emitChange();
+  }
+  stopPropagation(ev: Event) {
+    ev.stopPropagation();
+  }
+
+  remove() {
+    if (this.rangeValues.length &gt; 2) {
+      this.rangeValues.splice(this.selectedIndex, 1);
+      this.selectedIndex &#x3D; 0;
+      this.generateGradient();
+    }
+  }
+
+  generateGradient(ev?: string) {
+    if (ev &amp;&amp; this.rangeValues[this.selectedIndex]) {
+      this.rangeValues[this.selectedIndex].color &#x3D; ev;
+    }
+    for (let item of this.rangeValues) {
+      item.color ??&#x3D; generateRandomColor();
+    }
+    this.baseBg &#x3D; buildGradientFromStops(this.rangeValues, &#x27;linear&#x27;);
+    this.resultGradient &#x3D; buildGradientFromStops(this.rangeValues, this.type, this.rotation);
+  }
+
+  updateRangeSlider() {
+    if (this.rangeSlider) {
+      this.rangeSlider.writeValue(this.rangeValues);
+    }
+  }
+  emitChange() {
+    this._onChange(this.resultGradient);
+    this.change.emit(this.resultGradient);
+    this.confirm.emit(this.resultGradient);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;ngx-input-color-picker&quot; (click)&#x3D;&quot;stopPropagation($event)&quot;&gt;
+  &lt;div class&#x3D;&quot;ngx-color-preview&quot; [style.background]&#x3D;&quot;resultGradient&quot;&gt;&lt;/div&gt;
+  &lt;div class&#x3D;&quot;inner&quot;&gt;
+    &lt;range-slider
+      [(ngModel)]&#x3D;&quot;rangeValues&quot;
+      [min]&#x3D;&quot;0&quot;
+      [max]&#x3D;&quot;100&quot;
+      [step]&#x3D;&quot;1&quot;
+      [addNewRangeOnClick]&#x3D;&quot;true&quot;
+      [background]&#x3D;&quot;baseBg&quot;
+      [(selectedIndex)]&#x3D;&quot;selectedIndex&quot;
+      (change)&#x3D;&quot;generateGradient()&quot;
+      #rangeSlider&gt;&lt;/range-slider&gt;
+
+    &lt;div class&#x3D;&quot;text-end&quot;&gt;
+      &lt;button class&#x3D;&quot;remove-btn&quot; type&#x3D;&quot;button&quot; (click)&#x3D;&quot;remove()&quot;&gt;remove&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;ngx-row&quot; *ngIf&#x3D;&quot;rangeValues[selectedIndex]&quot;&gt;
+      &lt;div class&#x3D;&quot;ngx-input-group ngx-col-6&quot;&gt;
+        &lt;div class&#x3D;&quot;label&quot;&gt;Color&lt;/div&gt;
+        &lt;div class&#x3D;&quot;input-color&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            [(ngModel)]&#x3D;&quot;rangeValues[selectedIndex].color&quot;
+            name&#x3D;&quot;color&quot;
+            #ngxGradColor
+            (ngModelChange)&#x3D;&quot;generateGradient()&quot; /&gt;
+          &lt;span
+            class&#x3D;&quot;color&quot;
+            [style.backgroundColor]&#x3D;&quot;rangeValues[selectedIndex].color&quot;
+            [ngxInputColor]&#x3D;&quot;ngxGradColor&quot;
+            [showCloseButton]&#x3D;&quot;false&quot;
+            [showConfirmButton]&#x3D;&quot;false&quot;
+            [simpleMode]&#x3D;&quot;true&quot;
+            (change)&#x3D;&quot;generateGradient($event)&quot;&gt;&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;ngx-col-6&quot;&gt;
+        &lt;div class&#x3D;&quot;label&quot;&gt;Position&lt;/div&gt;
+        &lt;input
+          type&#x3D;&quot;number&quot;
+          [(ngModel)]&#x3D;&quot;rangeValues[selectedIndex].value&quot;
+          min&#x3D;&quot;0&quot;
+          max&#x3D;&quot;100&quot;
+          name&#x3D;&quot;posiition&quot;
+          (change)&#x3D;&quot;generateGradient(); updateRangeSlider()&quot; /&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;ngx-col-6&quot;&gt;
+        &lt;div class&#x3D;&quot;label&quot;&gt;Rotation&lt;/div&gt;
+        &lt;select [(ngModel)]&#x3D;&quot;rotation&quot; (change)&#x3D;&quot;generateGradient()&quot; name&#x3D;&quot;rotation&quot;&gt;
+          &lt;option [value]&#x3D;&quot;item&quot; *ngFor&#x3D;&quot;let item of rotationList&quot;&gt;{{ item + &#x27;°&#x27; }}&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;ngx-col-6&quot;&gt;
+        &lt;div class&#x3D;&quot;label&quot;&gt;Type&lt;/div&gt;
+        &lt;select [(ngModel)]&#x3D;&quot;type&quot; (change)&#x3D;&quot;generateGradient()&quot; name&#x3D;&quot;type&quot;&gt;
+          &lt;option value&#x3D;&quot;linear&quot;&gt;linear&lt;/option&gt;
+          &lt;option value&#x3D;&quot;radial&quot;&gt;radial&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;actions&quot;&gt;
+    &lt;div class&#x3D;&quot;action-buttons&quot;&gt;
+      &lt;button (click)&#x3D;&quot;close()&quot; *ngIf&#x3D;&quot;showCloseButton&quot;&gt;{{ closeTitle }}&lt;/button&gt;
+      &lt;button (click)&#x3D;&quot;ok()&quot;&gt;{{ confirmTitle }}&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./ngx-input-gradient.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.ngx-input-color-picker {
+  width: 330px;
+  max-width: 100%;
+  border: 1px #bfbfbf solid;
+  border-radius: 15px;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);
+  direction: ltr;
+
+  .inner {
+    padding: 0 12px 12px;
+  }
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.ngx-color-preview {
+  min-height: 120px;
+  padding: 10px 36px;
+  line-height: 2.2;
+  font-size: 14px;
+  font-family: arial, tahoma;
+  font-weight: 700;
+  position: relative;
+  color: #353535;
+
+  &amp;:after {
+    content: &#x27; &#x27;;
+    position: absolute;
+    background-color: white;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 30px;
+    border-radius: 30px 30px 0 0;
+  }
+  &amp;::before {
+    content: &#x27; &#x27;;
+    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
+.ngx-color-picker-backdrop {
+  background: #5e5e5e1e;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  transition: all 300ms;
+}
+
+/*------ button groups ---------*/
+.button-groups {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px #d3d3d3 solid;
+
+  button {
+    cursor: pointer;
+    background: #f9f9f9;
+    outline: none;
+    border: none;
+    transition: all 300ms;
+    border-left: 1px #d3d3d3 solid;
+    padding: 10px 12px;
+    flex: auto;
+    &amp;:hover {
+      background: #8db6e4;
+    }
+    &amp;:first-child {
+      border-left-width: 0;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  justify-content: space-between;
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  button {
+    cursor: pointer;
+    background: #f9f9f9;
+    outline: none;
+    transition: all 300ms;
+    border: 1px #d3d3d3 solid;
+    padding: 10px 12px;
+    min-width: 90px;
+    border-radius: 6px;
+    &amp;:hover {
+      background: #8db6e4;
+    }
+  }
+}
+/*------ button groups ---------*/
+
+.ngx-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  .ngx-col-6 {
+    width: 48%;
+  }
+
+  .input-color {
+    position: relative;
+    input {
+      padding-right: 26px;
+    }
+    .color {
+      position: absolute;
+      top: 4px;
+      right: 5px;
+      cursor: pointer;
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      transition: all 300ms;
+      &amp;:hover {
+        border-color: #8db6e4;
+      }
+    }
+  }
+
+  select,
+  input {
+    outline: none;
+    border: 1px solid #ececec;
+    border-radius: 4px;
+    padding: 8px 10px;
+    background: none;
+    width: 100%;
+    &amp;:focus {
+      cursor: pointer;
+      background: hsl(216, 100%, 95%);
+      color: hsl(216, 100%, 50%);
+    }
+    option {
+      padding: 10px 20px;
+      background-color: #fff;
+      transition: all 300ms;
+      &amp;:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+}
+
+.text-end {
+  text-align: end;
+}
+.remove-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: #0077ff;
+  transition: color 300ms;
+  &amp;:hover {
+    color: #0462cc;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="ngx-input-color-picker" (click)="stopPropagation($event)">  <div class="ngx-color-preview" [style.background]="resultGradient"></div>  <div class="inner">    <range-slider      [(ngModel)]="rangeValues"      [min]="0"      [max]="100"      [step]="1"      [addNewRangeOnClick]="true"      [background]="baseBg"      [(selectedIndex)]="selectedIndex"      (change)="generateGradient()"      #rangeSlider></range-slider>    <div class="text-end">      <button class="remove-btn" type="button" (click)="remove()">remove</button>    </div>    <div class="ngx-row" *ngIf="rangeValues[selectedIndex]">      <div class="ngx-input-group ngx-col-6">        <div class="label">Color</div>        <div class="input-color">          <input            type="text"            [(ngModel)]="rangeValues[selectedIndex].color"            name="color"            #ngxGradColor            (ngModelChange)="generateGradient()" />          <span            class="color"            [style.backgroundColor]="rangeValues[selectedIndex].color"            [ngxInputColor]="ngxGradColor"            [showCloseButton]="false"            [showConfirmButton]="false"            [simpleMode]="true"            (change)="generateGradient($event)"></span>        </div>      </div>      <div class="ngx-col-6">        <div class="label">Position</div>        <input          type="number"          [(ngModel)]="rangeValues[selectedIndex].value"          min="0"          max="100"          name="posiition"          (change)="generateGradient(); updateRangeSlider()" />      </div>      <div class="ngx-col-6">        <div class="label">Rotation</div>        <select [(ngModel)]="rotation" (change)="generateGradient()" name="rotation">          <option [value]="item" *ngFor="let item of rotationList">{{ item + \'°\' }}</option>        </select>      </div>      <div class="ngx-col-6">        <div class="label">Type</div>        <select [(ngModel)]="type" (change)="generateGradient()" name="type">          <option value="linear">linear</option>          <option value="radial">radial</option>        </select>      </div>    </div>  </div>  <div class="actions">    <div class="action-buttons">      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>      <button (click)="ok()">{{ confirmTitle }}</button>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'ButtonComponent', 'selector': 'storybook-button'},{'name': 'CmykComponent', 'selector': 'app-cmyk'},{'name': 'ComponentsComponent', 'selector': 'app-components'},{'name': 'DemoPageComponent', 'selector': 'app-demo-page'},{'name': 'HeaderComponent', 'selector': 'storybook-header'},{'name': 'HslComponent', 'selector': 'app-hsl'},{'name': 'NgxInputColorComponent', 'selector': 'ngx-input-color'},{'name': 'NgxInputGradientComponent', 'selector': 'ngx-input-gradient'},{'name': 'PageComponent', 'selector': 'storybook-page'},{'name': 'PickerComponent', 'selector': 'app-picker'},{'name': 'RangeSliderComponent', 'selector': 'range-slider'},{'name': 'RgbComponent', 'selector': 'app-rgb'},{'name': 'SaturationComponent', 'selector': 'saturation'},{'name': 'SliderComponent', 'selector': 'slider'}];
+    var DIRECTIVES = [{'name': 'NgxInputColorDirective', 'selector': '[ngxInputColor]'},{'name': 'NgxInputGradientDirective', 'selector': '[ngxInputGradient]'}];
+    var ACTUAL_COMPONENT = {'name': 'NgxInputGradientComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputGradientComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

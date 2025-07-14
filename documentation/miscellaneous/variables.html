@@ -1,0 +1,884 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ngx-input-color documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">ngx-input-color documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#appConfig" title="projects/demo/src/app/app.config.ts" ><b>appConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../app.config.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#colorNames" title="projects/ngx-input-color/src/utils/css-color-names.ts" ><b>colorNames</b>&nbsp;&nbsp;&nbsp;(projects/.../css-color-names.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EyeDropper" title="projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts" ><b>EyeDropper</b>&nbsp;&nbsp;&nbsp;(projects/.../ngx-input-color.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Inline" title="projects/demo/src/stories/ngx-input-color-inline.stories.ts" ><b>Inline</b>&nbsp;&nbsp;&nbsp;(projects/.../ngx-input-color-inline.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Inline" title="projects/demo/src/stories/ngx-input-gradient-inline.stories.ts" ><b>Inline</b>&nbsp;&nbsp;&nbsp;(projects/.../ngx-input-gradient-inline.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Large" title="projects/demo/src/stories/button.stories.ts" ><b>Large</b>&nbsp;&nbsp;&nbsp;(projects/.../button.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoggedIn" title="projects/demo/src/stories/header.stories.ts" ><b>LoggedIn</b>&nbsp;&nbsp;&nbsp;(projects/.../header.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoggedIn" title="projects/demo/src/stories/page.stories.ts" ><b>LoggedIn</b>&nbsp;&nbsp;&nbsp;(projects/.../page.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoggedOut" title="projects/demo/src/stories/header.stories.ts" ><b>LoggedOut</b>&nbsp;&nbsp;&nbsp;(projects/.../header.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoggedOut" title="projects/demo/src/stories/page.stories.ts" ><b>LoggedOut</b>&nbsp;&nbsp;&nbsp;(projects/.../page.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#meta" title="projects/demo/src/stories/button.stories.ts" ><b>meta</b>&nbsp;&nbsp;&nbsp;(projects/.../button.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#meta" title="projects/demo/src/stories/header.stories.ts" ><b>meta</b>&nbsp;&nbsp;&nbsp;(projects/.../header.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#meta" title="projects/demo/src/stories/ngx-input-color-inline.stories.ts" ><b>meta</b>&nbsp;&nbsp;&nbsp;(projects/.../ngx-input-color-inline.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#meta" title="projects/demo/src/stories/ngx-input-gradient-inline.stories.ts" ><b>meta</b>&nbsp;&nbsp;&nbsp;(projects/.../ngx-input-gradient-inline.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#meta" title="projects/demo/src/stories/page.stories.ts" ><b>meta</b>&nbsp;&nbsp;&nbsp;(projects/.../page.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Primary" title="projects/demo/src/stories/button.stories.ts" ><b>Primary</b>&nbsp;&nbsp;&nbsp;(projects/.../button.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Secondary" title="projects/demo/src/stories/button.stories.ts" ><b>Secondary</b>&nbsp;&nbsp;&nbsp;(projects/.../button.stories.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Small" title="projects/demo/src/stories/button.stories.ts" ><b>Small</b>&nbsp;&nbsp;&nbsp;(projects/.../button.stories.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>projects/demo/src/app/app.config.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="appConfig"></a>
+                    <span class="name">
+                        <span ><b>appConfig</b></span>
+                        <a href="#appConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ApplicationConfig</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/ngx-input-color/src/utils/css-color-names.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="colorNames"></a>
+                    <span class="name">
+                        <span ><b>colorNames</b></span>
+                        <a href="#colorNames"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Record&lt;string, string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  aliceblue: &#x27;#f0f8ff&#x27;, antiquewhite: &#x27;#faebd7&#x27;, aqua: &#x27;#00ffff&#x27;, aquamarine: &#x27;#7fffd4&#x27;, azure: &#x27;#f0ffff&#x27;,
+  beige: &#x27;#f5f5dc&#x27;, bisque: &#x27;#ffe4c4&#x27;, black: &#x27;#000000&#x27;, blanchedalmond: &#x27;#ffebcd&#x27;, blue: &#x27;#0000ff&#x27;,
+  blueviolet: &#x27;#8a2be2&#x27;, brown: &#x27;#a52a2a&#x27;, burlywood: &#x27;#deb887&#x27;, cadetblue: &#x27;#5f9ea0&#x27;, chartreuse: &#x27;#7fff00&#x27;,
+  chocolate: &#x27;#d2691e&#x27;, coral: &#x27;#ff7f50&#x27;, cornflowerblue: &#x27;#6495ed&#x27;, cornsilk: &#x27;#fff8dc&#x27;, crimson: &#x27;#dc143c&#x27;,
+  cyan: &#x27;#00ffff&#x27;, darkblue: &#x27;#00008b&#x27;, darkcyan: &#x27;#008b8b&#x27;, darkgoldenrod: &#x27;#b8860b&#x27;, darkgray: &#x27;#a9a9a9&#x27;,
+  darkgreen: &#x27;#006400&#x27;, darkgrey: &#x27;#a9a9a9&#x27;, darkkhaki: &#x27;#bdb76b&#x27;, darkmagenta: &#x27;#8b008b&#x27;, darkolivegreen: &#x27;#556b2f&#x27;,
+  darkorange: &#x27;#ff8c00&#x27;, darkorchid: &#x27;#9932cc&#x27;, darkred: &#x27;#8b0000&#x27;, darksalmon: &#x27;#e9967a&#x27;, darkseagreen: &#x27;#8fbc8f&#x27;,
+  darkslateblue: &#x27;#483d8b&#x27;, darkslategray: &#x27;#2f4f4f&#x27;, darkslategrey: &#x27;#2f4f4f&#x27;, darkturquoise: &#x27;#00ced1&#x27;,
+  darkviolet: &#x27;#9400d3&#x27;, deeppink: &#x27;#ff1493&#x27;, deepskyblue: &#x27;#00bfff&#x27;, dimgray: &#x27;#696969&#x27;, dimgrey: &#x27;#696969&#x27;,
+  dodgerblue: &#x27;#1e90ff&#x27;, firebrick: &#x27;#b22222&#x27;, floralwhite: &#x27;#fffaf0&#x27;, forestgreen: &#x27;#228b22&#x27;, fuchsia: &#x27;#ff00ff&#x27;,
+  gainsboro: &#x27;#dcdcdc&#x27;, ghostwhite: &#x27;#f8f8ff&#x27;, gold: &#x27;#ffd700&#x27;, goldenrod: &#x27;#daa520&#x27;, gray: &#x27;#808080&#x27;,
+  green: &#x27;#008000&#x27;, greenyellow: &#x27;#adff2f&#x27;, grey: &#x27;#808080&#x27;, honeydew: &#x27;#f0fff0&#x27;, hotpink: &#x27;#ff69b4&#x27;,
+  indianred: &#x27;#cd5c5c&#x27;, indigo: &#x27;#4b0082&#x27;, ivory: &#x27;#fffff0&#x27;, khaki: &#x27;#f0e68c&#x27;, lavender: &#x27;#e6e6fa&#x27;,
+  lavenderblush: &#x27;#fff0f5&#x27;, lawngreen: &#x27;#7cfc00&#x27;, lemonchiffon: &#x27;#fffacd&#x27;, lightblue: &#x27;#add8e6&#x27;, lightcoral: &#x27;#f08080&#x27;,
+  lightcyan: &#x27;#e0ffff&#x27;, lightgoldenrodyellow: &#x27;#fafad2&#x27;, lightgray: &#x27;#d3d3d3&#x27;, lightgreen: &#x27;#90ee90&#x27;, lightgrey: &#x27;#d3d3d3&#x27;,
+  lightpink: &#x27;#ffb6c1&#x27;, lightsalmon: &#x27;#ffa07a&#x27;, lightseagreen: &#x27;#20b2aa&#x27;, lightskyblue: &#x27;#87cefa&#x27;, lightslategray: &#x27;#778899&#x27;,
+  lightslategrey: &#x27;#778899&#x27;, lightsteelblue: &#x27;#b0c4de&#x27;, lightyellow: &#x27;#ffffe0&#x27;, lime: &#x27;#00ff00&#x27;, limegreen: &#x27;#32cd32&#x27;,
+  linen: &#x27;#faf0e6&#x27;, magenta: &#x27;#ff00ff&#x27;, maroon: &#x27;#800000&#x27;, mediumaquamarine: &#x27;#66cdaa&#x27;, mediumblue: &#x27;#0000cd&#x27;,
+  mediumorchid: &#x27;#ba55d3&#x27;, mediumpurple: &#x27;#9370db&#x27;, mediumseagreen: &#x27;#3cb371&#x27;, mediumslateblue: &#x27;#7b68ee&#x27;,
+  mediumspringgreen: &#x27;#00fa9a&#x27;, mediumturquoise: &#x27;#48d1cc&#x27;, mediumvioletred: &#x27;#c71585&#x27;, midnightblue: &#x27;#191970&#x27;,
+  mintcream: &#x27;#f5fffa&#x27;, mistyrose: &#x27;#ffe4e1&#x27;, moccasin: &#x27;#ffe4b5&#x27;, navajowhite: &#x27;#ffdead&#x27;, navy: &#x27;#000080&#x27;,
+  oldlace: &#x27;#fdf5e6&#x27;, olive: &#x27;#808000&#x27;, olivedrab: &#x27;#6b8e23&#x27;, orange: &#x27;#ffa500&#x27;, orangered: &#x27;#ff4500&#x27;,
+  orchid: &#x27;#da70d6&#x27;, palegoldenrod: &#x27;#eee8aa&#x27;, palegreen: &#x27;#98fb98&#x27;, paleturquoise: &#x27;#afeeee&#x27;, palevioletred: &#x27;#db7093&#x27;,
+  papayawhip: &#x27;#ffefd5&#x27;, peachpuff: &#x27;#ffdab9&#x27;, peru: &#x27;#cd853f&#x27;, pink: &#x27;#ffc0cb&#x27;, plum: &#x27;#dda0dd&#x27;, powderblue: &#x27;#b0e0e6&#x27;,
+  purple: &#x27;#800080&#x27;, rebeccapurple: &#x27;#663399&#x27;, red: &#x27;#ff0000&#x27;, rosybrown: &#x27;#bc8f8f&#x27;, royalblue: &#x27;#4169e1&#x27;,
+  saddlebrown: &#x27;#8b4513&#x27;, salmon: &#x27;#fa8072&#x27;, sandybrown: &#x27;#f4a460&#x27;, seagreen: &#x27;#2e8b57&#x27;, seashell: &#x27;#fff5ee&#x27;,
+  sienna: &#x27;#a0522d&#x27;, silver: &#x27;#c0c0c0&#x27;, skyblue: &#x27;#87ceeb&#x27;, slateblue: &#x27;#6a5acd&#x27;, slategray: &#x27;#708090&#x27;,
+  slategrey: &#x27;#708090&#x27;, snow: &#x27;#fffafa&#x27;, springgreen: &#x27;#00ff7f&#x27;, steelblue: &#x27;#4682b4&#x27;, tan: &#x27;#d2b48c&#x27;,
+  teal: &#x27;#008080&#x27;, thistle: &#x27;#d8bfd8&#x27;, tomato: &#x27;#ff6347&#x27;, turquoise: &#x27;#40e0d0&#x27;, violet: &#x27;#ee82ee&#x27;, wheat: &#x27;#f5deb3&#x27;,
+  white: &#x27;#ffffff&#x27;, whitesmoke: &#x27;#f5f5f5&#x27;, yellow: &#x27;#ffff00&#x27;, yellowgreen: &#x27;#9acd32&#x27;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EyeDropper"></a>
+                    <span class="name">
+                        <span ><b>EyeDropper</b></span>
+                        <a href="#EyeDropper"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/demo/src/stories/ngx-input-color-inline.stories.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Inline"></a>
+                    <span class="name">
+                        <span ><b>Inline</b></span>
+                        <a href="#Inline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    showCloseButton: true,
+    showConfirmButton: true,
+    simpleMode: false,
+    closeTitle: &#x27;Cancel&#x27;,
+    confirmTitle: &#x27;Select&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/NgxInputColorComponent.html" target="_self" >Meta&lt;NgxInputColorComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  title: &#x27;NGX Input Color/Inline&#x27;,
+  component: NgxInputColorComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [FormsModule],
+    }),
+  ],
+  tags: [&#x27;autodocs&#x27;],
+  argTypes: {
+    colorInspector: {
+      control: &#x27;select&#x27;,
+      options: [&#x27;Picker&#x27;, &#x27;RGB&#x27;, &#x27;HSL&#x27;, &#x27;CMYK&#x27;],
+    },
+    showCloseButton: { control: &#x27;boolean&#x27; },
+    showConfirmButton: { control: &#x27;boolean&#x27; },
+    simpleMode: { control: &#x27;boolean&#x27; },
+    closeTitle: { control: &#x27;text&#x27; },
+    confirmTitle: { control: &#x27;text&#x27; },
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/demo/src/stories/ngx-input-gradient-inline.stories.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Inline"></a>
+                    <span class="name">
+                        <span ><b>Inline</b></span>
+                        <a href="#Inline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    showCloseButton: true,
+    closeTitle: &#x27;Cancel&#x27;,
+    confirmTitle: &#x27;Done&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/NgxInputGradientComponent.html" target="_self" >Meta&lt;NgxInputGradientComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  title: &#x27;NGX Input Gradient/Inline&#x27;,
+  component: NgxInputGradientComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [FormsModule],
+    }),
+  ],
+  tags: [&#x27;autodocs&#x27;],
+  argTypes: {
+    showCloseButton: { control: &#x27;boolean&#x27; },
+    closeTitle: { control: &#x27;text&#x27; },
+    confirmTitle: { control: &#x27;text&#x27; },
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/demo/src/stories/button.stories.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Large"></a>
+                    <span class="name">
+                        <span ><b>Large</b></span>
+                        <a href="#Large"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    size: &#x27;large&#x27;,
+    label: &#x27;Button&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/ButtonComponent.html" target="_self" >Meta&lt;ButtonComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  title: &#x27;Example/Button&#x27;,
+  component: ButtonComponent,
+  tags: [&#x27;autodocs&#x27;],
+  argTypes: {
+    backgroundColor: {
+      control: &#x27;color&#x27;,
+    },
+  },
+  // Use &#x60;fn&#x60; to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  args: { onClick: fn() },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Primary"></a>
+                    <span class="name">
+                        <span ><b>Primary</b></span>
+                        <a href="#Primary"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    primary: true,
+    label: &#x27;Button&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Secondary"></a>
+                    <span class="name">
+                        <span ><b>Secondary</b></span>
+                        <a href="#Secondary"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    label: &#x27;Button&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Small"></a>
+                    <span class="name">
+                        <span ><b>Small</b></span>
+                        <a href="#Small"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    size: &#x27;small&#x27;,
+    label: &#x27;Button&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/demo/src/stories/header.stories.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoggedIn"></a>
+                    <span class="name">
+                        <span ><b>LoggedIn</b></span>
+                        <a href="#LoggedIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  args: {
+    user: {
+      name: &#x27;Jane Doe&#x27;,
+    },
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoggedOut"></a>
+                    <span class="name">
+                        <span ><b>LoggedOut</b></span>
+                        <a href="#LoggedOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/HeaderComponent.html" target="_self" >Meta&lt;HeaderComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  title: &#x27;Example/Header&#x27;,
+  component: HeaderComponent,
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+  tags: [&#x27;autodocs&#x27;],
+  parameters: {
+    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
+    layout: &#x27;fullscreen&#x27;,
+  },
+  args: {
+    onLogin: fn(),
+    onLogout: fn(),
+    onCreateAccount: fn(),
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>projects/demo/src/stories/page.stories.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoggedIn"></a>
+                    <span class="name">
+                        <span ><b>LoggedIn</b></span>
+                        <a href="#LoggedIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  play: async ({ canvasElement }) &#x3D;&gt; {
+    const canvas &#x3D; within(canvasElement);
+    const loginButton &#x3D; canvas.getByRole(&#x27;button&#x27;, { name: /Log in/i });
+    await expect(loginButton).toBeInTheDocument();
+    await userEvent.click(loginButton);
+    await expect(loginButton).not.toBeInTheDocument();
+
+    const logoutButton &#x3D; canvas.getByRole(&#x27;button&#x27;, { name: /Log out/i });
+    await expect(logoutButton).toBeInTheDocument();
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoggedOut"></a>
+                    <span class="name">
+                        <span ><b>LoggedOut</b></span>
+                        <a href="#LoggedOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Story" target="_self" >Story</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/PageComponent.html" target="_self" >Meta&lt;PageComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  title: &#x27;Example/Page&#x27;,
+  component: PageComponent,
+  parameters: {
+    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
+    layout: &#x27;fullscreen&#x27;,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
