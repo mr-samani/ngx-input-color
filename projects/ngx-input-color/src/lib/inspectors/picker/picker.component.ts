@@ -14,6 +14,7 @@ export class PickerComponent implements OnInit {
   board: IPosition = { x: 1, y: 0 };
   alpha = 1;
   private inputColor?: NgxColor;
+  @Input() simpleMode = false;
 
   @Input() set color(c: NgxColor) {
     if (c.equals(this.inputColor)) return;

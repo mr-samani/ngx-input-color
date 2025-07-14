@@ -1,5 +1,5 @@
 <saturation
-  [height]="220"
+  [height]="simpleMode ? 170 : 220"
   [(ngModel)]="board"
   [min]="{ x: 0, y: 0 }"
   [max]="{ x: 100, y: 100 }"
@@ -12,8 +12,7 @@
   [max]="360"
   [step]="1"
   (change)="generateColor()"
-  background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)">
-</slider>
+  background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)"></slider>
 <slider
   [(ngModel)]="alpha"
   [min]="0"

@@ -17,12 +17,13 @@ declare const EyeDropper: any;
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
 })
 export class NgxInputColorComponent implements OnInit {
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
   @Input() showCloseButton = false;
+  @Input() showConfirmButton = false;
+  @Input() simpleMode = false;
   @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
   @Output() change = new EventEmitter<string>();

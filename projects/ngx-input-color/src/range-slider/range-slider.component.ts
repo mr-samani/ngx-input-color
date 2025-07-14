@@ -82,14 +82,15 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
    * If true, clicking on the slider will add a new range at that position
    */
   @Input() addNewRangeOnClick = false;
+
   /**
    * The current value of the slider
    */
   @Output() change = new EventEmitter<IValue[]>();
-  @Output() selectedIndex = new EventEmitter<number>();
+  @Input() selectedIndex?: number;
+  @Output() selectedIndexChange = new EventEmitter<number>();
 
   private isDragging = false;
-  activeThumbIndex?: number;
 
   @ViewChild('slider', { static: true }) slider!: ElementRef<HTMLDivElement>;
   @ViewChild('thumb', { static: false }) thumb?: ElementRef<HTMLDivElement>;
@@ -173,10 +174,10 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
     ev.stopPropagation();
     ev.preventDefault();
     this.isDragging = true;
-    this.activeThumbIndex = index;
+    this.selectedIndex = index;
     this.updateRects();
     this.updateThumbPosition(ev);
-    this.selectedIndex.emit(this.activeThumbIndex);
+    this.selectedIndexChange.emit(this.selectedIndex);
   }
 
   addnewRangeOnSliderClick(event: MouseEvent | TouchEvent) {
@@ -196,13 +197,13 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   private updateThumbPosition(ev: MouseEvent | TouchEvent) {
-    if (!this.isDragging || this.activeThumbIndex == undefined) return;
+    if (!this.isDragging || this.selectedIndex == undefined) return;
     if (!this.sliderRect || !this.thumbRect) this.updateRects();
     let position = getOffsetPosition(ev, this.slider.nativeElement);
     let thumbRec = this.thumbRect!;
     position.x -= thumbRec.width / 2;
     let sliderRec = this.sliderRect!;
-    const thumb = this.values[this.activeThumbIndex];
+    const thumb = this.values[this.selectedIndex];
     if (position.x < 0) {
       thumb.x = 0;
     } else if (position.x > sliderRec.width - thumbRec.width) {
@@ -241,7 +242,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
   @HostListener('document:touchend', ['$event'])
   onDragEnd(ev: MouseEvent | TouchEvent) {
     this.isDragging = false;
-    // this.activeThumbIndex = undefined;
+    // this.selectedIndex = undefined;
   }
 
   valueChanged() {

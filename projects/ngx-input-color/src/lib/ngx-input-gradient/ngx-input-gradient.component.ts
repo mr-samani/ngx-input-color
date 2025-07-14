@@ -32,7 +32,6 @@ import { buildGradientFromStops, generateRandomColor } from '@ngx-input-color/ut
   templateUrl: './ngx-input-gradient.component.html',
   styleUrls: ['./ngx-input-gradient.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientComponent), multi: true },
     {
@@ -95,7 +94,12 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     return /^(\s*)(linear|radial)-gradient\s*\(/i.test(value);
   }
 
-  private parseGradient(value: string): { type: GradientType, rotation: number, stops: GradientStop[], valid: boolean } {
+  private parseGradient(value: string): {
+    type: GradientType;
+    rotation: number;
+    stops: GradientStop[];
+    valid: boolean;
+  } {
     let type: GradientType = 'linear';
     let rotation = 90;
     let stops: GradientStop[] = [];
@@ -106,7 +110,8 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     let content = match[3];
     // Split by commas, but ignore commas inside parentheses (for rgb, hsl, etc)
     let parts = [];
-    let buf = '', depth = 0;
+    let buf = '',
+      depth = 0;
     for (let c of content) {
       if (c === '(') depth++;
       if (c === ')') depth--;
@@ -136,7 +141,8 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
       if (!/^(#|rgb|hsl|[a-z])/i.test(first)) colorStopStart = 1;
     }
     // Color stop regex: supports hex, rgb(a), hsl(a), color names, with optional position
-    const colorStopRegex = /((#([0-9a-fA-F]{3,8}))|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))(\s+([\d.]+%?|[\d.]+px|[\d.]+em))?/;
+    const colorStopRegex =
+      /((#([0-9a-fA-F]{3,8}))|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))(\s+([\d.]+%?|[\d.]+px|[\d.]+em))?/;
     for (let i = colorStopStart; i < parts.length; i++) {
       let stopPart = parts[i];
       let m = stopPart.match(colorStopRegex);
@@ -211,7 +217,10 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     }
   }
 
-  generateGradient() {
+  generateGradient(ev?: string) {
+    if (ev && this.rangeValues[this.selectedIndex]) {
+      this.rangeValues[this.selectedIndex].color = ev;
+    }
     for (let item of this.rangeValues) {
       item.color ??= generateRandomColor();
     }

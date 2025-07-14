@@ -8,7 +8,7 @@
       [step]="1"
       [addNewRangeOnClick]="true"
       [background]="baseBg"
-      (selectedIndex)="selectedIndex = $event"
+      [(selectedIndex)]="selectedIndex"
       (change)="generateGradient()"
       #rangeSlider></range-slider>
 
@@ -22,11 +22,17 @@
           <input
             type="text"
             [(ngModel)]="rangeValues[selectedIndex].color"
-            [setInputBackgroundColor]="false"
-            ngxInputColor
             name="color"
-            (change)="generateGradient()" />
-          <span class="color" [style.backgroundColor]="rangeValues[selectedIndex].color"></span>
+            #ngxGradColor
+            (ngModelChange)="generateGradient()" />
+          <span
+            class="color"
+            [style.backgroundColor]="rangeValues[selectedIndex].color"
+            [ngxInputColor]="ngxGradColor"
+            [showCloseButton]="false"
+            [showConfirmButton]="false"
+            [simpleMode]="true"
+            (change)="generateGradient($event)"></span>
         </div>
       </div>
       <div class="ngx-col-6">
