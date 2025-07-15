@@ -28,39 +28,26 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/ngx-input-color/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         },
         "storybook": {
           "builder": "@storybook/angular:start-storybook",
           "options": {
-            "configDir": "projects/ngx-input-color/.storybook",
+            "configDir": "projects/storybook/.storybook",
             "browserTarget": "ngx-input-color:build",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "projects/ngx-input-color"
-            ],
+            "compodocArgs": ["-e", "json", "-d", "projects/ngx-input-color"],
             "port": 6006
           }
         },
         "build-storybook": {
           "builder": "@storybook/angular:build-storybook",
           "options": {
-            "configDir": "projects/ngx-input-color/.storybook",
+            "configDir": "projects/storybook/.storybook",
             "browserTarget": "ngx-input-color:build",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "projects/ngx-input-color"
-            ],
+            "compodocArgs": ["-e", "json", "-d", "projects/ngx-input-color"],
             "outputDir": "storybook-static"
           }
         }
