@@ -2970,7 +2970,7 @@
         },
         {
             "name": "NgxInputColorComponent",
-            "id": "component-NgxInputColorComponent-198a84bb766984f74257c092166621fb10168de7ad07acfe9da332bf01d757d6b641b489055f2f4f79f653b16eeb263426da764c6254e31b133e370627df8117",
+            "id": "component-NgxInputColorComponent-35ce5118ad32c80cfd6e669fcb3c588e7cedb30ce226496925cdbeeff73d02107113ee4dbab08b1c4984ef786a300e24e93a458138c927b9662b10d59f0d489f",
             "file": "projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -3003,7 +3003,9 @@
                     "defaultValue": "'Close'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 40,
+                    "rawdescription": "\nTitle for the close button",
+                    "description": "<p>Title for the close button</p>\n",
+                    "line": 41,
                     "type": "string",
                     "decorators": []
                 },
@@ -3012,7 +3014,9 @@
                     "defaultValue": "'Ok'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 41,
+                    "rawdescription": "\nTitle for the confirm button",
+                    "description": "<p>Title for the confirm button</p>\n",
+                    "line": 43,
                     "type": "string",
                     "decorators": []
                 },
@@ -3021,7 +3025,30 @@
                     "defaultValue": "ColorInspector.Picker",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 45,
+                    "jsdoctags": [
+                        {
+                            "pos": 1605,
+                            "end": 1633,
+                            "kind": 327,
+                            "id": 0,
+                            "flags": 16842752,
+                            "modifierFlagsCache": 0,
+                            "transformFlags": 0,
+                            "tagName": {
+                                "pos": 1606,
+                                "end": 1611,
+                                "kind": 80,
+                                "id": 0,
+                                "flags": 16842752,
+                                "transformFlags": 0,
+                                "escapedText": "alias"
+                            },
+                            "comment": "<p>defaultInspector</p>\n"
+                        }
+                    ],
+                    "rawdescription": "\n\ndefault inspectors\n- ColorInspector.Picker\n- ColorInspector.RGB\n- ColorInspector.HSL\n\n",
+                    "description": "<p>default inspectors</p>\n<ul>\n<li>ColorInspector.Picker</li>\n<li>ColorInspector.RGB</li>\n<li>ColorInspector.HSL</li>\n</ul>\n",
+                    "line": 59,
                     "type": "ColorInspector",
                     "decorators": []
                 },
@@ -3030,7 +3057,9 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 42,
+                    "rawdescription": "\nWhether to show the close button",
+                    "description": "<p>Whether to show the close button</p>\n",
+                    "line": 45,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -3039,7 +3068,9 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 43,
+                    "rawdescription": "\nWhether to show the confirm button",
+                    "description": "<p>Whether to show the confirm button</p>\n",
+                    "line": 47,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -3048,7 +3079,9 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 44,
+                    "rawdescription": "\nMinifi UI",
+                    "description": "<p>Minifi UI</p>\n",
+                    "line": 49,
                     "type": "boolean",
                     "decorators": []
                 }
@@ -3059,7 +3092,9 @@
                     "defaultValue": "new EventEmitter<void>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 49,
+                    "rawdescription": "\nEmitted when the cancel button is clicked",
+                    "description": "<p>Emitted when the cancel button is clicked</p>\n",
+                    "line": 66,
                     "type": "EventEmitter"
                 },
                 {
@@ -3067,7 +3102,9 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 47,
+                    "rawdescription": "\nEmitted when the color value changes",
+                    "description": "<p>Emitted when the color value changes</p>\n",
+                    "line": 62,
                     "type": "EventEmitter"
                 },
                 {
@@ -3075,436 +3112,14 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 48,
+                    "rawdescription": "\nEmitted when the confirm button is clicked",
+                    "description": "<p>Emitted when the confirm button is clicked</p>\n",
+                    "line": 64,
                     "type": "EventEmitter"
                 }
             ],
-            "propertiesClass": [
-                {
-                    "name": "_onChange",
-                    "defaultValue": "() => {...}",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 63,
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "_onTouched",
-                    "defaultValue": "() => {...}",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 64,
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "_onValidateChange",
-                    "defaultValue": "() => {...}",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 65,
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "color",
-                    "defaultValue": "new NgxColor()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "NgxColor",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 60
-                },
-                {
-                    "name": "format",
-                    "defaultValue": "ColorFormats.HSVA",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ColorFormats",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 51
-                },
-                {
-                    "name": "hexColor",
-                    "defaultValue": "''",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 55
-                },
-                {
-                    "name": "isDarkColor",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 52
-                },
-                {
-                    "name": "isDisabled",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 62
-                },
-                {
-                    "name": "isSupportedEyeDrop",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 58
-                },
-                {
-                    "name": "name",
-                    "defaultValue": "''",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 56
-                },
-                {
-                    "name": "rgbaColor",
-                    "defaultValue": "''",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 54
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "close",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 140,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "emitChange",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 147,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "initColor",
-                    "args": [
-                        {
-                            "name": "c",
-                            "type": "NgxColor",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "optional": true
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "any",
-                    "typeParameters": [],
-                    "line": 122,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n\n call from directive\n",
-                    "description": "<p> call from directive</p>\n",
-                    "modifierKind": [
-                        134
-                    ],
-                    "jsdoctags": [
-                        {
-                            "name": "c",
-                            "type": "NgxColor",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "optional": true,
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "ngOnDestroy",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 71,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "ngOnInit",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 70,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "ok",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 144,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "openEyeDrop",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 108,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "registerOnChange",
-                    "args": [
-                        {
-                            "name": "fn",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 78,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "fn",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "registerOnTouched",
-                    "args": [
-                        {
-                            "name": "fn",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 81,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "fn",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "registerOnValidatorChange",
-                    "args": [
-                        {
-                            "name": "fn",
-                            "type": "function",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "function": []
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 87,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "fn",
-                            "type": "function",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "function": [],
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "setDisabledState",
-                    "args": [
-                        {
-                            "name": "disabled",
-                            "type": "boolean",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 84,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "disabled",
-                            "type": "boolean",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "stopPropagation",
-                    "args": [
-                        {
-                            "name": "ev",
-                            "type": "Event",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 136,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "ev",
-                            "type": "Event",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "validate",
-                    "args": [
-                        {
-                            "name": "control",
-                            "type": "AbstractControl",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "ValidationErrors | null",
-                    "typeParameters": [],
-                    "line": 90,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "control",
-                            "type": "AbstractControl",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "writeValue",
-                    "args": [
-                        {
-                            "name": "value",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 97,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "value",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                }
-            ],
+            "propertiesClass": [],
+            "methodsClass": [],
             "deprecated": false,
             "deprecationMessage": "",
             "hostBindings": [],
@@ -3514,7 +3129,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() showCloseButton = true;\r\n  @Input() showConfirmButton = true;\r\n  @Input() simpleMode = false;\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  @Output() change = new EventEmitter<string>();\r\n  @Output() confirm = new EventEmitter<string>();\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  isDarkColor = false;\r\n\r\n  rgbaColor = '';\r\n  hexColor = '';\r\n  name = '';\r\n\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  color: NgxColor = new NgxColor();\r\n\r\n  isDisabled = false;\r\n  private _onChange = (value: string) => {};\r\n  private _onTouched = () => {};\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  ngOnInit(): void {}\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    debugger;\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  emitChange() {\r\n    this._onChange(this.hexColor);\r\n    this.change.emit(this.hexColor);\r\n    this.confirm.emit(this.hexColor);\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  /** Title for the close button */\r\n  @Input() closeTitle = 'Close';\r\n  /** Title for the confirm button */\r\n  @Input() confirmTitle = 'Ok';\r\n  /** Whether to show the close button */\r\n  @Input() showCloseButton = true;\r\n  /** Whether to show the confirm button */\r\n  @Input() showConfirmButton = true;\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   * \r\n   * @alias defaultInspector\r\n   */\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n  /** Emitted when the confirm button is clicked */\r\n  @Output() confirm = new EventEmitter<string>();\r\n  /** Emitted when the cancel button is clicked */\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = false;\r\n\r\n  /** @ignore */\r\n  rgbaColor = '';\r\n  /** @ignore */\r\n  hexColor = '';\r\n  /** @ignore */\r\n  name = '';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    debugger;\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  /** @ignore */\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  /** @ignore */\r\n  emitChange() {\r\n    this._onChange(this.hexColor);\r\n    this.change.emit(this.hexColor);\r\n    this.confirm.emit(this.hexColor);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -3536,7 +3151,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 65,
+                "line": 93,
                 "jsdoctags": [
                     {
                         "name": "cd",
@@ -3563,7 +3178,7 @@
                         "name": "ColorFormats",
                         "type": "",
                         "returnType": "",
-                        "line": 72
+                        "line": 102
                     }
                 },
                 "ColorInspector": {
@@ -3572,7 +3187,7 @@
                         "name": "ColorInspector",
                         "type": "",
                         "returnType": "",
-                        "line": 75
+                        "line": 105
                     }
                 }
             },
@@ -9905,7 +9520,7 @@
     },
     "routes": [],
     "coverage": {
-        "count": 30,
+        "count": 32,
         "status": "medium",
         "files": [
             {
@@ -9967,9 +9582,9 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "NgxInputColorComponent",
-                "coveragePercent": 2,
-                "coverageCount": "1/36",
-                "status": "low"
+                "coveragePercent": 81,
+                "coverageCount": "9/11",
+                "status": "very-good"
             },
             {
                 "filePath": "projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts",

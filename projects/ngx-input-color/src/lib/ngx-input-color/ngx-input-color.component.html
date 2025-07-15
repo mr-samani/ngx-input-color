@@ -7,7 +7,7 @@
   </div>
   <div class="inner">
     <div class="top-actions">
-      <select [(ngModel)]="colorInspector">
+      <select [(ngModel)]="defaultInspector">
         <option *ngFor="let inspector of ColorInspector | enumToArray" [value]="inspector">
           {{ ColorInspector[+inspector] }}
         </option>
@@ -32,7 +32,7 @@
       </button>
     </div>
 
-    <ng-container [ngSwitch]="+colorInspector">
+    <ng-container [ngSwitch]="+defaultInspector">
       <app-picker
         *ngSwitchCase="ColorInspector.Picker"
         [color]="color"

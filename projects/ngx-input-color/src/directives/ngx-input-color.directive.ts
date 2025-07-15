@@ -43,7 +43,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
   @Input() setInputBackgroundColor = true;
-  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
+  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
 
   @Input() showCloseButton = true;
   @Input() showConfirmButton = true;
@@ -163,7 +163,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
     const instance = this.colorPickerComponentRef.instance;
 
-    instance.colorInspector = this.colorInspector;
+    instance.defaultInspector = this.defaultInspector;
     instance.showCloseButton = true;
     instance.closeTitle = this.closeTitle;
     instance.confirmTitle = this.confirmTitle;

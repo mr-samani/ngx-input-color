@@ -37,37 +37,67 @@ declare const EyeDropper: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+  /** Title for the close button */
   @Input() closeTitle = 'Close';
+  /** Title for the confirm button */
   @Input() confirmTitle = 'Ok';
+  /** Whether to show the close button */
   @Input() showCloseButton = true;
+  /** Whether to show the confirm button */
   @Input() showConfirmButton = true;
+  /** Minifi UI  */
   @Input() simpleMode = false;
-  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
+  /**
+   * default inspectors
+   * - ColorInspector.Picker
+   * - ColorInspector.RGB
+   * - ColorInspector.HSL
+   *
+   * @alias defaultInspector
+   */
+  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
+
+  /** Emitted when the color value changes */
   @Output() change = new EventEmitter<string>();
+  /** Emitted when the confirm button is clicked */
   @Output() confirm = new EventEmitter<string>();
+  /** Emitted when the cancel button is clicked */
   @Output() cancel = new EventEmitter<void>();
 
+  /** @ignore */
   format: ColorFormats = ColorFormats.HSVA;
+  /** @ignore */
   isDarkColor = false;
 
+  /** @ignore */
   rgbaColor = '';
+  /** @ignore */
   hexColor = '';
+  /** @ignore */
   name = '';
 
+  /** @ignore */
   isSupportedEyeDrop: boolean;
 
+  /** @ignore */
   color: NgxColor = new NgxColor();
 
+  /** @ignore */
   isDisabled = false;
+  /**@ignore */
   private _onChange = (value: string) => {};
+  /**@ignore */
   private _onTouched = () => {};
+  /**@ignore */
   private _onValidateChange = () => {};
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
   }
 
+  /** @ignore */
   ngOnInit(): void {}
+  /** @ignore */
   ngOnDestroy(): void {}
   public get ColorFormats(): typeof ColorFormats {
     return ColorFormats;
@@ -75,18 +105,23 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   public get ColorInspector(): typeof ColorInspector {
     return ColorInspector;
   }
+  /** @ignore */
   registerOnChange(fn: any): void {
     this._onChange = fn;
   }
+  /** @ignore */
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
   }
+  /** @ignore */
   setDisabledState(disabled: boolean): void {
     this.isDisabled = disabled;
   }
+  /** @ignore */
   registerOnValidatorChange(fn: () => void): void {
     this._onValidateChange = fn;
   }
+  /** @ignore */
   validate(control: AbstractControl): ValidationErrors | null {
     if (this.color && this.color.isValid === false) {
       return { invalid: true };
@@ -94,6 +129,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     return null;
   }
 
+  /** @ignore */
   writeValue(value: any): void {
     debugger;
     try {
@@ -105,6 +141,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
       this.initColor(c);
     }
   }
+  /** @ignore */
   openEyeDrop() {
     if (this.isSupportedEyeDrop) {
       let t = new EyeDropper().open();
@@ -118,6 +155,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
 
   /**
    *  call from directive
+  /* @ignore 
    */
   async initColor(c?: NgxColor) {
     if (!c) return;
@@ -133,17 +171,21 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     }
   }
 
+  /** @ignore */
   stopPropagation(ev: Event) {
     ev.stopPropagation();
   }
 
+  /** @ignore */
   close() {
     this.cancel.emit();
   }
 
+  /** @ignore */
   ok() {
     this.emitChange();
   }
+  /** @ignore */
   emitChange() {
     this._onChange(this.hexColor);
     this.change.emit(this.hexColor);

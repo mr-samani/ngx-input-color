@@ -5,20 +5,17 @@ import { NgxInputColorModule } from '../../../../ngx-input-color/src/ngx-input-c
 import { EnumToArrayPipe } from '../../../../ngx-input-color/src/pipes/enum-to-array.pipe';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ColorInspector } from '../../../../ngx-input-color/src/models/ColorInspector.enum';
+import { Controls } from '@storybook/addon-docs/blocks';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta: Meta<NgxInputColorComponent> = {
   title: 'Demo/NgxInputColor',
   component: NgxInputColorComponent,
   tags: ['autodocs'],
-  //   argTypes: {
-  //     closeTitle: {
-  //       control: 'text',
-  //     },
-  //   },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: {},
-
+  argTypes: {},
+  args: {
+    defaultInspector: ColorInspector.Picker,
+  },
   decorators: [
     moduleMetadata({
       imports: [CommonModule, FormsModule, EnumToArrayPipe, NgxInputColorModule],
@@ -29,8 +26,19 @@ const meta: Meta<NgxInputColorComponent> = {
 export default meta;
 type Story = StoryObj<NgxInputColorComponent>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const InlineMode: Story = {
-  args: {},
+export const Default: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.Picker,
+  },
 };
-
+export const DefaultRGB: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.RGB,
+  },
+};

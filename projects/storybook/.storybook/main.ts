@@ -7,6 +7,7 @@ const config: StorybookConfig = {
     name: '@storybook/angular',
     options: {
       docs: {
+        defaultName: 'Documentation',
         // دقیقا همون مسیر خروجی compodoc
         compodoc: 'projects/storybook/.storybook/documentation/documentation.json',
       },
