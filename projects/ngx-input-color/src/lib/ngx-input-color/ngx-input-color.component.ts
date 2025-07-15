@@ -68,14 +68,14 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   /** @ignore */
   format: ColorFormats = ColorFormats.HSVA;
   /** @ignore */
-  isDarkColor = false;
+  isDarkColor = true;
 
   /** @ignore */
-  rgbaColor = '';
+  rgbaColor = 'rgba(0, 0, 0, 1)';
   /** @ignore */
-  hexColor = '';
+  hexColor = '#000000';
   /** @ignore */
-  name = '';
+  name = 'black';
 
   /** @ignore */
   isSupportedEyeDrop: boolean;
@@ -131,7 +131,6 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
 
   /** @ignore */
   writeValue(value: any): void {
-    debugger;
     try {
       const c = value ? new NgxColor(value) : new NgxColor('#000');
       this.initColor(c);

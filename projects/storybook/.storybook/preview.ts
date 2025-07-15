@@ -8,21 +8,25 @@ import { ColorInspector } from '../../ngx-input-color/src/models/ColorInspector.
 
 const preview: Preview = {
   // tags: ['autodocs'],
-  parameters: {
-    ArgTypes: {
-      ColorInspector: {
-        control: {
-          type: 'select',
-          options:[0,1,2,3]// new EnumToArrayPipe().transform(ColorInspector),
-        },
+  argTypes: {
+    defaultInspector: {
+      options: Object.keys(ColorInspector)
+        .filter((key) => !isNaN(parseInt(key)))
+        .map((key) => parseInt(key)),
+      control: {
+        type: 'select',
+        labels: Object.values(ColorInspector).filter((value) => typeof value === 'string'),
       },
     },
+  },
+  parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      expanded: false, // حذف دکمه 'set object'
     },
     docs: {},
   },

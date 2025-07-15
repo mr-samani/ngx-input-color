@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ColorInspector } from '../../../../ngx-input-color/src/models/ColorInspector.enum';
 import { Controls } from '@storybook/addon-docs/blocks';
+import { NgxColor } from '../../../../ngx-input-color/src/utils/color-helper';
 
 const meta: Meta<NgxInputColorComponent> = {
   title: 'Demo/NgxInputColor',
@@ -31,14 +32,59 @@ export const Default: Story = {
     controls: {},
   },
   args: {
-    defaultInspector: ColorInspector.Picker,
+    closeTitle: 'انصراف',
+    confirmTitle: 'تائید',
   },
 };
-export const DefaultRGB: Story = {
+export const RGB: Story = {
   parameters: {
     controls: {},
   },
   args: {
     defaultInspector: ColorInspector.RGB,
+  },
+};
+export const HSL: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.HSL,
+  },
+  render: (args) => ({
+    props: { ...args, myColor: 'hsl(296, 88%, 87%)' },
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color [(ngModel)]="myColor"></ngx-input-color>
+    </div>`,
+  }),
+};
+export const Minimal: Story = {
+  name: 'Minimal UI',
+  render: (args) => ({
+    props: args,
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color 
+        [(ngModel)]="myColor"
+        [defaultInspector]="defaultInspector" 
+        [simpleMode]="simpleMode" 
+        [showCloseButton]="showCloseButton" 
+        [showConfirmButton]="showConfirmButton"
+        [closeTitle]="closeTitle"
+        [confirmTitle]="confirmTitle"
+        ></ngx-input-color>
+    </div>`,
+  }),
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.Picker,
+    simpleMode: true,
+    showCloseButton: false,
+    showConfirmButton: false,
   },
 };
