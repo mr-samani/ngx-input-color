@@ -21,10 +21,10 @@ import {
   ValidationErrors,
   FormsModule,
 } from '@angular/forms';
-import { GradientStop, GradientType } from '@ngx-input-color/models/GradientStop';
-import { NgxInputColorModule } from '@ngx-input-color/public-api';
-import { RangeSliderComponent } from '@ngx-input-color/range-slider/range-slider.component';
-import { buildGradientFromStops, generateRandomColor } from '@ngx-input-color/utils/build-gradient';
+import { RangeSliderComponent } from '../../range-slider/range-slider.component';
+import { NgxInputColorModule } from '../../ngx-input-color.module';
+import { GradientStop, GradientType } from '../../models/GradientStop';
+import { buildGradientFromStops, generateRandomColor } from '../../utils/build-gradient';
 
 @Component({
   standalone: true,

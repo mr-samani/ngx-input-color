@@ -20,9 +20,9 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { NgxInputColorComponent } from '@ngx-input-color/lib/ngx-input-color/ngx-input-color.component';
-import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
-import { NgxColor } from '@ngx-input-color/utils/color-helper';
+import { ColorInspector } from '../models/ColorInspector.enum';
+import { NgxInputColorComponent } from '../lib/ngx-input-color/ngx-input-color.component';
+import { NgxColor } from '../utils/color-helper';
 
 @Directive({
   selector: '[ngxInputColor]',

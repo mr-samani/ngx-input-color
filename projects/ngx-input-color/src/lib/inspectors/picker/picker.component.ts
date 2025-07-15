@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IPosition } from '@ngx-input-color/models/IPosition';
-import { NgxColor } from '@ngx-input-color/utils/color-helper';
-import { HSVA } from '@ngx-input-color/utils/interfaces';
+import { NgxColor } from '../../../utils/color-helper';
+import { IPosition } from '../../../models/IPosition';
+import { HSVA } from '../../../utils/interfaces';
 
 @Component({
   selector: 'app-picker',

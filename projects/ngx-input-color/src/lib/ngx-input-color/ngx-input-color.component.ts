@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { ColorFormats } from '../../models/ColorFormats.enum';
 import { NgxColor } from '../../utils/color-helper';
-import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -21,6 +20,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { ColorInspector } from '../../models/ColorInspector.enum';
 declare const EyeDropper: any;
 @Component({
   selector: 'ngx-input-color',

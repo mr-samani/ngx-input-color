@@ -1,4 +1,4 @@
-import { GradientStop, GradientType } from '@ngx-input-color/models/GradientStop';
+import { GradientStop, GradientType } from "../models/GradientStop";
 
 export function buildGradientFromStops(stops: GradientStop[], type: GradientType = 'linear', rotation = 0): string {
   if (!stops || stops.length === 0) return '';

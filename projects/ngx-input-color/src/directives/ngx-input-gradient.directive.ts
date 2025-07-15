@@ -17,8 +17,8 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
-import { NgxInputGradientComponent } from '@ngx-input-color/lib/ngx-input-gradient/ngx-input-gradient.component';
+import { ColorInspector } from '../models/ColorInspector.enum';
+import { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';
 
 @Directive({
   selector: '[ngxInputGradient]',
