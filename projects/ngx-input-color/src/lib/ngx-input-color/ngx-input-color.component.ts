@@ -57,12 +57,12 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
 
   isSupportedEyeDrop: boolean;
 
-  color = new NgxColor();
+  color: NgxColor = new NgxColor();
 
   isDisabled = false;
-  _onChange = (value: string) => {};
-  _onTouched = () => {};
-  _onValidateChange = () => {};
+  private _onChange = (value: string) => {};
+  private _onTouched = () => {};
+  private _onValidateChange = () => {};
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
   }
@@ -95,11 +95,14 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   writeValue(value: any): void {
+    debugger;
     try {
-      this.color = value ? new NgxColor(value) : new NgxColor('#000');
+      const c = value ? new NgxColor(value) : new NgxColor('#000');
+      this.initColor(c);
       this._onValidateChange();
     } catch (e) {
-      this.color = new NgxColor('#000'); // مقدار پیش‌فرض
+      const c = new NgxColor('#000'); // مقدار پیش‌فرض
+      this.initColor(c);
     }
   }
   openEyeDrop() {

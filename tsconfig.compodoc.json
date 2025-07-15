@@ -1,4 +1,4 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./projects/ngx-input-color/tsconfig.lib.json",
   "exclude": ["**/*.spec.ts", "**/*.stories.ts", "node_modules", "dist", "documentation", "./projects/storybook/*"]
 }

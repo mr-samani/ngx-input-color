@@ -5,7 +5,12 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-docs'],
   framework: {
     name: '@storybook/angular',
-    options: {},
+    options: {
+      docs: {
+        // دقیقا همون مسیر خروجی compodoc
+        compodoc: 'projects/storybook/.storybook/documentation/documentation.json',
+      },
+    },
   },
 };
 export default config;

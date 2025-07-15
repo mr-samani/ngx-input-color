@@ -37,7 +37,14 @@
             "configDir": "projects/storybook/.storybook",
             "browserTarget": "ngx-input-color:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "projects/ngx-input-color"],
+            "compodocArgs": [
+              "-p",
+              "tsconfig.compodoc.json",
+              "-e",
+              "json",
+              "-d",
+              "projects/storybook/.storybook/documentation"
+            ],
             "port": 6006
           }
         },
@@ -47,7 +54,14 @@
             "configDir": "projects/storybook/.storybook",
             "browserTarget": "ngx-input-color:build",
             "compodoc": true,
-            "compodocArgs": ["-e", "json", "-d", "projects/ngx-input-color"],
+            "compodocArgs": [
+              "-p",
+              "tsconfig.compodoc.json",
+              "-e",
+              "json",
+              "-d",
+              "projects/storybook/.storybook/documentation"
+            ],
             "outputDir": "storybook-static"
           }
         }
