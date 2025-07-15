@@ -10,6 +10,8 @@
     "build:lib": "ng build ngx-input-color",
     "publish:npm": "cd dist/ngx-input-color && npm publish",
     "storybook": "ng run ngx-input-color:storybook",
+    "compdoc:serve":"compodoc -p tsconfig.compodoc.json -s",
+    "compdoc:exportJson":"compodoc -p tsconfig.compodoc.json -e --exportFormat json",
     "build-storybook": "ng run ngx-input-color:build-storybook"
   },
   "private": true,

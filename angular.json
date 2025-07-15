@@ -39,7 +39,7 @@
           "options": {
             "configDir": "projects/ngx-input-color/.storybook",
             "browserTarget": "ngx-input-color:build",
-            "compodoc": false,
+            "compodoc": true,
             "compodocArgs": [
               "-e",
               "json",
@@ -54,7 +54,7 @@
           "options": {
             "configDir": "projects/ngx-input-color/.storybook",
             "browserTarget": "ngx-input-color:build",
-            "compodoc": false,
+            "compodoc": true,
             "compodocArgs": [
               "-e",
               "json",
