@@ -183,14 +183,15 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   /** @ignore */
-  ok() {
+  async ok() {
     this.emitChange();
+    const output = await this.color.getOutputResult(this.outputType);
+    this.confirm.emit(output);
   }
   /** @ignore */
   async emitChange() {
     const output = await this.color.getOutputResult(this.outputType);
     this._onChange(output);
     this.change.emit(output);
-    this.confirm.emit(output);
   }
 }

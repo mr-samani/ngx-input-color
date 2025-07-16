@@ -1892,12 +1892,12 @@
         },
         {
             "name": "NgxInputGradientDirective",
-            "id": "directive-NgxInputGradientDirective-34a0196585f303530a4f8b2d0e3f2983d54101712c8c874a5c32d42f12cd50f885815c96ec6f2d7afb8c94f584d0ba041ec304b2b8c11005ea1d7e230afb6f26",
+            "id": "directive-NgxInputGradientDirective-d74de5721d6e73a14d3391f67b91682c991570d51a4d9f59ab31a6795b3ea73f8a64e5e01f5f924090cca6cd0cf7de952d24c1da2058f29f7c11e59004c57066",
             "file": "projects/ngx-input-color/src/directives/ngx-input-gradient.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Inject,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';\r\nimport { DOCUMENT } from '@angular/common';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientDirective,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackground = true;\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value) {\r\n      if (this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', value);\r\n      }\r\n      this._onValidateChange();\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    // ایجاد کامپوننت\r\n    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);\r\n\r\n    const instance = this.pickerComponentRef.instance;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n\r\n    // رویدادها\r\n    const sub1 = instance.confirm.subscribe((c: any) => {\r\n      this.confirmColor(c);\r\n    });\r\n\r\n    const sub2 = instance.cancel.subscribe(() => {\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    // بک‌دراپ\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.style.cssText = `\r\n          background: #5e5e5e1e;\r\n          position: fixed;\r\n          top: 0;\r\n          left: 0;\r\n          right: 0;\r\n          bottom: 0;\r\n          overflow: auto;\r\n          transition: all 300ms;\r\n        `;\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    // گرفتن المنت کامپوننت واقعی\r\n    this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize', ['$event'])\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl || !this.pickerComponentRef) return;\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      // اعمال موقتی برای گرفتن سایز دقیق\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه\r\n\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      // وسط‌چین کردن افقی\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      // جلوگیری از بیرون زدن از راست\r\n      if (left + pickerRect.width > window.innerWidth) {\r\n        left = window.innerWidth - pickerRect.width - 8;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از چپ\r\n      if (left < 8) {\r\n        left = 8;\r\n      }\r\n\r\n      // اگر از پایین بیرون زد، ببر بالا\r\n      if (top + pickerRect.height > window.innerHeight) {\r\n        top = hostRect.top - pickerRect.height;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از بالا\r\n      if (top < 8) {\r\n        top = 8;\r\n      }\r\n\r\n      // اعمال نهایی\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  destroyColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.pickerComponentRef.destroy();\r\n      this.pickerComponentRef = undefined;\r\n    }\r\n    if (this.backdrop && this.backdrop.parentNode) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  confirmColor(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n    this._onChange(c);\r\n    this.destroyColorPicker();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Inject,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';\r\nimport { DOCUMENT } from '@angular/common';\r\nimport { isValidGradient, parseGradient } from '../utils/build-gradient';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientDirective,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackground = true;\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  isDisabled = false;\r\n\r\n  value = '';\r\n\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    this.value = value;\r\n    if (value && isValidGradient(value)) {\r\n      const parsed = parseGradient(value);\r\n      if (parsed.valid && this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', value);\r\n      }\r\n      this._onValidateChange();\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    // ایجاد کامپوننت\r\n    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);\r\n\r\n    const instance = this.pickerComponentRef.instance;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n    instance.writeValue(this.value);\r\n\r\n    // رویدادها\r\n    const sub1 = instance.confirm.subscribe((c: any) => {\r\n      this.confirmColor(c);\r\n    });\r\n\r\n    const sub2 = instance.cancel.subscribe(() => {\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    // بک‌دراپ\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.style.cssText = `\r\n          background: #5e5e5e1e;\r\n          position: fixed;\r\n          top: 0;\r\n          left: 0;\r\n          right: 0;\r\n          bottom: 0;\r\n          overflow: auto;\r\n          transition: all 300ms;\r\n        `;\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    // گرفتن المنت کامپوننت واقعی\r\n    this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize', ['$event'])\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl || !this.pickerComponentRef) return;\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      // اعمال موقتی برای گرفتن سایز دقیق\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه\r\n\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      // وسط‌چین کردن افقی\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      // جلوگیری از بیرون زدن از راست\r\n      if (left + pickerRect.width > window.innerWidth) {\r\n        left = window.innerWidth - pickerRect.width - 8;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از چپ\r\n      if (left < 8) {\r\n        left = 8;\r\n      }\r\n\r\n      // اگر از پایین بیرون زد، ببر بالا\r\n      if (top + pickerRect.height > window.innerHeight) {\r\n        top = hostRect.top - pickerRect.height;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از بالا\r\n      if (top < 8) {\r\n        top = 8;\r\n      }\r\n\r\n      // اعمال نهایی\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  destroyColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.pickerComponentRef.destroy();\r\n      this.pickerComponentRef = undefined;\r\n    }\r\n    if (this.backdrop && this.backdrop.parentNode) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  confirmColor(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n    this._onChange(c);\r\n    this.value = c;\r\n    this.destroyColorPicker();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputGradient]",
             "providers": [
                 {
@@ -1917,7 +1917,7 @@
                     "defaultValue": "'Close'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 37,
+                    "line": 38,
                     "type": "string",
                     "decorators": []
                 },
@@ -1926,7 +1926,7 @@
                     "defaultValue": "'Ok'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 38,
+                    "line": 39,
                     "type": "string",
                     "decorators": []
                 },
@@ -1935,7 +1935,7 @@
                     "defaultValue": "ColorInspector.Picker",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 40,
+                    "line": 41,
                     "type": "ColorInspector",
                     "decorators": []
                 },
@@ -1944,7 +1944,7 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 39,
+                    "line": 40,
                     "type": "boolean",
                     "decorators": []
                 }
@@ -1969,7 +1969,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 56
+                    "line": 60
                 },
                 {
                     "name": "window:resize",
@@ -1979,7 +1979,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 137
+                    "line": 144
                 }
             ],
             "propertiesClass": [
@@ -1992,7 +1992,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46
+                    "line": 50
                 },
                 {
                     "name": "_onTouched",
@@ -2003,7 +2003,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 47
+                    "line": 51
                 },
                 {
                     "name": "_onValidateChange",
@@ -2014,7 +2014,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 48
+                    "line": 52
                 },
                 {
                     "name": "backdrop",
@@ -2024,7 +2024,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 43,
+                    "line": 44,
                     "modifierKind": [
                         123
                     ]
@@ -2037,7 +2037,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 44,
+                    "line": 45,
                     "modifierKind": [
                         123
                     ]
@@ -2051,7 +2051,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 45
+                    "line": 46
                 },
                 {
                     "name": "pickerComponentRef",
@@ -2061,10 +2061,21 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 42,
+                    "line": 43,
                     "modifierKind": [
                         123
                     ]
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 48
                 }
             ],
             "methodsClass": [
@@ -2081,7 +2092,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 197,
+                    "line": 204,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2102,7 +2113,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 185,
+                    "line": 192,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2112,7 +2123,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 78,
+                    "line": 82,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2129,7 +2140,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 56,
+                    "line": 60,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2166,7 +2177,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 62,
+                    "line": 66,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2194,7 +2205,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 65,
+                    "line": 69,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2223,7 +2234,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 71,
+                    "line": 75,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2252,7 +2263,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 68,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2273,7 +2284,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 137,
+                    "line": 144,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2292,7 +2303,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 91,
+                    "line": 97,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2309,7 +2320,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 74,
+                    "line": 78,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2337,7 +2348,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 82,
+                    "line": 86,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2390,7 +2401,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 48,
+                "line": 52,
                 "jsdoctags": [
                     {
                         "name": "_doc",
@@ -2520,7 +2531,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<ngx-input-gradient [(ngModel)]=\"gradient\"></ngx-input-gradient>\r\n<p>{{ gradient }}</p>\r\n\r\n<input type=\"text\" [(ngModel)]=\"color\" ngxInputColor />\r\n\r\n<p>{{ color }}</p>\r\n"
+            "templateData": "<ngx-input-gradient [(ngModel)]=\"gradient\"></ngx-input-gradient>\r\n<p>{{ gradient }}</p>\r\n\r\n<input type=\"text\" [(ngModel)]=\"color\" ngxInputColor class=\"form-control\" />\r\n\r\n<p>{{ color }}</p>\r\n<input ngxInputGradient [(ngModel)]=\"gradient\" class=\"form-control\" />\r\n<p>{{ gradient }}</p>\r\n"
         },
         {
             "name": "CmykComponent",
@@ -3105,7 +3116,7 @@
         },
         {
             "name": "NgxInputColorComponent",
-            "id": "component-NgxInputColorComponent-1fbefceb8ef7021b3d8290ab6abe3055a29994e9bf00cc5bba582b0fc5cde4fed107bf3bcda6d964723938f611fa6d9fa2ba1518581e803713a0275545484aaa",
+            "id": "component-NgxInputColorComponent-3ae8203ce77b4dd58b353bba80c3541e97818e17e1ef27127458c67e5070d2ee72427e1f6fb41cc9137548e9ea91027ff25997f494e57f44d4fd1393acb81f69",
             "file": "projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -3273,7 +3284,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor, OutputType } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  /** Title for the close button */\r\n  @Input() closeTitle = 'Close';\r\n  /** Title for the confirm button */\r\n  @Input() confirmTitle = 'Ok';\r\n  /** Whether to show the close button */\r\n  @Input() showCloseButton = true;\r\n  /** Whether to show the confirm button */\r\n  @Input() showConfirmButton = true;\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() outputType: OutputType = 'HEX';\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n  /** Emitted when the confirm button is clicked */\r\n  @Output() confirm = new EventEmitter<string>();\r\n  /** Emitted when the cancel button is clicked */\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  /** @ignore */\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  /** @ignore */\r\n  async emitChange() {\r\n    const output = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(output);\r\n    this.change.emit(output);\r\n    this.confirm.emit(output);\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor, OutputType } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  /** Title for the close button */\r\n  @Input() closeTitle = 'Close';\r\n  /** Title for the confirm button */\r\n  @Input() confirmTitle = 'Ok';\r\n  /** Whether to show the close button */\r\n  @Input() showCloseButton = true;\r\n  /** Whether to show the confirm button */\r\n  @Input() showConfirmButton = true;\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() outputType: OutputType = 'HEX';\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n  /** Emitted when the confirm button is clicked */\r\n  @Output() confirm = new EventEmitter<string>();\r\n  /** Emitted when the cancel button is clicked */\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  /** @ignore */\r\n  async ok() {\r\n    this.emitChange();\r\n    const output = await this.color.getOutputResult(this.outputType);\r\n    this.confirm.emit(output);\r\n  }\r\n  /** @ignore */\r\n  async emitChange() {\r\n    const output = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(output);\r\n    this.change.emit(output);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -3339,7 +3350,7 @@
         },
         {
             "name": "NgxInputGradientComponent",
-            "id": "component-NgxInputGradientComponent-faf49894665a2fb7bb7cede137ad0ced9b8ae052344180131e04a44b81c04e48e2f83eeea9bfc5fa6e598e8a8a5adb1b29d60f873760ae6f023734d8e69a0fdf",
+            "id": "component-NgxInputGradientComponent-92442868204573f5eba1ce1ea4f615b31d5ea2563c4cf604a44943428e9f7dc0c8478e7accdd3f52d09ada66cbc082b042c42b10f04c4196a3c45e5d36c7ee3d",
             "file": "projects/ngx-input-color/src/lib/ngx-input-gradient/ngx-input-gradient.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -3581,7 +3592,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 206,
+                    "line": 134,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3591,7 +3602,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 241,
+                    "line": 169,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3609,7 +3620,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 225,
+                    "line": 153,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3631,42 +3642,11 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 198,
+                    "line": 126,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
                         123
-                    ]
-                },
-                {
-                    "name": "isValidGradient",
-                    "args": [
-                        {
-                            "name": "value",
-                            "type": "string",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "boolean",
-                    "typeParameters": [],
-                    "line": 96,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ],
-                    "jsdoctags": [
-                        {
-                            "name": "value",
-                            "type": "string",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
                     ]
                 },
                 {
@@ -3695,7 +3675,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 210,
+                    "line": 138,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3718,7 +3698,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 255,
+                    "line": 183,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3734,37 +3714,6 @@
                         {
                             "name": "i",
                             "type": "number",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "parseGradient",
-                    "args": [
-                        {
-                            "name": "value",
-                            "type": "string",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "literal type",
-                    "typeParameters": [],
-                    "line": 101,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ],
-                    "jsdoctags": [
-                        {
-                            "name": "value",
-                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
@@ -3865,7 +3814,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 217,
+                    "line": 145,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3875,7 +3824,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 247,
+                    "line": 175,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3920,7 +3869,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 213,
+                    "line": 141,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3941,7 +3890,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 236,
+                    "line": 164,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3986,7 +3935,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 170,
+                    "line": 98,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4028,7 +3977,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewChild,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n  FormsModule,\r\n} from '@angular/forms';\r\nimport { RangeSliderComponent } from '../../range-slider/range-slider.component';\r\nimport { NgxInputColorModule } from '../../ngx-input-color.module';\r\nimport { GradientStop, GradientType } from '../../models/GradientStop';\r\nimport { buildGradientFromStops, generateRandomColor } from '../../utils/build-gradient';\r\nimport { DefaultGradients } from './default-gradients';\r\n\r\n@Component({\r\n  standalone: true,\r\n  selector: 'ngx-input-gradient',\r\n  templateUrl: './ngx-input-gradient.component.html',\r\n  styleUrls: ['./ngx-input-gradient.component.scss'],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientComponent,\r\n    },\r\n  ],\r\n  imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],\r\n})\r\nexport class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() showCloseButton = true;\r\n\r\n  @Output() change = new EventEmitter<string>();\r\n  @Output() confirm = new EventEmitter<string>();\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  defaultGradients: string[] = [];\r\n\r\n  resultGradient = '';\r\n  baseBg = '';\r\n  rangeValues: GradientStop[] = [];\r\n  type: GradientType = 'linear';\r\n  rotation: number = 90;\r\n  rotationList = [0, 45, 90, 135, 180, 225, 270, 315, 360];\r\n  selectedIndex = 0;\r\n\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;\r\n  constructor(private cd: ChangeDetectorRef) {}\r\n\r\n  ngOnInit(): void {\r\n    this.setDefaultGradients();\r\n  }\r\n  ngOnDestroy(): void {}\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (!this.resultGradient) return { required: true };\r\n    const parsed = this.parseGradient(this.resultGradient);\r\n    if (!parsed.valid) return { invalid: true };\r\n    if (parsed.stops.length < 2) return { stops: 'at least 2 color stops required' };\r\n    return null;\r\n  }\r\n\r\n  private isValidGradient(value: string): boolean {\r\n    // Accepts linear-gradient or radial-gradient with any color format\r\n    return /^(\\s*)(linear|radial)-gradient\\s*\\(/i.test(value);\r\n  }\r\n\r\n  private parseGradient(value: string): {\r\n    type: GradientType;\r\n    rotation: number;\r\n    stops: GradientStop[];\r\n    valid: boolean;\r\n  } {\r\n    let type: GradientType = 'linear';\r\n    let rotation = 90;\r\n    let stops: GradientStop[] = [];\r\n    let valid = false;\r\n    let match = value.match(/^(\\s*)(linear|radial)-gradient\\s*\\((.*)\\)$/i);\r\n    if (!match) return { type, rotation, stops, valid };\r\n    type = match[2] as GradientType;\r\n    let content = match[3];\r\n    // Split by commas, but ignore commas inside parentheses (for rgb, hsl, etc)\r\n    let parts = [];\r\n    let buf = '',\r\n      depth = 0;\r\n    for (let c of content) {\r\n      if (c === '(') depth++;\r\n      if (c === ')') depth--;\r\n      if (c === ',' && depth === 0) {\r\n        parts.push(buf.trim());\r\n        buf = '';\r\n      } else {\r\n        buf += c;\r\n      }\r\n    }\r\n    if (buf) parts.push(buf.trim());\r\n    // First part may be angle/direction (for linear) or shape/position (for radial)\r\n    let first = parts[0];\r\n    let colorStopStart = 0;\r\n    if (type === 'linear') {\r\n      let angleMatch = first.match(/^(\\d+)(deg)?$/i);\r\n      if (angleMatch) {\r\n        rotation = parseInt(angleMatch[1], 10);\r\n        colorStopStart = 1;\r\n      } else if (/to /.test(first)) {\r\n        // e.g. 'to right', 'to bottom left' (optional: map to degree)\r\n        // You can add mapping if needed\r\n        colorStopStart = 1;\r\n      }\r\n    } else if (type === 'radial') {\r\n      // e.g. 'circle at center', 'ellipse at top left', etc\r\n      if (!/^(#|rgb|hsl|[a-z])/i.test(first)) colorStopStart = 1;\r\n    }\r\n    // Color stop regex: supports hex, rgb(a), hsl(a), color names, with optional position\r\n    const colorStopRegex =\r\n      /((#([0-9a-fA-F]{3,8}))|(rgba?\\([^\\)]+\\))|(hsla?\\([^\\)]+\\))|([a-zA-Z]+))(\\s+([\\d.]+%?|[\\d.]+px|[\\d.]+em))?/;\r\n    for (let i = colorStopStart; i < parts.length; i++) {\r\n      let stopPart = parts[i];\r\n      let m = stopPart.match(colorStopRegex);\r\n      if (m) {\r\n        let color = m[1];\r\n        let posStr = m[8];\r\n        let value = 0;\r\n        if (posStr) {\r\n          if (posStr.endsWith('%')) value = parseFloat(posStr);\r\n          else value = parseFloat(posStr); // px/em: you may want to normalize or keep as is\r\n        } else {\r\n          value = i === colorStopStart ? 0 : 100;\r\n        }\r\n        stops.push({ color, value, id: this.generateId() });\r\n      }\r\n    }\r\n    valid = stops.length >= 2;\r\n    return { type, rotation, stops, valid };\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value && this.isValidGradient(value)) {\r\n      const parsed = this.parseGradient(value);\r\n      if (parsed.valid) {\r\n        this.resultGradient = value;\r\n        this.type = parsed.type;\r\n        this.rotation = parsed.rotation;\r\n        this.rangeValues = parsed.stops;\r\n      } else {\r\n        this.resultGradient = '';\r\n        this.rangeValues = [\r\n          { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n          { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n        ];\r\n        this.type = 'linear';\r\n        this.rotation = 90;\r\n      }\r\n    } else {\r\n      this.resultGradient = '';\r\n      this.rangeValues = [\r\n        { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n        { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n      ];\r\n      this.type = 'linear';\r\n      this.rotation = 90;\r\n    }\r\n    this.generateGradient();\r\n  }\r\n  private generateId(): string {\r\n    let id = 'ngx-thumb-' + Math.random().toString(36).substring(2, 9);\r\n    if (this.rangeValues.findIndex((x) => x.id == id) >= 0) {\r\n      return this.generateId();\r\n    }\r\n    return id;\r\n  }\r\n\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  remove() {\r\n    if (this.rangeValues.length > 2) {\r\n      this.rangeValues.splice(this.selectedIndex, 1);\r\n      this.selectedIndex = 0;\r\n      this.generateGradient();\r\n    }\r\n  }\r\n\r\n  generateGradient(ev?: string) {\r\n    if (ev && this.rangeValues[this.selectedIndex]) {\r\n      this.rangeValues[this.selectedIndex].color = ev;\r\n    }\r\n    for (let item of this.rangeValues) {\r\n      item.color ??= generateRandomColor();\r\n    }\r\n    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);\r\n    this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, this.rotation);\r\n  }\r\n\r\n  updateRangeSlider() {\r\n    if (this.rangeSlider) {\r\n      this.rangeSlider.writeValue(this.rangeValues);\r\n    }\r\n  }\r\n  emitChange() {\r\n    this._onChange(this.resultGradient);\r\n    this.change.emit(this.resultGradient);\r\n    this.confirm.emit(this.resultGradient);\r\n  }\r\n\r\n  setDefaultGradients() {\r\n    this.defaultGradients = [];\r\n\r\n    for (let item of DefaultGradients) {\r\n      this.defaultGradients.push(buildGradientFromStops(item, 'linear', 90));\r\n    }\r\n  }\r\n\r\n  onSelectDefault(item: string, i: number) {\r\n    this.writeValue(item);\r\n  }\r\n}\r\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewChild,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n  FormsModule,\r\n} from '@angular/forms';\r\nimport { RangeSliderComponent } from '../../range-slider/range-slider.component';\r\nimport { NgxInputColorModule } from '../../ngx-input-color.module';\r\nimport { GradientStop, GradientType } from '../../models/GradientStop';\r\nimport { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../../utils/build-gradient';\r\nimport { DefaultGradients } from './default-gradients';\r\n\r\n@Component({\r\n  standalone: true,\r\n  selector: 'ngx-input-gradient',\r\n  templateUrl: './ngx-input-gradient.component.html',\r\n  styleUrls: ['./ngx-input-gradient.component.scss'],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientComponent,\r\n    },\r\n  ],\r\n  imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],\r\n})\r\nexport class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() showCloseButton = true;\r\n\r\n  @Output() change = new EventEmitter<string>();\r\n  @Output() confirm = new EventEmitter<string>();\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  defaultGradients: string[] = [];\r\n\r\n  resultGradient = '';\r\n  baseBg = '';\r\n  rangeValues: GradientStop[] = [];\r\n  type: GradientType = 'linear';\r\n  rotation: number = 90;\r\n  rotationList = [0, 45, 90, 135, 180, 225, 270, 315, 360];\r\n  selectedIndex = 0;\r\n\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;\r\n  constructor(private cd: ChangeDetectorRef) {}\r\n\r\n  ngOnInit(): void {\r\n    this.setDefaultGradients();\r\n  }\r\n  ngOnDestroy(): void {}\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (!this.resultGradient) return { required: true };\r\n    const parsed = parseGradient(this.resultGradient);\r\n    if (!parsed.valid) return { invalid: true };\r\n    if (parsed.stops.length < 2) return { stops: 'at least 2 color stops required' };\r\n    return null;\r\n  }\r\n\r\n \r\n\r\n  writeValue(value: any): void {\r\n    if (value && isValidGradient(value)) {\r\n      const parsed = parseGradient(value);\r\n      if (parsed.valid) {\r\n        this.resultGradient = value;\r\n        this.type = parsed.type;\r\n        this.rotation = parsed.rotation;\r\n        this.rangeValues = parsed.stops;\r\n      } else {\r\n        this.resultGradient = '';\r\n        this.rangeValues = [\r\n          { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n          { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n        ];\r\n        this.type = 'linear';\r\n        this.rotation = 90;\r\n      }\r\n    } else {\r\n      this.resultGradient = '';\r\n      this.rangeValues = [\r\n        { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n        { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n      ];\r\n      this.type = 'linear';\r\n      this.rotation = 90;\r\n    }\r\n    this.generateGradient();\r\n  }\r\n  private generateId(): string {\r\n    let id = 'ngx-thumb-' + Math.random().toString(36).substring(2, 9);\r\n    if (this.rangeValues.findIndex((x) => x.id == id) >= 0) {\r\n      return this.generateId();\r\n    }\r\n    return id;\r\n  }\r\n\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  remove() {\r\n    if (this.rangeValues.length > 2) {\r\n      this.rangeValues.splice(this.selectedIndex, 1);\r\n      this.selectedIndex = 0;\r\n      this.generateGradient();\r\n    }\r\n  }\r\n\r\n  generateGradient(ev?: string) {\r\n    if (ev && this.rangeValues[this.selectedIndex]) {\r\n      this.rangeValues[this.selectedIndex].color = ev;\r\n    }\r\n    for (let item of this.rangeValues) {\r\n      item.color ??= generateRandomColor();\r\n    }\r\n    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);\r\n    this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, this.rotation);\r\n  }\r\n\r\n  updateRangeSlider() {\r\n    if (this.rangeSlider) {\r\n      this.rangeSlider.writeValue(this.rangeValues);\r\n    }\r\n  }\r\n  emitChange() {\r\n    this._onChange(this.resultGradient);\r\n    this.change.emit(this.resultGradient);\r\n    this.confirm.emit(this.resultGradient);\r\n  }\r\n\r\n  setDefaultGradients() {\r\n    this.defaultGradients = [];\r\n\r\n    for (let item of DefaultGradients) {\r\n      this.defaultGradients.push(buildGradientFromStops(item, 'linear', 90));\r\n    }\r\n  }\r\n\r\n  onSelectDefault(item: string, i: number) {\r\n    console.log('onSelectDefault', item, i);\r\n    this.writeValue(item);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -7456,6 +7405,33 @@
                 ]
             },
             {
+                "name": "generateId",
+                "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "rangeValues",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "rangeValues",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "generateRandomColor",
                 "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
                 "ctype": "miscellaneous",
@@ -7714,6 +7690,35 @@
                 ]
             },
             {
+                "name": "isValidGradient",
+                "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "value",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "boolean",
+                "jsdoctags": [
+                    {
+                        "name": "value",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "numberInputToObject",
                 "file": "projects/ngx-input-color/src/utils/conversion.ts",
                 "ctype": "miscellaneous",
@@ -7791,6 +7796,35 @@
                 "jsdoctags": [
                     {
                         "name": "str",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "parseGradient",
+                "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "value",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "literal type",
+                "jsdoctags": [
+                    {
+                        "name": "value",
                         "type": "string",
                         "deprecated": false,
                         "deprecationMessage": "",
@@ -10074,6 +10108,33 @@
                     ]
                 },
                 {
+                    "name": "generateId",
+                    "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "rangeValues",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "rangeValues",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "generateRandomColor",
                     "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
                     "ctype": "miscellaneous",
@@ -10083,6 +10144,64 @@
                     "description": "",
                     "args": [],
                     "returnType": "string"
+                },
+                {
+                    "name": "isValidGradient",
+                    "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "boolean",
+                    "jsdoctags": [
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "parseGradient",
+                    "file": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "literal type",
+                    "jsdoctags": [
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
                 }
             ],
             "projects/ngx-input-color/src/utils/get-offset-position.ts": [
@@ -10270,7 +10389,7 @@
     },
     "routes": [],
     "coverage": {
-        "count": 29,
+        "count": 27,
         "status": "medium",
         "files": [
             {
@@ -10307,7 +10426,7 @@
                 "linktype": "directive",
                 "name": "NgxInputGradientDirective",
                 "coveragePercent": 0,
-                "coverageCount": "0/27",
+                "coverageCount": "0/28",
                 "status": "low"
             },
             {
@@ -10381,7 +10500,7 @@
                 "linktype": "component",
                 "name": "NgxInputGradientComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/41",
+                "coverageCount": "0/39",
                 "status": "low"
             },
             {
@@ -10500,7 +10619,37 @@
                 "type": "function",
                 "linktype": "miscellaneous",
                 "linksubtype": "function",
+                "name": "generateId",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
                 "name": "generateRandomColor",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "isValidGradient",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/build-gradient.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "parseGradient",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"

@@ -21,6 +21,7 @@ import {
 import { ColorInspector } from '../models/ColorInspector.enum';
 import { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';
 import { DOCUMENT } from '@angular/common';
+import { isValidGradient, parseGradient } from '../utils/build-gradient';
 
 @Directive({
   selector: '[ngxInputGradient]',
@@ -43,6 +44,9 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
   private backdrop?: HTMLDivElement;
   private colorPickerEl?: HTMLElement;
   isDisabled = false;
+
+  value = '';
+
   _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
@@ -80,8 +84,10 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
   }
 
   writeValue(value: any): void {
-    if (value) {
-      if (this.setInputBackground) {
+    this.value = value;
+    if (value && isValidGradient(value)) {
+      const parsed = parseGradient(value);
+      if (parsed.valid && this.setInputBackground) {
         this.renderer.setStyle(this.el.nativeElement, 'background', value);
       }
       this._onValidateChange();
@@ -101,6 +107,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     instance.showCloseButton = true;
     instance.closeTitle = this.closeTitle;
     instance.confirmTitle = this.confirmTitle;
+    instance.writeValue(this.value);
 
     // رویدادها
     const sub1 = instance.confirm.subscribe((c: any) => {
@@ -199,6 +206,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       this.renderer.setStyle(this.el.nativeElement, 'background', c);
     }
     this._onChange(c);
+    this.value = c;
     this.destroyColorPicker();
   }
 }

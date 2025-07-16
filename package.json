@@ -13,7 +13,8 @@
     "storybook": "npm run copy-readme && ng run ngx-input-color:storybook",
     "compdoc:serve": "compodoc -p tsconfig.compodoc.json -s",
     "compdoc:exportJson": "compodoc -p tsconfig.compodoc.json -e --exportFormat json",
-    "build-storybook": "npm run copy-readme && ng run ngx-input-color:build-storybook"
+    "build-storybook": "npm run copy-readme  && ng run ngx-input-color:build-storybook && npm run copyScreenShot",
+    "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.png docs\\screenshot.png"
   },
   "private": true,
   "dependencies": {
