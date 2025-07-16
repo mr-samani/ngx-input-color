@@ -18,7 +18,7 @@ import {
 import { colorNames } from './css-color-names';
 import { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces';
 export type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;
-export type OutputType = 'CMYK' | 'HSL' | 'HSV' | 'RGB' | 'HEX' | 'HEXA';
+export type OutputType = 'CMYK' | 'HSL' | 'HSV' | 'RGB' | 'HEX';
 
 export class NgxColor {
   private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };
@@ -189,9 +189,6 @@ export class NgxColor {
 
       case 'HEX':
         return this.toHexString(true);
-
-      case 'HEXA':
-        return this.toHexString(false);
 
       default:
         let name = await this.name();

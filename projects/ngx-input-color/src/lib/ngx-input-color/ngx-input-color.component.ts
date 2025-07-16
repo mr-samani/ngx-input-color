@@ -48,7 +48,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   /** Minifi UI  */
   @Input() simpleMode = false;
 
-  @Input() outputType: OutputType = 'HEXA';
+  @Input() outputType: OutputType = 'HEX';
 
   /**
    * default inspectors

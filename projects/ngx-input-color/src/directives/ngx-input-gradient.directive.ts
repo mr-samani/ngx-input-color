@@ -114,7 +114,16 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     // بک‌دراپ
     this.backdrop = this.renderer.createElement('div');
     if (this.backdrop) {
-      this.backdrop.className = 'ngx-color-picker-backdrop';
+      this.backdrop.style.cssText = `
+          background: #5e5e5e1e;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          overflow: auto;
+          transition: all 300ms;
+        `;
       this.backdrop.onclick = () => this.destroyColorPicker();
     }
     // گرفتن المنت کامپوننت واقعی
