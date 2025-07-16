@@ -18,6 +18,12 @@ const preview: Preview = {
         labels: Object.values(ColorInspector).filter((value) => typeof value === 'string'),
       },
     },
+    outputType: {
+      options: ['CMYK', 'HSL', 'HSV', 'RGB', 'HEX', 'HEXA'],
+      control: {
+        type: 'select',
+      },
+    },
   },
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },

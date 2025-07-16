@@ -22,7 +22,7 @@ import {
 } from '@angular/forms';
 import { ColorInspector } from '../models/ColorInspector.enum';
 import { NgxInputColorComponent } from '../lib/ngx-input-color/ngx-input-color.component';
-import { NgxColor } from '../utils/color-helper';
+import { NgxColor, OutputType } from '../utils/color-helper';
 
 @Directive({
   selector: '[ngxInputColor]',
@@ -48,6 +48,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   @Input() showCloseButton = true;
   @Input() showConfirmButton = true;
   @Input() simpleMode = false;
+  @Input() outputType: OutputType = 'HEXA';
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
   };
@@ -170,14 +171,14 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     instance.showCloseButton = this.showCloseButton;
     instance.showConfirmButton = this.showConfirmButton;
     instance.simpleMode = this.simpleMode;
+    instance.outputType = this.outputType;
 
     if (this.color?.isValid) instance.initColor(this.color);
     instance.change.subscribe((c: string) => {
-      this.change.emit(c);
+      this.emitChange(c);
     });
     instance.confirm.subscribe((c: string) => {
-      this.confirm.emit(c);
-      this.confirmColor(c);
+      this.emitChange(c);
       this.destroyColorPicker();
     });
 
@@ -240,7 +241,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     this.colorPickerEl = undefined;
   }
 
-  private confirmColor(c: string) {
+  private emitChange(c: string) {
     this.color = new NgxColor(c);
 
     if (this.setInputBackgroundColor) {
@@ -260,7 +261,10 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
       this._targetInput.dispatchEvent(event);
     }
 
-    this._onChange(c);
+    const output = this.color.getOutputResult(this.outputType);
+    this._onChange(output);
+    this.change.emit(output);
+    this.confirm.emit(output);
     this._onTouched();
   }
 }

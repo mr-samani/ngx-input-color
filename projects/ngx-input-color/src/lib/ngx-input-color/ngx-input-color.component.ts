@@ -11,7 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorFormats } from '../../models/ColorFormats.enum';
-import { NgxColor } from '../../utils/color-helper';
+import { NgxColor, OutputType } from '../../utils/color-helper';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -47,6 +47,8 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() showConfirmButton = true;
   /** Minifi UI  */
   @Input() simpleMode = false;
+
+  @Input() outputType: OutputType = 'HEXA';
 
   /**
    * default inspectors
@@ -186,8 +188,9 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
   /** @ignore */
   emitChange() {
-    this._onChange(this.hexColor);
-    this.change.emit(this.hexColor);
-    this.confirm.emit(this.hexColor);
+    const output = this.color.getOutputResult(this.outputType);
+    this._onChange(output);
+    this.change.emit(output);
+    this.confirm.emit(output);
   }
 }

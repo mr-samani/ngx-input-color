@@ -73,7 +73,6 @@ export function parseCmykString(str: string): CMYK {
   };
 }
 
-
 /**
  * Take input from [0, n] and return it as [0, 1]
  * @hidden
@@ -471,4 +470,17 @@ export function numberInputToObject(color: number): RGB {
     g: (color & 0xff00) >> 8,
     b: color & 0xff,
   };
+}
+
+export function rgbToHslaString(r: number, g: number, b: number, a = 1): string {
+  const { h, s, l } = rgbToHsl(r, g, b);
+  return `hsla(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%, ${+a.toFixed(2)})`;
+}
+export function rgbToHsvString(r: number, g: number, b: number, a = 1): string {
+  const { h, s, v } = rgbToHsv(r, g, b);
+  return `hsva(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(v)}%, ${+a.toFixed(2)})`;
+}
+export function rgbToCmykString(r: number, g: number, b: number): string {
+  const { c, m, y, k } = rgbToCmyk(r, g, b);
+  return `cmyk(${Math.round(c)}%, ${Math.round(m)}%, ${Math.round(y)}%, ${Math.round(k)}%)`;
 }

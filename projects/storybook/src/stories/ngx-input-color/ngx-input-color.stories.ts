@@ -22,11 +22,19 @@ const meta: Meta<NgxInputColorComponent> = {
       imports: [CommonModule, FormsModule, EnumToArrayPipe, NgxInputColorModule],
     }),
   ],
+  render: (args) => ({
+    props: { ...args, myColor: '#5d00f1ff' },
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color [(ngModel)]="myColor"></ngx-input-color>
+    </div>`,
+  }),
 };
 
 export default meta;
 type Story = StoryObj<NgxInputColorComponent>;
-
+//_________________________________________________________________________________________________________
 export const Default: Story = {
   parameters: {
     controls: {},
@@ -35,24 +43,8 @@ export const Default: Story = {
     closeTitle: 'انصراف',
     confirmTitle: 'تائید',
   },
-};
-export const RGB: Story = {
-  parameters: {
-    controls: {},
-  },
-  args: {
-    defaultInspector: ColorInspector.RGB,
-  },
-};
-export const HSL: Story = {
-  parameters: {
-    controls: {},
-  },
-  args: {
-    defaultInspector: ColorInspector.HSL,
-  },
   render: (args) => ({
-    props: { ...args, myColor: 'hsl(296, 88%, 87%)' },
+    props: { ...args, myColor: '#01a13fff' },
     template: `
     <div class="flex flex-col gap-4">
     <h1> {{myColor}}</h1>
@@ -60,24 +52,65 @@ export const HSL: Story = {
     </div>`,
   }),
 };
-export const Minimal: Story = {
-  name: 'Minimal UI',
+//_________________________________________________________________________________________________________
+export const RGB: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.RGB,
+    outputType: 'RGB',
+  },
   render: (args) => ({
-    props: args,
+    props: { ...args, myColor: '#9c01a1ff' },
     template: `
     <div class="flex flex-col gap-4">
     <h1> {{myColor}}</h1>
-    <ngx-input-color 
-        [(ngModel)]="myColor"
-        [defaultInspector]="defaultInspector" 
-        [simpleMode]="simpleMode" 
-        [showCloseButton]="showCloseButton" 
-        [showConfirmButton]="showConfirmButton"
-        [closeTitle]="closeTitle"
-        [confirmTitle]="confirmTitle"
-        ></ngx-input-color>
+    <ngx-input-color [(ngModel)]="myColor" [outputType]="outputType"></ngx-input-color>
     </div>`,
   }),
+};
+//_________________________________________________________________________________________________________
+export const HSL: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.HSL,
+    outputType: 'HSL',
+  },
+  render: (args) => ({
+    props: { ...args, myColor: 'hsl(296, 88%, 87%)' },
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color [(ngModel)]="myColor" [outputType]="outputType"></ngx-input-color>
+    </div>`,
+  }),
+};
+//__
+//_________________________________________________________________________________________________________
+export const HSV: Story = {
+  parameters: {
+    controls: {},
+  },
+  args: {
+    defaultInspector: ColorInspector.Picker,
+    outputType: 'HSV',
+  },
+  render: (args) => ({
+    props: { ...args, myColor: '#ff0040ff' },
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color [(ngModel)]="myColor" [outputType]="outputType"></ngx-input-color>
+    </div>`,
+  }),
+};
+//_________________________________________________________________________________________________________
+export const Minimal: Story = {
+  name: 'Minimal UI',
+
   parameters: {
     controls: {},
   },
@@ -87,4 +120,18 @@ export const Minimal: Story = {
     showCloseButton: false,
     showConfirmButton: false,
   },
+  render: (args) => ({
+    props: { ...args, myColor: 'pink' },
+
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> {{myColor}}</h1>
+    <ngx-input-color 
+        [(ngModel)]="myColor"
+        [simpleMode]="simpleMode"
+        [showCloseButton]="showCloseButton"
+        [showConfirmButton]="showConfirmButton"
+        ></ngx-input-color>
+    </div>`,
+  }),
 };
