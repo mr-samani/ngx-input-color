@@ -59,6 +59,13 @@
         </select>
       </div>
     </div>
+
+    <div class="default-list">
+      <span
+        *ngFor="let item of defaultGradients; let i = index"
+        [style.background]="item"
+        (click)="onSelectDefault(item, i)"></span>
+    </div>
   </div>
 
   <div class="actions">

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgxColor } from '@ngx-input-color/utils/color-helper';
-import { RGBA } from '@ngx-input-color/utils/interfaces';
+import { NgxColor } from '../../../utils/color-helper';
+import { RGBA } from '../../../utils/interfaces';
 
 @Component({
   selector: 'app-rgb',

@@ -10,7 +10,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -21,10 +20,11 @@ import {
   ValidationErrors,
   FormsModule,
 } from '@angular/forms';
-import { GradientStop, GradientType } from '@ngx-input-color/models/GradientStop';
-import { NgxInputColorModule } from '@ngx-input-color/public-api';
-import { RangeSliderComponent } from '@ngx-input-color/range-slider/range-slider.component';
-import { buildGradientFromStops, generateRandomColor } from '@ngx-input-color/utils/build-gradient';
+import { RangeSliderComponent } from '../../range-slider/range-slider.component';
+import { NgxInputColorModule } from '../../ngx-input-color.module';
+import { GradientStop, GradientType } from '../../models/GradientStop';
+import { buildGradientFromStops, generateRandomColor } from '../../utils/build-gradient';
+import { DefaultGradients } from './default-gradients';
 
 @Component({
   standalone: true,
@@ -51,6 +51,8 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   @Output() confirm = new EventEmitter<string>();
   @Output() cancel = new EventEmitter<void>();
 
+  defaultGradients: string[] = [];
+
   resultGradient = '';
   baseBg = '';
   rangeValues: GradientStop[] = [];
@@ -67,7 +69,9 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;
   constructor(private cd: ChangeDetectorRef) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setDefaultGradients();
+  }
   ngOnDestroy(): void {}
   registerOnChange(fn: any): void {
     this._onChange = fn;
@@ -225,7 +229,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     for (let item of this.rangeValues) {
       item.color ??= generateRandomColor();
     }
-    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear');
+    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);
     this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, this.rotation);
   }
 
@@ -238,5 +242,17 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     this._onChange(this.resultGradient);
     this.change.emit(this.resultGradient);
     this.confirm.emit(this.resultGradient);
+  }
+
+  setDefaultGradients() {
+    this.defaultGradients = [];
+
+    for (let item of DefaultGradients) {
+      this.defaultGradients.push(buildGradientFromStops(item, 'linear', 90));
+    }
+  }
+
+  onSelectDefault(item: string, i: number) {
+    this.writeValue(item);
   }
 }

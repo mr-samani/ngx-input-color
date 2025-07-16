@@ -28,10 +28,41 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/ngx-input-color/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": "projects/storybook/.storybook",
+            "browserTarget": "ngx-input-color:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-p",
+              "tsconfig.compodoc.json",
+              "-e",
+              "json",
+              "-d",
+              "projects/storybook/.storybook/documentation"
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": "projects/storybook/.storybook",
+            "browserTarget": "ngx-input-color:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-p",
+              "tsconfig.compodoc.json",
+              "-e",
+              "json",
+              "-d",
+              "projects/storybook/.storybook/documentation"
+            ],
+            "outputDir": "storybook-static"
           }
         }
       }
@@ -50,8 +81,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "docs",
-            "baseHref": "/ngx-input-color/",
+            "outputPath": "dist/demo",
             "index": "projects/demo/src/index.html",
             "browser": "projects/demo/src/main.ts",
             "polyfills": [
@@ -62,17 +92,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              },
-              "projects/demo/src/screenshot.png"
+                "input": "projects/demo/public"
+              }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "projects/demo/src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -125,7 +151,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/demo/public"
               }
             ],
             "styles": [

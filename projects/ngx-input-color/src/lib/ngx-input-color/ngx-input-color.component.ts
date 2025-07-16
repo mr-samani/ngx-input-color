@@ -11,8 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorFormats } from '../../models/ColorFormats.enum';
-import { NgxColor } from '../../utils/color-helper';
-import { ColorInspector } from '@ngx-input-color/models/ColorInspector.enum';
+import { NgxColor, OutputType } from '../../utils/color-helper';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -21,6 +20,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { ColorInspector } from '../../models/ColorInspector.enum';
 declare const EyeDropper: any;
 @Component({
   selector: 'ngx-input-color',
@@ -37,37 +37,69 @@ declare const EyeDropper: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+  /** Title for the close button */
   @Input() closeTitle = 'Close';
+  /** Title for the confirm button */
   @Input() confirmTitle = 'Ok';
+  /** Whether to show the close button */
   @Input() showCloseButton = true;
+  /** Whether to show the confirm button */
   @Input() showConfirmButton = true;
+  /** Minifi UI  */
   @Input() simpleMode = false;
-  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;
 
+  @Input() outputType: OutputType = 'HEX';
+
+  /**
+   * default inspectors
+   * - ColorInspector.Picker
+   * - ColorInspector.RGB
+   * - ColorInspector.HSL
+   *
+   * @alias defaultInspector
+   */
+  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
+
+  /** Emitted when the color value changes */
   @Output() change = new EventEmitter<string>();
+  /** Emitted when the confirm button is clicked */
   @Output() confirm = new EventEmitter<string>();
+  /** Emitted when the cancel button is clicked */
   @Output() cancel = new EventEmitter<void>();
 
+  /** @ignore */
   format: ColorFormats = ColorFormats.HSVA;
-  isDarkColor = false;
+  /** @ignore */
+  isDarkColor = true;
 
-  rgbaColor = '';
-  hexColor = '';
-  name = '';
+  /** @ignore */
+  rgbaColor = 'rgba(0, 0, 0, 1)';
+  /** @ignore */
+  hexColor = '#000000';
+  /** @ignore */
+  name = 'black';
 
+  /** @ignore */
   isSupportedEyeDrop: boolean;
 
-  color = new NgxColor();
+  /** @ignore */
+  color: NgxColor = new NgxColor();
 
+  /** @ignore */
   isDisabled = false;
-  _onChange = (value: string) => {};
-  _onTouched = () => {};
-  _onValidateChange = () => {};
+  /**@ignore */
+  private _onChange = (value: string) => {};
+  /**@ignore */
+  private _onTouched = () => {};
+  /**@ignore */
+  private _onValidateChange = () => {};
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
   }
 
+  /** @ignore */
   ngOnInit(): void {}
+  /** @ignore */
   ngOnDestroy(): void {}
   public get ColorFormats(): typeof ColorFormats {
     return ColorFormats;
@@ -75,18 +107,23 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   public get ColorInspector(): typeof ColorInspector {
     return ColorInspector;
   }
+  /** @ignore */
   registerOnChange(fn: any): void {
     this._onChange = fn;
   }
+  /** @ignore */
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
   }
+  /** @ignore */
   setDisabledState(disabled: boolean): void {
     this.isDisabled = disabled;
   }
+  /** @ignore */
   registerOnValidatorChange(fn: () => void): void {
     this._onValidateChange = fn;
   }
+  /** @ignore */
   validate(control: AbstractControl): ValidationErrors | null {
     if (this.color && this.color.isValid === false) {
       return { invalid: true };
@@ -94,14 +131,18 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     return null;
   }
 
+  /** @ignore */
   writeValue(value: any): void {
     try {
-      this.color = value ? new NgxColor(value) : new NgxColor('#000');
+      const c = value ? new NgxColor(value) : new NgxColor('#000');
+      this.initColor(c);
       this._onValidateChange();
     } catch (e) {
-      this.color = new NgxColor('#000'); // مقدار پیش‌فرض
+      const c = new NgxColor('#000'); // مقدار پیش‌فرض
+      this.initColor(c);
     }
   }
+  /** @ignore */
   openEyeDrop() {
     if (this.isSupportedEyeDrop) {
       let t = new EyeDropper().open();
@@ -115,6 +156,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
 
   /**
    *  call from directive
+  /* @ignore 
    */
   async initColor(c?: NgxColor) {
     if (!c) return;
@@ -130,20 +172,25 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     }
   }
 
+  /** @ignore */
   stopPropagation(ev: Event) {
     ev.stopPropagation();
   }
 
+  /** @ignore */
   close() {
     this.cancel.emit();
   }
 
+  /** @ignore */
   ok() {
     this.emitChange();
   }
-  emitChange() {
-    this._onChange(this.hexColor);
-    this.change.emit(this.hexColor);
-    this.confirm.emit(this.hexColor);
+  /** @ignore */
+  async emitChange() {
+    const output = await this.color.getOutputResult(this.outputType);
+    this._onChange(output);
+    this.change.emit(output);
+    this.confirm.emit(output);
   }
 }

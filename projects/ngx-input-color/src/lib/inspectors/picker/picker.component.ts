@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IPosition } from '@ngx-input-color/models/IPosition';
-import { NgxColor } from '@ngx-input-color/utils/color-helper';
-import { HSVA } from '@ngx-input-color/utils/interfaces';
+import { NgxColor } from '../../../utils/color-helper';
+import { IPosition } from '../../../models/IPosition';
+import { HSVA } from '../../../utils/interfaces';
 
 @Component({
   selector: 'app-picker',
@@ -23,7 +23,8 @@ export class PickerComponent implements OnInit {
     this.hue = shva.h;
     this.board = { x: shva.s, y: 100 - shva.v };
     this.alpha = shva.a ?? 1;
-    this.baseColor = c.toHexString(false);
+    const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });
+    this.baseColor = pureColor.toHexString(false);
   }
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
 
@@ -35,7 +36,8 @@ export class PickerComponent implements OnInit {
     try {
       const hsva: HSVA = { h: this.hue, s: this.board.x, v: 100 - this.board.y, a: this.alpha };
       const color = new NgxColor(hsva);
-      this.baseColor = color.toHexString(false);
+      const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });
+      this.baseColor = pureColor.toHexString(false);
       if (color.equals(this.inputColor) == false) {
         this.inputColor = color;
         this.colorChange.emit(color);

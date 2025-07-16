@@ -1,1 +1,6 @@
-<router-outlet></router-outlet>
+<ngx-input-gradient [(ngModel)]="gradient"></ngx-input-gradient>
+<p>{{ gradient }}</p>
+
+<input type="text" [(ngModel)]="color" ngxInputColor />
+
+<p>{{ color }}</p>

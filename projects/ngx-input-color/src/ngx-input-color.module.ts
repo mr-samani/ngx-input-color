@@ -10,13 +10,10 @@ import { PickerComponent } from './lib/inspectors/picker/picker.component';
 import { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';
 import { HslComponent } from './lib/inspectors/hsl/hsl.component';
 import { RgbComponent } from './lib/inspectors/rgb/rgb.component';
-import { RangeSliderComponent } from './range-slider/range-slider.component';
-import { NgxInputGradientDirective } from './directives/ngx-input-gradient.directive';
 
 @NgModule({
   declarations: [
     NgxInputColorDirective,
-    NgxInputGradientDirective,
     NgxInputColorComponent,
     PickerComponent,
     CmykComponent,
@@ -28,11 +25,9 @@ import { NgxInputGradientDirective } from './directives/ngx-input-gradient.direc
     FormsModule,
     SliderComponent,
     SaturationComponent,
-    RangeSliderComponent,
-    EnumToArrayPipe,
-    NgxInputGradientComponent,
+    EnumToArrayPipe, 
   ],
-  exports: [NgxInputColorComponent, NgxInputGradientComponent, NgxInputColorDirective, NgxInputGradientDirective],
+  exports: [NgxInputColorComponent, NgxInputColorDirective],
   providers: [],
 })
 export class NgxInputColorModule {}

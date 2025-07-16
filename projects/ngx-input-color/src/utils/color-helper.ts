@@ -9,12 +9,16 @@ import {
   parseRgbString,
   rgbaToHex,
   rgbToCmyk,
+  rgbToCmykString,
   rgbToHsl,
+  rgbToHslaString,
   rgbToHsv,
+  rgbToHsvString,
 } from './conversion';
 import { colorNames } from './css-color-names';
 import { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces';
 export type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;
+export type OutputType = 'CMYK' | 'HSL' | 'HSV' | 'RGB' | 'HEX';
 
 export class NgxColor {
   private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };
@@ -165,5 +169,30 @@ export class NgxColor {
 
   isLight(): boolean {
     return !this.isDark();
+  }
+
+  async getOutputResult(outputType: OutputType): Promise<string> {
+    const { r, g, b, a } = this._rgb;
+
+    switch (outputType) {
+      case 'CMYK':
+        return rgbToCmykString(r, g, b);
+
+      case 'HSL':
+        return rgbToHslaString(r, g, b, a);
+
+      case 'HSV':
+        return rgbToHsvString(r, g, b, a);
+
+      case 'RGB':
+        return a < 1 ? `rgba(${r}, ${g}, ${b}, ${+a.toFixed(2)})` : `rgb(${r}, ${g}, ${b})`;
+
+      case 'HEX':
+        return this.toHexString(true);
+
+      default:
+        let name = await this.name();
+        return name ?? this.toHexString(true);
+    }
   }
 }
