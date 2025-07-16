@@ -1,7 +1,0 @@
-import{d as w,e as W,l as B,m as E,n as T}from"./chunk-UZX3OKBC.js";import{La as l,Oa as t,Pa as i,Qb as S,Rb as _,X as M,ab as d,bb as f,cb as u,db as s,eb as m,fb as p,hb as y,kb as h,lb as c,wa as r}from"./chunk-MJ3LKA4J.js";var N=(()=>{let o=class o{constructor(){this.s={x:50,y:50},this.slider=50}ngOnInit(){}};o.\u0275fac=function(a){return new(a||o)},o.\u0275cmp=M({type:o,selectors:[["app-components"]],standalone:!0,features:[y],decls:10,vars:15,consts:[[3,"ngModelChange","ngModel","height","color"],[3,"ngModelChange","ngModel","min","max"],["background","linear-gradient(to right, transparent, rgb(255, 0, 98))",3,"ngModelChange","ngModel","min","max","isBgTransparent"]],template:function(a,e){a&1&&(t(0,"saturation",0),p("ngModelChange",function(n){return m(e.s,n)||(e.s=n),n}),i(),t(1,"pre"),d(2),h(3,"json"),i(),t(4,"slider",1),p("ngModelChange",function(n){return m(e.slider,n)||(e.slider=n),n}),i(),t(5,"pre"),d(6),i(),t(7,"slider",2),p("ngModelChange",function(n){return m(e.slider,n)||(e.slider=n),n}),i(),t(8,"pre"),d(9),i()),a&2&&(s("ngModel",e.s),l("height",200)("color","blue"),r(2),f(c(3,13,e.s)),r(2),s("ngModel",e.slider),l("min",20)("max",80),r(2),u(`  min=20
-  max=80
-  slider=`,e.slider,`
-`),r(),s("ngModel",e.slider),l("min",0)("max",100)("isBgTransparent",!0),r(2),u(`  min=0
-  max=100
-  slider=`,e.slider,`
-`))},dependencies:[_,S,T,E,B,w,W]});let g=o;return g})();export{N as ComponentsComponent};

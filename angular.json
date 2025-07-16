@@ -62,7 +62,7 @@
               "-d",
               "projects/storybook/.storybook/documentation"
             ],
-            "outputDir": "storybook-static"
+            "outputDir": "docs"
           }
         }
       }
