@@ -171,7 +171,7 @@ export class NgxColor {
     return !this.isDark();
   }
 
-  getOutputResult(outputType: OutputType): string {
+  async getOutputResult(outputType: OutputType): Promise<string> {
     const { r, g, b, a } = this._rgb;
 
     switch (outputType) {
@@ -194,7 +194,8 @@ export class NgxColor {
         return this.toHexString(false);
 
       default:
-        return this.toHexString(true);
+        let name = await this.name();
+        return name ?? this.toHexString(true);
     }
   }
 }

@@ -8,23 +8,7 @@ import { ColorInspector } from '../../ngx-input-color/src/models/ColorInspector.
 
 const preview: Preview = {
   // tags: ['autodocs'],
-  argTypes: {
-    defaultInspector: {
-      options: Object.keys(ColorInspector)
-        .filter((key) => !isNaN(parseInt(key)))
-        .map((key) => parseInt(key)),
-      control: {
-        type: 'select',
-        labels: Object.values(ColorInspector).filter((value) => typeof value === 'string'),
-      },
-    },
-    outputType: {
-      options: ['CMYK', 'HSL', 'HSV', 'RGB', 'HEX', 'HEXA'],
-      control: {
-        type: 'select',
-      },
-    },
-  },
+  argTypes: {},
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {

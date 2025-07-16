@@ -11,6 +11,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
+  Inject,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -23,6 +24,7 @@ import {
 import { ColorInspector } from '../models/ColorInspector.enum';
 import { NgxInputColorComponent } from '../lib/ngx-input-color/ngx-input-color.component';
 import { NgxColor, OutputType } from '../utils/color-helper';
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
   selector: '[ngxInputColor]',
@@ -83,7 +85,12 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   _onTouched = () => {};
   _onValidateChange = () => {};
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}
+  constructor(
+    @Inject(DOCUMENT) private _doc: Document,
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private viewContainerRef: ViewContainerRef
+  ) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -179,7 +186,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     });
     instance.confirm.subscribe((c: string) => {
       this.emitChange(c);
-      this.destroyColorPicker();
     });
 
     instance.cancel.subscribe(() => {
@@ -194,7 +200,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     }
     this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
     this.renderer.appendChild(this.backdrop, this.colorPickerEl);
-    this.renderer.appendChild(document.body, this.backdrop);
+    this.renderer.appendChild(this._doc.body, this.backdrop);
     this.setPosition();
   }
 
@@ -212,7 +218,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
       this.renderer.setStyle(pickerEl, 'left', '0px');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
-      document.body.appendChild(pickerEl);
+      this._doc.body.appendChild(pickerEl);
       const pickerRect = pickerEl.getBoundingClientRect();
 
       let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
@@ -234,14 +240,14 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     this.colorPickerComponentRef = undefined;
 
     if (this.backdrop) {
-      this.renderer.removeChild(document.body, this.backdrop);
+      this.renderer.removeChild(this._doc.body, this.backdrop);
       this.backdrop = undefined;
     }
 
     this.colorPickerEl = undefined;
   }
 
-  private emitChange(c: string) {
+  private async emitChange(c: string) {
     this.color = new NgxColor(c);
 
     if (this.setInputBackgroundColor) {
@@ -261,7 +267,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
       this._targetInput.dispatchEvent(event);
     }
 
-    const output = this.color.getOutputResult(this.outputType);
+    const output = await this.color.getOutputResult(this.outputType);
     this._onChange(output);
     this.change.emit(output);
     this.confirm.emit(output);

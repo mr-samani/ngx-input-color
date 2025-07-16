@@ -3,6 +3,7 @@ import {
   Directive,
   ElementRef,
   HostListener,
+  Inject,
   Input,
   OnDestroy,
   Renderer2,
@@ -19,6 +20,7 @@ import {
 } from '@angular/forms';
 import { ColorInspector } from '../models/ColorInspector.enum';
 import { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
   selector: '[ngxInputGradient]',
@@ -44,7 +46,12 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
   _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
-  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}
+  constructor(
+    @Inject(DOCUMENT) private _doc: Document,
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private viewContainerRef: ViewContainerRef
+  ) {}
 
   @HostListener('click', ['$event']) onClick(ev: Event) {
     ev.stopPropagation();
@@ -98,7 +105,6 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     // رویدادها
     const sub1 = instance.confirm.subscribe((c: any) => {
       this.confirmColor(c);
-      this.destroyColorPicker(); // بستن بعد از تایید
     });
 
     const sub2 = instance.cancel.subscribe(() => {
@@ -114,7 +120,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     // گرفتن المنت کامپوننت واقعی
     this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
     this.renderer.appendChild(this.backdrop, this.colorPickerEl);
-    this.renderer.appendChild(document.body, this.backdrop);
+    this.renderer.appendChild(this._doc.body, this.backdrop);
     this.setPosition();
   }
 
@@ -132,7 +138,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       this.renderer.setStyle(pickerEl, 'left', '0px');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
-      document.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
+      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
 
       const pickerRect = pickerEl.getBoundingClientRect();
 
@@ -173,7 +179,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       this.pickerComponentRef = undefined;
     }
     if (this.backdrop && this.backdrop.parentNode) {
-      this.renderer.removeChild(document.body, this.backdrop);
+      this.renderer.removeChild(this._doc.body, this.backdrop);
       this.backdrop = undefined;
     }
     this.colorPickerEl = undefined;

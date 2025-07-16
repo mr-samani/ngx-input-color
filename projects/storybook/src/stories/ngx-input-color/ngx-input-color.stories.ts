@@ -6,14 +6,28 @@ import { EnumToArrayPipe } from '../../../../ngx-input-color/src/pipes/enum-to-a
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ColorInspector } from '../../../../ngx-input-color/src/models/ColorInspector.enum';
-import { Controls } from '@storybook/addon-docs/blocks';
-import { NgxColor } from '../../../../ngx-input-color/src/utils/color-helper';
 
 const meta: Meta<NgxInputColorComponent> = {
   title: 'Demo/NgxInputColor',
   component: NgxInputColorComponent,
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    defaultInspector: {
+      options: Object.keys(ColorInspector)
+        .filter((key) => !isNaN(parseInt(key)))
+        .map((key) => parseInt(key)),
+      control: {
+        type: 'select',
+        labels: Object.values(ColorInspector).filter((value) => typeof value === 'string'),
+      },
+    },
+    outputType: {
+      options: ['CMYK', 'HSL', 'HSV', 'RGB', 'HEX', 'HEXA'],
+      control: {
+        type: 'select',
+      },
+    },
+  },
   args: {
     defaultInspector: ColorInspector.Picker,
   },
@@ -132,6 +146,34 @@ export const Minimal: Story = {
         [showCloseButton]="showCloseButton"
         [showConfirmButton]="showConfirmButton"
         ></ngx-input-color>
+    </div>`,
+  }),
+};
+
+//_________________________________________________________________________________________________________
+export const InputDirective: Story = {
+  name: 'Input',
+
+  parameters: {
+    controls: {},
+  },
+  args: {
+    simpleMode: true,
+    showCloseButton: false,
+    showConfirmButton: false,
+  },
+  render: (args) => ({
+    props: { ...args, myColor: 'pink' },
+
+    template: `
+    <div class="flex flex-col gap-4">
+    <h1> ngxInputColor = {{myColor}}</h1>
+    <input ngxInputColor 
+        [(ngModel)]="myColor" 
+        [simpleMode]="simpleMode" 
+        [showCloseButton]="showCloseButton" 
+        [showConfirmButton]="showConfirmButton"
+        class="form-control" />
     </div>`,
   }),
 };

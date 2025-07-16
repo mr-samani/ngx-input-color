@@ -224,7 +224,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     for (let item of this.rangeValues) {
       item.color ??= generateRandomColor();
     }
-    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear');
+    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);
     this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, this.rotation);
   }
 

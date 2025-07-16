@@ -556,12 +556,12 @@
         },
         {
             "name": "NgxColor",
-            "id": "class-NgxColor-5210594151dbb0088d6f37d85d8d730b364d9550774b8e58e41d3a388e140ec99cb09c073960579db334ef9cf4f21da1cf7a908af5a1b7cf12889953521fc682",
+            "id": "class-NgxColor-07010d990602a904761b0b545218b4a58fbd1e53f0e781118663ba2dc9074597e0c5d261c4292ef8f89c3552c2c7aa1f58ab04485c5c0bee7c755d3fb1754067",
             "file": "projects/ngx-input-color/src/utils/color-helper.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  cmykToRgb,\r\n  hexToRgb,\r\n  hslToRgba,\r\n  hsvToRgb,\r\n  parseCmykString,\r\n  parseHslString,\r\n  parseHsvString,\r\n  parseRgbString,\r\n  rgbaToHex,\r\n  rgbToCmyk,\r\n  rgbToHsl,\r\n  rgbToHsv,\r\n} from './conversion';\r\nimport { colorNames } from './css-color-names';\r\nimport { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces';\r\nexport type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;\r\n\r\nexport class NgxColor {\r\n  private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };\r\n  private _name: string = '';\r\n\r\n  constructor(input?: ColorInput) {\r\n    if (!input) return;\r\n    if (input instanceof NgxColor) {\r\n      this._rgb = { ...input._rgb };\r\n      this._name = input._name;\r\n      return;\r\n    }\r\n    if (typeof input === 'object') {\r\n      if ('r' in input && 'g' in input && 'b' in input) {\r\n        this._rgb = { r: +input.r, g: +input.g, b: +input.b, a: (input as any).a !== undefined ? +input.a : 1 };\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'l' in input) {\r\n        this._rgb = NgxColor.hslaToRgba(input as HSLA);\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'v' in input) {\r\n        this._rgb = NgxColor.hsvaToRgba(input as HSVA);\r\n        return;\r\n      }\r\n      if ('c' in input && 'm' in input && 'y' in input && 'k' in input) {\r\n        this._rgb = NgxColor.cmykToRgba(input as CMYK);\r\n        return;\r\n      }\r\n    }\r\n    if (typeof input === 'string') {\r\n      const name = input.trim().toLowerCase();\r\n      if (colorNames[name]) {\r\n        this._rgb = hexToRgb(colorNames[name]);\r\n        this._name = name;\r\n        return;\r\n      } else if (/^#?[0-9a-f]{3,8}$/i.test(name)) {\r\n        this._rgb = hexToRgb(name);\r\n        return;\r\n      }\r\n      if (name.includes('rgb')) {\r\n        this._rgb = parseRgbString(name);\r\n        return;\r\n      }\r\n      if (name.includes('hsl')) {\r\n        this._rgb = NgxColor.hslaToRgba(parseHslString(name));\r\n        return;\r\n      }\r\n      if (name.includes('hsv')) {\r\n        this._rgb = NgxColor.hsvaToRgba(parseHsvString(name));\r\n        return;\r\n      }\r\n      if (name.includes('cmyk')) {\r\n        this._rgb = NgxColor.cmykToRgba(parseCmykString(name));\r\n        return;\r\n      }\r\n      throw new Error('Unknown color string: ' + input);\r\n    }\r\n  }\r\n\r\n  get isValid(): boolean {\r\n    return (\r\n      typeof this._rgb.r === 'number' &&\r\n      typeof this._rgb.g === 'number' &&\r\n      typeof this._rgb.b === 'number' &&\r\n      !isNaN(this._rgb.r) &&\r\n      !isNaN(this._rgb.g) &&\r\n      !isNaN(this._rgb.b)\r\n    );\r\n  }\r\n\r\n  async name() {\r\n    if (this._name) return this._name;\r\n    const hex = this.toHexString();\r\n    for (const [n, h] of Object.entries(colorNames)) {\r\n      if (h.toLowerCase() === hex.toLowerCase()) return n;\r\n    }\r\n    return '';\r\n  }\r\n\r\n  toRgb(): RGBA {\r\n    return this._rgb;\r\n  }\r\n\r\n  toRgbString(): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a === 1\r\n      ? `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`\r\n      : `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${+a.toFixed(3)})`;\r\n  }\r\n\r\n  toHexString(allowAlpha = true): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return rgbaToHex(r, g, b, a, allowAlpha && a < 1);\r\n  }\r\n\r\n  toHsl(): HSLA {\r\n    return NgxColor.rgbToHsla(this.toRgb());\r\n  }\r\n\r\n  toHsv(): HSVA {\r\n    return NgxColor.rgbToHsva(this.toRgb());\r\n  }\r\n\r\n  toCmyk(): CMYK {\r\n    return NgxColor.rgbToCmyk(this.toRgb());\r\n  }\r\n\r\n  static cmykToRgba(cmyk: CMYK): RGBA {\r\n    const { c, m, y, k } = cmyk;\r\n    return { ...cmykToRgb(c, m, y, k), a: (cmyk as any).a !== undefined ? +(cmyk as any).a : 1 };\r\n  }\r\n\r\n  static rgbToCmyk(rgba: RGBA): CMYK {\r\n    const { r, g, b } = rgba;\r\n    return rgbToCmyk(r, g, b);\r\n  }\r\n\r\n  static rgbToHsla(rgba: RGBA): HSLA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsl(r, g, b), a };\r\n  }\r\n\r\n  static rgbToHsva(rgba: RGBA): HSVA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsv(r, g, b), a };\r\n  }\r\n\r\n  static hsvaToRgba(hsva: HSVA): RGBA {\r\n    const { h, s, v, a } = hsva;\r\n    return { ...hsvToRgb(h, s, v), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  static hslaToRgba(hsla: HSLA): RGBA {\r\n    const { h, s, l, a } = hsla;\r\n    return { ...hslToRgba(h, s, l), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  equals(other?: NgxColor): boolean {\r\n    if (!other) return false;\r\n    return this.toHexString().toLowerCase() === other.toHexString().toLowerCase();\r\n  }\r\n\r\n  isDark(): boolean {\r\n    const { r, g, b } = this.toRgb();\r\n    return 0.299 * r + 0.587 * g + 0.114 * b < 128;\r\n  }\r\n\r\n  isLight(): boolean {\r\n    return !this.isDark();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  cmykToRgb,\r\n  hexToRgb,\r\n  hslToRgba,\r\n  hsvToRgb,\r\n  parseCmykString,\r\n  parseHslString,\r\n  parseHsvString,\r\n  parseRgbString,\r\n  rgbaToHex,\r\n  rgbToCmyk,\r\n  rgbToCmykString,\r\n  rgbToHsl,\r\n  rgbToHslaString,\r\n  rgbToHsv,\r\n  rgbToHsvString,\r\n} from './conversion';\r\nimport { colorNames } from './css-color-names';\r\nimport { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces';\r\nexport type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;\r\nexport type OutputType = 'CMYK' | 'HSL' | 'HSV' | 'RGB' | 'HEX' | 'HEXA';\r\n\r\nexport class NgxColor {\r\n  private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };\r\n  private _name: string = '';\r\n\r\n  constructor(input?: ColorInput) {\r\n    if (!input) return;\r\n    if (input instanceof NgxColor) {\r\n      this._rgb = { ...input._rgb };\r\n      this._name = input._name;\r\n      return;\r\n    }\r\n    if (typeof input === 'object') {\r\n      if ('r' in input && 'g' in input && 'b' in input) {\r\n        this._rgb = { r: +input.r, g: +input.g, b: +input.b, a: (input as any).a !== undefined ? +input.a : 1 };\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'l' in input) {\r\n        this._rgb = NgxColor.hslaToRgba(input as HSLA);\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'v' in input) {\r\n        this._rgb = NgxColor.hsvaToRgba(input as HSVA);\r\n        return;\r\n      }\r\n      if ('c' in input && 'm' in input && 'y' in input && 'k' in input) {\r\n        this._rgb = NgxColor.cmykToRgba(input as CMYK);\r\n        return;\r\n      }\r\n    }\r\n    if (typeof input === 'string') {\r\n      const name = input.trim().toLowerCase();\r\n      if (colorNames[name]) {\r\n        this._rgb = hexToRgb(colorNames[name]);\r\n        this._name = name;\r\n        return;\r\n      } else if (/^#?[0-9a-f]{3,8}$/i.test(name)) {\r\n        this._rgb = hexToRgb(name);\r\n        return;\r\n      }\r\n      if (name.includes('rgb')) {\r\n        this._rgb = parseRgbString(name);\r\n        return;\r\n      }\r\n      if (name.includes('hsl')) {\r\n        this._rgb = NgxColor.hslaToRgba(parseHslString(name));\r\n        return;\r\n      }\r\n      if (name.includes('hsv')) {\r\n        this._rgb = NgxColor.hsvaToRgba(parseHsvString(name));\r\n        return;\r\n      }\r\n      if (name.includes('cmyk')) {\r\n        this._rgb = NgxColor.cmykToRgba(parseCmykString(name));\r\n        return;\r\n      }\r\n      throw new Error('Unknown color string: ' + input);\r\n    }\r\n  }\r\n\r\n  get isValid(): boolean {\r\n    return (\r\n      typeof this._rgb.r === 'number' &&\r\n      typeof this._rgb.g === 'number' &&\r\n      typeof this._rgb.b === 'number' &&\r\n      !isNaN(this._rgb.r) &&\r\n      !isNaN(this._rgb.g) &&\r\n      !isNaN(this._rgb.b)\r\n    );\r\n  }\r\n\r\n  async name() {\r\n    if (this._name) return this._name;\r\n    const hex = this.toHexString();\r\n    for (const [n, h] of Object.entries(colorNames)) {\r\n      if (h.toLowerCase() === hex.toLowerCase()) return n;\r\n    }\r\n    return '';\r\n  }\r\n\r\n  toRgb(): RGBA {\r\n    return this._rgb;\r\n  }\r\n\r\n  toRgbString(): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a === 1\r\n      ? `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`\r\n      : `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${+a.toFixed(3)})`;\r\n  }\r\n\r\n  toHexString(allowAlpha = true): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return rgbaToHex(r, g, b, a, allowAlpha && a < 1);\r\n  }\r\n\r\n  toHsl(): HSLA {\r\n    return NgxColor.rgbToHsla(this.toRgb());\r\n  }\r\n\r\n  toHsv(): HSVA {\r\n    return NgxColor.rgbToHsva(this.toRgb());\r\n  }\r\n\r\n  toCmyk(): CMYK {\r\n    return NgxColor.rgbToCmyk(this.toRgb());\r\n  }\r\n\r\n  static cmykToRgba(cmyk: CMYK): RGBA {\r\n    const { c, m, y, k } = cmyk;\r\n    return { ...cmykToRgb(c, m, y, k), a: (cmyk as any).a !== undefined ? +(cmyk as any).a : 1 };\r\n  }\r\n\r\n  static rgbToCmyk(rgba: RGBA): CMYK {\r\n    const { r, g, b } = rgba;\r\n    return rgbToCmyk(r, g, b);\r\n  }\r\n\r\n  static rgbToHsla(rgba: RGBA): HSLA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsl(r, g, b), a };\r\n  }\r\n\r\n  static rgbToHsva(rgba: RGBA): HSVA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsv(r, g, b), a };\r\n  }\r\n\r\n  static hsvaToRgba(hsva: HSVA): RGBA {\r\n    const { h, s, v, a } = hsva;\r\n    return { ...hsvToRgb(h, s, v), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  static hslaToRgba(hsla: HSLA): RGBA {\r\n    const { h, s, l, a } = hsla;\r\n    return { ...hslToRgba(h, s, l), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  equals(other?: NgxColor): boolean {\r\n    if (!other) return false;\r\n    return this.toHexString().toLowerCase() === other.toHexString().toLowerCase();\r\n  }\r\n\r\n  isDark(): boolean {\r\n    const { r, g, b } = this.toRgb();\r\n    return 0.299 * r + 0.587 * g + 0.114 * b < 128;\r\n  }\r\n\r\n  isLight(): boolean {\r\n    return !this.isDark();\r\n  }\r\n\r\n  async getOutputResult(outputType: OutputType): Promise<string> {\r\n    const { r, g, b, a } = this._rgb;\r\n\r\n    switch (outputType) {\r\n      case 'CMYK':\r\n        return rgbToCmykString(r, g, b);\r\n\r\n      case 'HSL':\r\n        return rgbToHslaString(r, g, b, a);\r\n\r\n      case 'HSV':\r\n        return rgbToHsvString(r, g, b, a);\r\n\r\n      case 'RGB':\r\n        return a < 1 ? `rgba(${r}, ${g}, ${b}, ${+a.toFixed(2)})` : `rgb(${r}, ${g}, ${b})`;\r\n\r\n      case 'HEX':\r\n        return this.toHexString(true);\r\n\r\n      case 'HEXA':\r\n        return this.toHexString(false);\r\n\r\n      default:\r\n        let name = await this.name();\r\n        return name ?? this.toHexString(true);\r\n    }\r\n  }\r\n}\r\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -576,7 +576,7 @@
                         "optional": true
                     }
                 ],
-                "line": 21,
+                "line": 25,
                 "jsdoctags": [
                     {
                         "name": "input",
@@ -602,7 +602,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21,
+                    "line": 25,
                     "modifierKind": [
                         123
                     ]
@@ -616,7 +616,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 20,
+                    "line": 24,
                     "modifierKind": [
                         123
                     ]
@@ -636,7 +636,7 @@
                     "optional": false,
                     "returnType": "RGBA",
                     "typeParameters": [],
-                    "line": 126,
+                    "line": 130,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -668,7 +668,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 156,
+                    "line": 160,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -678,6 +678,37 @@
                             "deprecated": false,
                             "deprecationMessage": "",
                             "optional": true,
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getOutputResult",
+                    "args": [
+                        {
+                            "name": "outputType",
+                            "type": "OutputType",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Promise<string>",
+                    "typeParameters": [],
+                    "line": 174,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        134
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "outputType",
+                            "type": "OutputType",
+                            "deprecated": false,
+                            "deprecationMessage": "",
                             "tagName": {
                                 "text": "param"
                             }
@@ -697,7 +728,7 @@
                     "optional": false,
                     "returnType": "RGBA",
                     "typeParameters": [],
-                    "line": 151,
+                    "line": 155,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -728,7 +759,7 @@
                     "optional": false,
                     "returnType": "RGBA",
                     "typeParameters": [],
-                    "line": 146,
+                    "line": 150,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -752,7 +783,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 161,
+                    "line": 165,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -762,7 +793,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 166,
+                    "line": 170,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -772,7 +803,7 @@
                     "optional": false,
                     "returnType": "unknown",
                     "typeParameters": [],
-                    "line": 89,
+                    "line": 93,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -792,7 +823,7 @@
                     "optional": false,
                     "returnType": "CMYK",
                     "typeParameters": [],
-                    "line": 131,
+                    "line": 135,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -823,7 +854,7 @@
                     "optional": false,
                     "returnType": "HSLA",
                     "typeParameters": [],
-                    "line": 136,
+                    "line": 140,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -854,7 +885,7 @@
                     "optional": false,
                     "returnType": "HSVA",
                     "typeParameters": [],
-                    "line": 141,
+                    "line": 145,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -878,7 +909,7 @@
                     "optional": false,
                     "returnType": "CMYK",
                     "typeParameters": [],
-                    "line": 122,
+                    "line": 126,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -896,7 +927,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 109,
+                    "line": 113,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -918,7 +949,7 @@
                     "optional": false,
                     "returnType": "HSLA",
                     "typeParameters": [],
-                    "line": 114,
+                    "line": 118,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -928,7 +959,7 @@
                     "optional": false,
                     "returnType": "HSVA",
                     "typeParameters": [],
-                    "line": 118,
+                    "line": 122,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -938,7 +969,7 @@
                     "optional": false,
                     "returnType": "RGBA",
                     "typeParameters": [],
-                    "line": 98,
+                    "line": 102,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -948,7 +979,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 102,
+                    "line": 106,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -962,7 +993,7 @@
                         "name": "isValid",
                         "type": "boolean",
                         "returnType": "boolean",
-                        "line": 78
+                        "line": 82
                     }
                 }
             },
@@ -1160,12 +1191,12 @@
     "directives": [
         {
             "name": "NgxInputColorDirective",
-            "id": "directive-NgxInputColorDirective-db9626daafd5259b77e3f7aa37bc76f9a3d2f6952f30f2b68f36832ce4af58faa9546056b74e2deea762567e856290c1dd75633fc711ec7ac377cd2d78b3c332",
+            "id": "directive-NgxInputColorDirective-b27d53375aec3742d792c439da5a2c1d929e7da5910c01ca538b9330bb35f520a811d6ef82c6e80e8cb16ba49c489870f6b01201cc10650fc16f42e63d7ed074",
             "file": "projects/ngx-input-color/src/directives/ngx-input-color.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ComponentRef,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../lib/ngx-input-color/ngx-input-color.component';\r\nimport { NgxColor } from '../utils/color-helper';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColorDirective),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColorDirective),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  @Input() showCloseButton = true;\r\n  @Input() showConfirmButton = true;\r\n  @Input() simpleMode = false;\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''\r\n  ) {\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  @Output() confirm = new EventEmitter<string>();\r\n  @Output() cancel = new EventEmitter<void>();\r\n  private color?: NgxColor;\r\n  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor && colorStr) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.colorPickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);\r\n    const instance = this.colorPickerComponentRef.instance;\r\n\r\n    instance.defaultInspector = this.defaultInspector;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n    instance.showCloseButton = this.showCloseButton;\r\n    instance.showConfirmButton = this.showConfirmButton;\r\n    instance.simpleMode = this.simpleMode;\r\n\r\n    if (this.color?.isValid) instance.initColor(this.color);\r\n    instance.change.subscribe((c: string) => {\r\n      this.change.emit(c);\r\n    });\r\n    instance.confirm.subscribe((c: string) => {\r\n      this.confirm.emit(c);\r\n      this.confirmColor(c);\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    instance.cancel.subscribe(() => {\r\n      this.cancel.emit();\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-color-picker-backdrop';\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(document.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize')\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl) return;\r\n\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      document.body.appendChild(pickerEl);\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;\r\n      if (left < 8) left = 8;\r\n      if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;\r\n      if (top < 8) top = 8;\r\n\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.colorPickerComponentRef?.destroy();\r\n    this.colorPickerComponentRef = undefined;\r\n\r\n    if (this.backdrop) {\r\n      this.renderer.removeChild(document.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  private confirmColor(c: string) {\r\n    this.color = new NgxColor(c);\r\n\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ComponentRef,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n  Inject,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../lib/ngx-input-color/ngx-input-color.component';\r\nimport { NgxColor, OutputType } from '../utils/color-helper';\r\nimport { DOCUMENT } from '@angular/common';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColorDirective),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColorDirective),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  @Input() showCloseButton = true;\r\n  @Input() showConfirmButton = true;\r\n  @Input() simpleMode = false;\r\n  @Input() outputType: OutputType = 'HEXA';\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''\r\n  ) {\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  @Output() confirm = new EventEmitter<string>();\r\n  @Output() cancel = new EventEmitter<void>();\r\n  private color?: NgxColor;\r\n  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor && colorStr) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.colorPickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);\r\n    const instance = this.colorPickerComponentRef.instance;\r\n\r\n    instance.defaultInspector = this.defaultInspector;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n    instance.showCloseButton = this.showCloseButton;\r\n    instance.showConfirmButton = this.showConfirmButton;\r\n    instance.simpleMode = this.simpleMode;\r\n    instance.outputType = this.outputType;\r\n\r\n    if (this.color?.isValid) instance.initColor(this.color);\r\n    instance.change.subscribe((c: string) => {\r\n      this.emitChange(c);\r\n    });\r\n    instance.confirm.subscribe((c: string) => {\r\n      this.emitChange(c);\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    instance.cancel.subscribe(() => {\r\n      this.cancel.emit();\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-color-picker-backdrop';\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize')\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl) return;\r\n\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      this._doc.body.appendChild(pickerEl);\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;\r\n      if (left < 8) left = 8;\r\n      if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;\r\n      if (top < 8) top = 8;\r\n\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.colorPickerComponentRef?.destroy();\r\n    this.colorPickerComponentRef = undefined;\r\n\r\n    if (this.backdrop) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    this.color = new NgxColor(c);\r\n\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    const output = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(output);\r\n    this.change.emit(output);\r\n    this.confirm.emit(output);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputColor]",
             "providers": [
                 {
@@ -1185,7 +1216,7 @@
                     "defaultValue": "'Close'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 43,
+                    "line": 45,
                     "type": "string",
                     "decorators": []
                 },
@@ -1194,7 +1225,7 @@
                     "defaultValue": "'Ok'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 44,
+                    "line": 46,
                     "type": "string",
                     "decorators": []
                 },
@@ -1203,7 +1234,7 @@
                     "defaultValue": "ColorInspector.Picker",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 46,
+                    "line": 48,
                     "type": "ColorInspector",
                     "decorators": []
                 },
@@ -1211,8 +1242,17 @@
                     "name": "ngxInputColor",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 56,
+                    "line": 59,
                     "type": "HTMLInputElement | ElementRef | null | undefined | string",
+                    "decorators": []
+                },
+                {
+                    "name": "outputType",
+                    "defaultValue": "'HEXA'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 53,
+                    "type": "OutputType",
                     "decorators": []
                 },
                 {
@@ -1220,7 +1260,7 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 45,
+                    "line": 47,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -1229,7 +1269,7 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 48,
+                    "line": 50,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -1238,7 +1278,7 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 49,
+                    "line": 51,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -1247,7 +1287,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 50,
+                    "line": 52,
                     "type": "boolean",
                     "decorators": []
                 }
@@ -1258,7 +1298,7 @@
                     "defaultValue": "new EventEmitter<void>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 73,
+                    "line": 76,
                     "type": "EventEmitter"
                 },
                 {
@@ -1266,7 +1306,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 71,
+                    "line": 74,
                     "type": "EventEmitter"
                 },
                 {
@@ -1274,7 +1314,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 72,
+                    "line": 75,
                     "type": "EventEmitter"
                 }
             ],
@@ -1297,7 +1337,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 99
+                    "line": 107
                 },
                 {
                     "name": "window:resize",
@@ -1305,7 +1345,7 @@
                     "argsDecorator": [],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 201
+                    "line": 209
                 }
             ],
             "propertiesClass": [
@@ -1318,7 +1358,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 81
+                    "line": 84
                 },
                 {
                     "name": "_onTouched",
@@ -1329,7 +1369,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 82
+                    "line": 85
                 },
                 {
                     "name": "_onValidateChange",
@@ -1340,7 +1380,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 83
+                    "line": 86
                 },
                 {
                     "name": "_targetInput",
@@ -1350,7 +1390,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 54,
+                    "line": 57,
                     "modifierKind": [
                         123
                     ]
@@ -1363,7 +1403,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 76,
+                    "line": 79,
                     "modifierKind": [
                         123
                     ]
@@ -1377,7 +1417,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 51,
+                    "line": 54,
                     "modifierKind": [
                         123
                     ]
@@ -1390,7 +1430,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 74,
+                    "line": 77,
                     "modifierKind": [
                         123
                     ]
@@ -1403,7 +1443,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 75,
+                    "line": 78,
                     "modifierKind": [
                         123
                     ]
@@ -1416,7 +1456,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 77,
+                    "line": 80,
                     "modifierKind": [
                         123
                     ]
@@ -1430,7 +1470,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 79
+                    "line": 82
                 },
                 {
                     "name": "isDisabled",
@@ -1441,7 +1481,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 80
+                    "line": 83
                 },
                 {
                     "name": "isHostInput",
@@ -1452,7 +1492,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 78,
+                    "line": 81,
                     "modifierKind": [
                         123
                     ]
@@ -1460,7 +1500,20 @@
             ],
             "methodsClass": [
                 {
-                    "name": "confirmColor",
+                    "name": "destroyColorPicker",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 239,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "emitChange",
                     "args": [
                         {
                             "name": "c",
@@ -1470,13 +1523,14 @@
                         }
                     ],
                     "optional": false,
-                    "returnType": "void",
+                    "returnType": "any",
                     "typeParameters": [],
-                    "line": 243,
+                    "line": 251,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
-                        123
+                        123,
+                        134
                     ],
                     "jsdoctags": [
                         {
@@ -1491,25 +1545,12 @@
                     ]
                 },
                 {
-                    "name": "destroyColorPicker",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 231,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
                     "name": "ngAfterViewInit",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 87,
+                    "line": 95,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1519,7 +1560,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 94,
+                    "line": 102,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -1536,7 +1577,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 99,
+                    "line": 107,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -1573,7 +1614,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 134,
+                    "line": 142,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1601,7 +1642,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 138,
+                    "line": 146,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1630,7 +1671,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 146,
+                    "line": 154,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1659,7 +1700,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 142,
+                    "line": 150,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1680,7 +1721,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 201,
+                    "line": 209,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -1699,7 +1740,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 157,
+                    "line": 165,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -1719,7 +1760,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 150,
+                    "line": 158,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1747,7 +1788,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 105,
+                    "line": 113,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1777,6 +1818,12 @@
                 "deprecationMessage": "",
                 "args": [
                     {
+                        "name": "_doc",
+                        "type": "Document",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
                         "name": "el",
                         "type": "ElementRef",
                         "deprecated": false,
@@ -1795,8 +1842,17 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 83,
+                "line": 86,
                 "jsdoctags": [
+                    {
+                        "name": "_doc",
+                        "type": "Document",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
                     {
                         "name": "el",
                         "type": "ElementRef",
@@ -1843,7 +1899,7 @@
                             }
                         ],
                         "returnType": "void",
-                        "line": 56,
+                        "line": 59,
                         "jsdoctags": [
                             {
                                 "name": "el",
@@ -1861,12 +1917,12 @@
         },
         {
             "name": "NgxInputGradientDirective",
-            "id": "directive-NgxInputGradientDirective-90ede91ef6cf12cddf98bfb4e55b0b1d67b9b5bad37f0dfa632be7826f7ef22c3c15e7fe7163ebeeddc2a6c1dcf1a2a872d8ca969c69fc0a871e814281097e09",
+            "id": "directive-NgxInputGradientDirective-afb4d77814caf75d2264e9e94c06e8308eda62b0b9a8f9541852f2951972327c7192b4f8b722e4a5e789b466e4057e83a449389a5058bc5df7a5a2bbc2535323",
             "file": "projects/ngx-input-color/src/directives/ngx-input-gradient.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientDirective,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackground = true;\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(private el: ElementRef, private renderer: Renderer2, private viewContainerRef: ViewContainerRef) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value) {\r\n      if (this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', value);\r\n      }\r\n      this._onValidateChange();\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    // ایجاد کامپوننت\r\n    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);\r\n\r\n    const instance = this.pickerComponentRef.instance;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n\r\n    // رویدادها\r\n    const sub1 = instance.confirm.subscribe((c: any) => {\r\n      this.confirmColor(c);\r\n      this.destroyColorPicker(); // بستن بعد از تایید\r\n    });\r\n\r\n    const sub2 = instance.cancel.subscribe(() => {\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    // بک‌دراپ\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-color-picker-backdrop';\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    // گرفتن المنت کامپوننت واقعی\r\n    this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(document.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize', ['$event'])\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl || !this.pickerComponentRef) return;\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      // اعمال موقتی برای گرفتن سایز دقیق\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      document.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه\r\n\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      // وسط‌چین کردن افقی\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      // جلوگیری از بیرون زدن از راست\r\n      if (left + pickerRect.width > window.innerWidth) {\r\n        left = window.innerWidth - pickerRect.width - 8;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از چپ\r\n      if (left < 8) {\r\n        left = 8;\r\n      }\r\n\r\n      // اگر از پایین بیرون زد، ببر بالا\r\n      if (top + pickerRect.height > window.innerHeight) {\r\n        top = hostRect.top - pickerRect.height;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از بالا\r\n      if (top < 8) {\r\n        top = 8;\r\n      }\r\n\r\n      // اعمال نهایی\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  destroyColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      this.pickerComponentRef.destroy();\r\n      this.pickerComponentRef = undefined;\r\n    }\r\n    if (this.backdrop && this.backdrop.parentNode) {\r\n      this.renderer.removeChild(document.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  confirmColor(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n    this._onChange(c);\r\n    this.destroyColorPicker();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Inject,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../models/ColorInspector.enum';\r\nimport { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';\r\nimport { DOCUMENT } from '@angular/common';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientDirective,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() closeTitle = 'Close';\r\n  @Input() confirmTitle = 'Ok';\r\n  @Input() setInputBackground = true;\r\n  @Input('defaultInspector') colorInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    debugger;\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value) {\r\n      if (this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', value);\r\n      }\r\n      this._onValidateChange();\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerComponentRef) {\r\n      debugger;\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    // ایجاد کامپوننت\r\n    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);\r\n\r\n    const instance = this.pickerComponentRef.instance;\r\n    instance.showCloseButton = true;\r\n    instance.closeTitle = this.closeTitle;\r\n    instance.confirmTitle = this.confirmTitle;\r\n\r\n    // رویدادها\r\n    const sub1 = instance.confirm.subscribe((c: any) => {\r\n      this.confirmColor(c);\r\n      debugger;\r\n      this.destroyColorPicker(); // بستن بعد از تایید\r\n    });\r\n\r\n    const sub2 = instance.cancel.subscribe(() => {\r\n      debugger;\r\n      this.destroyColorPicker();\r\n    });\r\n\r\n    // بک‌دراپ\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-color-picker-backdrop';\r\n     // this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    // گرفتن المنت کامپوننت واقعی\r\n    this.colorPickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n    this.setPosition();\r\n  }\r\n\r\n  @HostListener('window:resize', ['$event'])\r\n  setPosition() {\r\n    setTimeout(() => {\r\n      if (!this.colorPickerEl || !this.pickerComponentRef) return;\r\n      const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n      const pickerEl = this.colorPickerEl;\r\n\r\n      // اعمال موقتی برای گرفتن سایز دقیق\r\n      this.renderer.setStyle(pickerEl, 'position', 'absolute');\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');\r\n      this.renderer.setStyle(pickerEl, 'top', '0px');\r\n      this.renderer.setStyle(pickerEl, 'left', '0px');\r\n      this.renderer.setStyle(pickerEl, 'z-index', '9999');\r\n\r\n      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه\r\n\r\n      const pickerRect = pickerEl.getBoundingClientRect();\r\n\r\n      // وسط‌چین کردن افقی\r\n      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n      let top = hostRect.bottom;\r\n\r\n      // جلوگیری از بیرون زدن از راست\r\n      if (left + pickerRect.width > window.innerWidth) {\r\n        left = window.innerWidth - pickerRect.width - 8;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از چپ\r\n      if (left < 8) {\r\n        left = 8;\r\n      }\r\n\r\n      // اگر از پایین بیرون زد، ببر بالا\r\n      if (top + pickerRect.height > window.innerHeight) {\r\n        top = hostRect.top - pickerRect.height;\r\n      }\r\n\r\n      // جلوگیری از بیرون زدن از بالا\r\n      if (top < 8) {\r\n        top = 8;\r\n      }\r\n\r\n      // اعمال نهایی\r\n      this.renderer.setStyle(pickerEl, 'visibility', 'visible');\r\n      this.renderer.setStyle(pickerEl, 'top', `${top}px`);\r\n      this.renderer.setStyle(pickerEl, 'left', `${left}px`);\r\n    });\r\n  }\r\n\r\n  destroyColorPicker() {\r\n    debugger;\r\n    if (this.pickerComponentRef) {\r\n      this.pickerComponentRef.destroy();\r\n      this.pickerComponentRef = undefined;\r\n    }\r\n    if (this.backdrop && this.backdrop.parentNode) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  confirmColor(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n    this._onChange(c);\r\n    debugger;\r\n    this.destroyColorPicker();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputGradient]",
             "providers": [
                 {
@@ -1886,7 +1942,7 @@
                     "defaultValue": "'Close'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 35,
+                    "line": 37,
                     "type": "string",
                     "decorators": []
                 },
@@ -1895,7 +1951,7 @@
                     "defaultValue": "'Ok'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 36,
+                    "line": 38,
                     "type": "string",
                     "decorators": []
                 },
@@ -1904,7 +1960,7 @@
                     "defaultValue": "ColorInspector.Picker",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 38,
+                    "line": 40,
                     "type": "ColorInspector",
                     "decorators": []
                 },
@@ -1913,7 +1969,7 @@
                     "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 37,
+                    "line": 39,
                     "type": "boolean",
                     "decorators": []
                 }
@@ -1938,7 +1994,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 49
+                    "line": 56
                 },
                 {
                     "name": "window:resize",
@@ -1948,7 +2004,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 122
+                    "line": 133
                 }
             ],
             "propertiesClass": [
@@ -1961,7 +2017,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 44
+                    "line": 46
                 },
                 {
                     "name": "_onTouched",
@@ -1972,7 +2028,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 45
+                    "line": 47
                 },
                 {
                     "name": "_onValidateChange",
@@ -1983,7 +2039,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46
+                    "line": 48
                 },
                 {
                     "name": "backdrop",
@@ -1993,7 +2049,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 41,
+                    "line": 43,
                     "modifierKind": [
                         123
                     ]
@@ -2006,7 +2062,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 42,
+                    "line": 44,
                     "modifierKind": [
                         123
                     ]
@@ -2020,7 +2076,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 43
+                    "line": 45
                 },
                 {
                     "name": "pickerComponentRef",
@@ -2030,7 +2086,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 40,
+                    "line": 42,
                     "modifierKind": [
                         123
                     ]
@@ -2050,7 +2106,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 182,
+                    "line": 194,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2071,7 +2127,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 170,
+                    "line": 181,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2081,7 +2137,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 71,
+                    "line": 78,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2098,7 +2154,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 49,
+                    "line": 56,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2135,7 +2191,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 55,
+                    "line": 62,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2163,7 +2219,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 58,
+                    "line": 65,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2192,7 +2248,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 64,
+                    "line": 71,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2221,7 +2277,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 61,
+                    "line": 68,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2242,7 +2298,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 122,
+                    "line": 133,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2261,7 +2317,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 84,
+                    "line": 92,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2278,7 +2334,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 67,
+                    "line": 74,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2306,7 +2362,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 75,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2335,6 +2391,12 @@
                 "deprecationMessage": "",
                 "args": [
                     {
+                        "name": "_doc",
+                        "type": "Document",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
                         "name": "el",
                         "type": "ElementRef",
                         "deprecated": false,
@@ -2353,8 +2415,17 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 46,
+                "line": 48,
                 "jsdoctags": [
+                    {
+                        "name": "_doc",
+                        "type": "Document",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
                     {
                         "name": "el",
                         "type": "ElementRef",
@@ -2970,7 +3041,7 @@
         },
         {
             "name": "NgxInputColorComponent",
-            "id": "component-NgxInputColorComponent-ba5b57d9016d26ef8e9288bf3e7c0439860eacd17003e43866098ff71eb79b3e966801627dca6f8ca618bee43e1dc229990fd016cd9380e9cd0afb59dbe4c874",
+            "id": "component-NgxInputColorComponent-5cc86ed885733c4c5892e059a040d331bd6ef25fdaffa8de9570c8bb330076aa759642830b534acc561c511b0f77969b3650cc377319332c301ff93241e188d9",
             "file": "projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -3027,16 +3098,16 @@
                     "deprecationMessage": "",
                     "jsdoctags": [
                         {
-                            "pos": 1604,
-                            "end": 1632,
+                            "pos": 1663,
+                            "end": 1691,
                             "kind": 327,
                             "id": 0,
                             "flags": 16842752,
                             "modifierFlagsCache": 0,
                             "transformFlags": 0,
                             "tagName": {
-                                "pos": 1605,
-                                "end": 1610,
+                                "pos": 1664,
+                                "end": 1669,
                                 "kind": 80,
                                 "id": 0,
                                 "flags": 16842752,
@@ -3048,8 +3119,17 @@
                     ],
                     "rawdescription": "\n\ndefault inspectors\n- ColorInspector.Picker\n- ColorInspector.RGB\n- ColorInspector.HSL\n\n",
                     "description": "<p>default inspectors</p>\n<ul>\n<li>ColorInspector.Picker</li>\n<li>ColorInspector.RGB</li>\n<li>ColorInspector.HSL</li>\n</ul>\n",
-                    "line": 59,
+                    "line": 61,
                     "type": "ColorInspector",
+                    "decorators": []
+                },
+                {
+                    "name": "outputType",
+                    "defaultValue": "'HEXA'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 51,
+                    "type": "OutputType",
                     "decorators": []
                 },
                 {
@@ -3094,7 +3174,7 @@
                     "deprecationMessage": "",
                     "rawdescription": "\nEmitted when the cancel button is clicked",
                     "description": "<p>Emitted when the cancel button is clicked</p>\n",
-                    "line": 66,
+                    "line": 68,
                     "type": "EventEmitter"
                 },
                 {
@@ -3104,7 +3184,7 @@
                     "deprecationMessage": "",
                     "rawdescription": "\nEmitted when the color value changes",
                     "description": "<p>Emitted when the color value changes</p>\n",
-                    "line": 62,
+                    "line": 64,
                     "type": "EventEmitter"
                 },
                 {
@@ -3114,7 +3194,7 @@
                     "deprecationMessage": "",
                     "rawdescription": "\nEmitted when the confirm button is clicked",
                     "description": "<p>Emitted when the confirm button is clicked</p>\n",
-                    "line": 64,
+                    "line": 66,
                     "type": "EventEmitter"
                 }
             ],
@@ -3129,7 +3209,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  /** Title for the close button */\r\n  @Input() closeTitle = 'Close';\r\n  /** Title for the confirm button */\r\n  @Input() confirmTitle = 'Ok';\r\n  /** Whether to show the close button */\r\n  @Input() showCloseButton = true;\r\n  /** Whether to show the confirm button */\r\n  @Input() showConfirmButton = true;\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n  /** Emitted when the confirm button is clicked */\r\n  @Output() confirm = new EventEmitter<string>();\r\n  /** Emitted when the cancel button is clicked */\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  /** @ignore */\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  /** @ignore */\r\n  emitChange() {\r\n    this._onChange(this.hexColor);\r\n    this.change.emit(this.hexColor);\r\n    this.confirm.emit(this.hexColor);\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewEncapsulation,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../../models/ColorFormats.enum';\r\nimport { NgxColor, OutputType } from '../../utils/color-helper';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../../models/ColorInspector.enum';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './ngx-input-color.component.html',\r\n  styleUrls: ['./ngx-input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  /** Title for the close button */\r\n  @Input() closeTitle = 'Close';\r\n  /** Title for the confirm button */\r\n  @Input() confirmTitle = 'Ok';\r\n  /** Whether to show the close button */\r\n  @Input() showCloseButton = true;\r\n  /** Whether to show the confirm button */\r\n  @Input() showConfirmButton = true;\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() outputType: OutputType = 'HEXA';\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n  /** Emitted when the confirm button is clicked */\r\n  @Output() confirm = new EventEmitter<string>();\r\n  /** Emitted when the cancel button is clicked */\r\n  @Output() cancel = new EventEmitter<void>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    if (this.showConfirmButton == false) {\r\n      this.emitChange();\r\n    } else {\r\n      this.change.emit(this.hexColor);\r\n    }\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  close() {\r\n    this.cancel.emit();\r\n  }\r\n\r\n  /** @ignore */\r\n  ok() {\r\n    this.emitChange();\r\n  }\r\n  /** @ignore */\r\n  async emitChange() {\r\n    const output = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(output);\r\n    this.change.emit(output);\r\n    this.confirm.emit(output);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -3151,7 +3231,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 93,
+                "line": 95,
                 "jsdoctags": [
                     {
                         "name": "cd",
@@ -3178,7 +3258,7 @@
                         "name": "ColorFormats",
                         "type": "",
                         "returnType": "",
-                        "line": 102
+                        "line": 104
                     }
                 },
                 "ColorInspector": {
@@ -3187,7 +3267,7 @@
                         "name": "ColorInspector",
                         "type": "",
                         "returnType": "",
-                        "line": 105
+                        "line": 107
                     }
                 }
             },
@@ -3866,7 +3946,7 @@
         },
         {
             "name": "PickerComponent",
-            "id": "component-PickerComponent-c14141990a627bc8b50f230c3964674c53969888cbef117674a4da83b5ae80f9cf1f85b28266461c07dacce2eac76e824c15841e6e700142182de7efc7151f82",
+            "id": "component-PickerComponent-bd335176ab6c8cc53d2fdcc0cd4a74d2f2d53e0973fc142d5709f422ca87997baeacfd0235b52ae0092d905d1a127a92684af38841cebf852788886921dc4256",
             "file": "projects/ngx-input-color/src/lib/inspectors/picker/picker.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3908,7 +3988,7 @@
                     "defaultValue": "new EventEmitter<NgxColor | undefined>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 28,
+                    "line": 29,
                     "type": "EventEmitter"
                 }
             ],
@@ -3978,7 +4058,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 34,
+                    "line": 35,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3988,7 +4068,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 32,
+                    "line": 33,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -4002,7 +4082,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../../utils/color-helper';\r\nimport { IPosition } from '../../../models/IPosition';\r\nimport { HSVA } from '../../../utils/interfaces';\r\n\r\n@Component({\r\n  selector: 'app-picker',\r\n  templateUrl: './picker.component.html',\r\n  styleUrls: ['./picker.component.scss'],\r\n})\r\nexport class PickerComponent implements OnInit {\r\n  hue = 300;\r\n  baseColor = 'rgb(0,0,0)';\r\n  board: IPosition = { x: 1, y: 0 };\r\n  alpha = 1;\r\n  private inputColor?: NgxColor;\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const shva = c.toHsv();\r\n    this.hue = shva.h;\r\n    this.board = { x: shva.s, y: 100 - shva.v };\r\n    this.alpha = shva.a ?? 1;\r\n    this.baseColor = c.toHexString(false);\r\n  }\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsva: HSVA = { h: this.hue, s: this.board.x, v: 100 - this.board.y, a: this.alpha };\r\n      const color = new NgxColor(hsva);\r\n      this.baseColor = color.toHexString(false);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../../utils/color-helper';\r\nimport { IPosition } from '../../../models/IPosition';\r\nimport { HSVA } from '../../../utils/interfaces';\r\n\r\n@Component({\r\n  selector: 'app-picker',\r\n  templateUrl: './picker.component.html',\r\n  styleUrls: ['./picker.component.scss'],\r\n})\r\nexport class PickerComponent implements OnInit {\r\n  hue = 300;\r\n  baseColor = 'rgb(0,0,0)';\r\n  board: IPosition = { x: 1, y: 0 };\r\n  alpha = 1;\r\n  private inputColor?: NgxColor;\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const shva = c.toHsv();\r\n    this.hue = shva.h;\r\n    this.board = { x: shva.s, y: 100 - shva.v };\r\n    this.alpha = shva.a ?? 1;\r\n    const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n    this.baseColor = pureColor.toHexString(false);\r\n  }\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsva: HSVA = { h: this.hue, s: this.board.x, v: 100 - this.board.y, a: this.alpha };\r\n      const color = new NgxColor(hsva);\r\n      const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n      this.baseColor = pureColor.toHexString(false);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -4017,7 +4097,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 28
+                "line": 29
             },
             "extends": [],
             "implements": [
@@ -6756,13 +6836,13 @@
     "modules": [
         {
             "name": "NgxInputColorModule",
-            "id": "module-NgxInputColorModule-19c0a0a321175ac9acc300bd4bfb25f4f186b07ef7aa1d75291e3b9aa2407480204e86522c8164b7df909d696381811bdb2491e31fccae632d589aab658ba33b",
+            "id": "module-NgxInputColorModule-9ecf8b6293e67c694f4c8536a40fe58e39ffc329e637d052af48d95263fa5803c20e011394f0e40179ba9514c0707bbc7dbbb001ab7a467c9a2fb5ff55a55928",
             "description": "",
             "deprecationMessage": "",
             "deprecated": false,
             "file": "projects/ngx-input-color/src/ngx-input-color.module.ts",
             "methods": [],
-            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { NgxInputColorDirective } from './directives/ngx-input-color.directive';\r\nimport { NgxInputColorComponent, NgxInputGradientComponent } from './public-api';\r\nimport { CommonModule } from '@angular/common';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { SaturationComponent } from './saturation/saturation.component';\r\nimport { SliderComponent } from './slider/slider.component';\r\nimport { EnumToArrayPipe } from './pipes/enum-to-array.pipe';\r\nimport { PickerComponent } from './lib/inspectors/picker/picker.component';\r\nimport { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';\r\nimport { HslComponent } from './lib/inspectors/hsl/hsl.component';\r\nimport { RgbComponent } from './lib/inspectors/rgb/rgb.component';\r\nimport { RangeSliderComponent } from './range-slider/range-slider.component';\r\n\r\n@NgModule({\r\n  declarations: [\r\n    NgxInputColorDirective,\r\n    NgxInputColorComponent,\r\n    PickerComponent,\r\n    CmykComponent,\r\n    HslComponent,\r\n    RgbComponent,\r\n  ],\r\n  imports: [\r\n    CommonModule,\r\n    FormsModule,\r\n    SliderComponent,\r\n    SaturationComponent,\r\n    RangeSliderComponent,\r\n    EnumToArrayPipe, \r\n  ],\r\n  exports: [NgxInputColorComponent, NgxInputColorDirective],\r\n  providers: [],\r\n})\r\nexport class NgxInputColorModule {}\r\n",
+            "sourceCode": "import { NgModule } from '@angular/core';\r\nimport { NgxInputColorDirective } from './directives/ngx-input-color.directive';\r\nimport { NgxInputColorComponent, NgxInputGradientComponent } from './public-api';\r\nimport { CommonModule } from '@angular/common';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { SaturationComponent } from './saturation/saturation.component';\r\nimport { SliderComponent } from './slider/slider.component';\r\nimport { EnumToArrayPipe } from './pipes/enum-to-array.pipe';\r\nimport { PickerComponent } from './lib/inspectors/picker/picker.component';\r\nimport { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';\r\nimport { HslComponent } from './lib/inspectors/hsl/hsl.component';\r\nimport { RgbComponent } from './lib/inspectors/rgb/rgb.component';\r\n\r\n@NgModule({\r\n  declarations: [\r\n    NgxInputColorDirective,\r\n    NgxInputColorComponent,\r\n    PickerComponent,\r\n    CmykComponent,\r\n    HslComponent,\r\n    RgbComponent,\r\n  ],\r\n  imports: [\r\n    CommonModule,\r\n    FormsModule,\r\n    SliderComponent,\r\n    SaturationComponent,\r\n    EnumToArrayPipe, \r\n  ],\r\n  exports: [NgxInputColorComponent, NgxInputColorDirective],\r\n  providers: [],\r\n})\r\nexport class NgxInputColorModule {}\r\n",
             "children": [
                 {
                     "type": "providers",
@@ -6798,9 +6878,6 @@
                             "name": "EnumToArrayPipe"
                         },
                         {
-                            "name": "RangeSliderComponent"
-                        },
-                        {
                             "name": "SaturationComponent"
                         },
                         {
@@ -6816,6 +6893,63 @@
                         },
                         {
                             "name": "NgxInputColorDirective"
+                        }
+                    ]
+                },
+                {
+                    "type": "bootstrap",
+                    "elements": []
+                },
+                {
+                    "type": "classes",
+                    "elements": []
+                }
+            ]
+        },
+        {
+            "name": "NgxInputGradientModule",
+            "id": "module-NgxInputGradientModule-60a75916d6e808a8e6fe4535b08cd9e25a4330bb800d035d7f0fac3996417742e494540512ad93652d4633f7fbe95c8d38b5f04a85ce1a20646f1ea3f96c0725",
+            "description": "",
+            "deprecationMessage": "",
+            "deprecated": false,
+            "file": "projects/ngx-input-color/src/ngx-input-gradient.module.ts",
+            "methods": [],
+            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport { NgModule } from '@angular/core';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { SliderComponent } from './slider/slider.component';\r\nimport { RangeSliderComponent } from './range-slider/range-slider.component';\r\nimport { NgxInputGradientComponent, NgxInputGradientDirective } from './public-api';\r\n\r\n@NgModule({\r\n  declarations: [NgxInputGradientDirective],\r\n  imports: [\r\n    CommonModule,\r\n    FormsModule,\r\n    SliderComponent,\r\n    RangeSliderComponent,\r\n    NgxInputGradientComponent,\r\n  ],\r\n  exports: [NgxInputGradientComponent, NgxInputGradientDirective],\r\n  providers: [],\r\n})\r\nexport class NgxInputGradientModule {}\r\n",
+            "children": [
+                {
+                    "type": "providers",
+                    "elements": []
+                },
+                {
+                    "type": "declarations",
+                    "elements": [
+                        {
+                            "name": "NgxInputGradientDirective"
+                        }
+                    ]
+                },
+                {
+                    "type": "imports",
+                    "elements": [
+                        {
+                            "name": "NgxInputGradientComponent"
+                        },
+                        {
+                            "name": "RangeSliderComponent"
+                        },
+                        {
+                            "name": "SliderComponent"
+                        }
+                    ]
+                },
+                {
+                    "type": "exports",
+                    "elements": [
+                        {
+                            "name": "NgxInputGradientComponent"
+                        },
+                        {
+                            "name": "NgxInputGradientDirective"
                         }
                     ]
                 },
@@ -7877,6 +8011,65 @@
                 ]
             },
             {
+                "name": "rgbToCmykString",
+                "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "rgbToHsl",
                 "file": "projects/ngx-input-color/src/utils/conversion.ts",
                 "ctype": "miscellaneous",
@@ -7936,6 +8129,82 @@
                 ]
             },
             {
+                "name": "rgbToHslaString",
+                "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "a",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "defaultValue": "1"
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "a",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "defaultValue": "1",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "rgbToHsv",
                 "file": "projects/ngx-input-color/src/utils/conversion.ts",
                 "ctype": "miscellaneous",
@@ -7988,6 +8257,82 @@
                         "type": "number",
                         "deprecated": false,
                         "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "rgbToHsvString",
+                "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "a",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "defaultValue": "1"
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "r",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "g",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "b",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "a",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "defaultValue": "1",
                         "tagName": {
                             "text": "param"
                         }
@@ -8092,6 +8437,17 @@
                 "deprecationMessage": "",
                 "description": "<p>convert all properties in an interface to a number</p>\n",
                 "kind": 200
+            },
+            {
+                "name": "OutputType",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"CMYK\" | \"HSL\" | \"HSV\" | \"RGB\" | \"HEX\" | \"HEXA\"",
+                "file": "projects/ngx-input-color/src/utils/color-helper.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
             }
         ],
         "enumerations": [
@@ -9101,6 +9457,65 @@
                     ]
                 },
                 {
+                    "name": "rgbToCmykString",
+                    "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "rgbToHsl",
                     "file": "projects/ngx-input-color/src/utils/conversion.ts",
                     "ctype": "miscellaneous",
@@ -9160,6 +9575,82 @@
                     ]
                 },
                 {
+                    "name": "rgbToHslaString",
+                    "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "a",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "1"
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "a",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "1",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "rgbToHsv",
                     "file": "projects/ngx-input-color/src/utils/conversion.ts",
                     "ctype": "miscellaneous",
@@ -9212,6 +9703,82 @@
                             "type": "number",
                             "deprecated": false,
                             "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "rgbToHsvString",
+                    "file": "projects/ngx-input-color/src/utils/conversion.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "a",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "1"
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "r",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "g",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "b",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "a",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "1",
                             "tagName": {
                                 "text": "param"
                             }
@@ -9475,6 +10042,17 @@
                     "deprecationMessage": "",
                     "description": "",
                     "kind": 192
+                },
+                {
+                    "name": "OutputType",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"CMYK\" | \"HSL\" | \"HSV\" | \"RGB\" | \"HEX\" | \"HEXA\"",
+                    "file": "projects/ngx-input-color/src/utils/color-helper.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
                 }
             ],
             "projects/ngx-input-color/src/models/eye-dropper.ts": [
@@ -9520,7 +10098,7 @@
     },
     "routes": [],
     "coverage": {
-        "count": 32,
+        "count": 29,
         "status": "medium",
         "files": [
             {
@@ -9529,7 +10107,7 @@
                 "linktype": "directive",
                 "name": "NgxInputColorDirective",
                 "coveragePercent": 0,
-                "coverageCount": "0/40",
+                "coverageCount": "0/41",
                 "status": "low"
             },
             {
@@ -9582,9 +10160,9 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "NgxInputColorComponent",
-                "coveragePercent": 81,
-                "coverageCount": "9/11",
-                "status": "very-good"
+                "coveragePercent": 75,
+                "coverageCount": "9/12",
+                "status": "good"
             },
             {
                 "filePath": "projects/ngx-input-color/src/lib/ngx-input-color/ngx-input-color.component.ts",
@@ -9732,7 +10310,7 @@
                 "linktype": "classe",
                 "name": "NgxColor",
                 "coveragePercent": 0,
-                "coverageCount": "0/20",
+                "coverageCount": "0/21",
                 "status": "low"
             },
             {
@@ -9741,6 +10319,16 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "typealias",
                 "name": "ColorInput",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/color-helper.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "OutputType",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -9960,6 +10548,16 @@
                 "type": "function",
                 "linktype": "miscellaneous",
                 "linksubtype": "function",
+                "name": "rgbToCmykString",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/conversion.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
                 "name": "rgbToHsl",
                 "coveragePercent": 100,
                 "coverageCount": "1/1",
@@ -9970,10 +10568,30 @@
                 "type": "function",
                 "linktype": "miscellaneous",
                 "linksubtype": "function",
+                "name": "rgbToHslaString",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/conversion.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
                 "name": "rgbToHsv",
                 "coveragePercent": 100,
                 "coverageCount": "1/1",
                 "status": "very-good"
+            },
+            {
+                "filePath": "projects/ngx-input-color/src/utils/conversion.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "rgbToHsvString",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
             },
             {
                 "filePath": "projects/ngx-input-color/src/utils/conversion.ts",

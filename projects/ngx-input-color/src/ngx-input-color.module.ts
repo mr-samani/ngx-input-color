@@ -10,7 +10,6 @@ import { PickerComponent } from './lib/inspectors/picker/picker.component';
 import { CmykComponent } from './lib/inspectors/cmyk/cmyk.component';
 import { HslComponent } from './lib/inspectors/hsl/hsl.component';
 import { RgbComponent } from './lib/inspectors/rgb/rgb.component';
-import { RangeSliderComponent } from './range-slider/range-slider.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { RangeSliderComponent } from './range-slider/range-slider.component';
     FormsModule,
     SliderComponent,
     SaturationComponent,
-    RangeSliderComponent,
     EnumToArrayPipe, 
   ],
   exports: [NgxInputColorComponent, NgxInputColorDirective],
