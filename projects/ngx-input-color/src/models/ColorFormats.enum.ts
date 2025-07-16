@@ -5,3 +5,4 @@ export enum ColorFormats {
   HSVA,
   CMYK,
 }
+

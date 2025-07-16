@@ -1,0 +1,110 @@
+.ngx-box-shadow-container {
+  width: 260px;
+  max-width: 100%;
+  border: 1px #bfbfbf solid;
+  border-radius: 15px;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);
+  direction: ltr;
+  padding: 12px;
+  * {
+    box-sizing: border-box;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    justify-content: space-between;
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      cursor: pointer;
+      background: #f9f9f9;
+      outline: none;
+      transition: all 300ms;
+      border: 1px #d3d3d3 solid;
+      padding: 10px 12px;
+      min-width: 90px;
+      border-radius: 6px;
+      &:hover {
+        background: #8db6e4;
+      }
+    }
+  }
+}
+
+.pad-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 1px #545454 solid;
+  box-sizing: border-box;
+  direction: ltr;
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    border: 1px #91919169 solid;
+  }
+  &::after {
+    width: 100%;
+    top: calc(50% - 1px);
+    left: 0px;
+  }
+  &::before {
+    height: 100%;
+    top: 0px;
+    left: calc(50% - 1px);
+  }
+  //   background-color: green;
+  .thumb {
+    box-shadow: inset 0 0 0px 2px #fff;
+    width: 15px;
+    height: 15px;
+    display: block;
+    border-radius: 10px;
+    position: absolute;
+    cursor: pointer;
+    background: blue;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0px 10px;
+  border: none;
+  width: 100%;
+  margin-top: 10px;
+  th,
+  td {
+    border: none;
+    padding: 5px;
+    vertical-align: middle;
+  }
+  th {
+    text-align: end;
+  }
+  td {
+  }
+
+  input {
+    width: 80px;
+    border: none;
+    border: 1px solid #91919169;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    direction: ltr;
+    &:focus {
+      outline: none;
+      border: 1px solid #09218d;
+    }
+  }
+}

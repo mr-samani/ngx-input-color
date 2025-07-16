@@ -11,6 +11,8 @@ import { HSVA } from '../../../utils/interfaces';
 export class PickerComponent implements OnInit {
   hue = 300;
   baseColor = 'rgb(0,0,0)';
+  alphaBgColor = '#000';
+
   board: IPosition = { x: 1, y: 0 };
   alpha = 1;
   private inputColor?: NgxColor;
@@ -25,6 +27,7 @@ export class PickerComponent implements OnInit {
     this.alpha = shva.a ?? 1;
     const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });
     this.baseColor = pureColor.toHexString(false);
+    this.alphaBgColor = this.inputColor.toHexString(false);
   }
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
 
@@ -38,6 +41,8 @@ export class PickerComponent implements OnInit {
       const color = new NgxColor(hsva);
       const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });
       this.baseColor = pureColor.toHexString(false);
+      this.alphaBgColor = color.toHexString(false);
+
       if (color.equals(this.inputColor) == false) {
         this.inputColor = color;
         this.colorChange.emit(color);

@@ -1,0 +1,77 @@
+<div class="ngx-box-shadow-container" (click)="stopPropagation($event)">
+  <div class="pad-container" #pad>
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <line
+        [attr.x1]="line.x1"
+        [attr.y1]="line.y1"
+        [attr.x2]="line.x2"
+        [attr.y2]="line.y2"
+        stroke="blue"
+        stroke-width="2" />
+    </svg>
+    <div
+      class="thumb"
+      #thumb
+      [style.left.px]="x"
+      [style.top.px]="y"
+      (mousedown)="dragStart($event)"
+      (touchstart)="dragStart($event)"></div>
+  </div>
+
+  <table>
+    <tr>
+      <th>
+        <label for="offsetX">offsetX</label>
+      </th>
+      <td>
+        <input type="number" id="offsetX" [(ngModel)]="value.x" (ngModelChange)="onChangeValue()" />
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="offsetY">offsetY</label>
+      </th>
+      <td>
+        <input type="number" id="offsetY" [(ngModel)]="value.y" (ngModelChange)="onChangeValue()" />
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="blur">blur</label>
+      </th>
+      <td>
+        <input type="number" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeData()" />
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="spread">spread</label>
+      </th>
+      <td>
+        <input type="number" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeData()" />
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <label for="color">color</label>
+      </th>
+      <td>
+        <input
+          type="text"
+          id="color"
+          [(ngModel)]="color"
+          ngxInputColor
+          [simpleMode]="true"
+          [showCloseButton]="false"
+          [showConfirmButton]="false"
+          (ngModelChange)="onChangeData()" />
+      </td>
+    </tr>
+  </table>
+  <div class="actions">
+    <div class="action-buttons">
+      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
+      <button (click)="onChangeData(true)">{{ confirmTitle }}</button>
+    </div>
+  </div>
+</div>
