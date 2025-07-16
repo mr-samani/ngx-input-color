@@ -18,28 +18,27 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { ColorInspector } from '../models/ColorInspector.enum';
-import { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';
-import { DOCUMENT } from '@angular/common';
-import { isValidGradient, parseGradient } from '../utils/build-gradient';
+import { ColorInspector } from '../models/ColorInspector.enum'; 
+import { DOCUMENT } from '@angular/common'; 
+import { NgxBoxShadowComponent } from '../lib/ngx-box-shadow/ngx-box-shadow.component';
 
 @Directive({
-  selector: '[ngxInputGradient]',
+  selector: '[ngxInputBoxShadow]',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputBoxShadowDirective), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputGradientDirective,
+      useExisting: NgxInputBoxShadowDirective,
     },
   ],
 })
-export class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccessor, Validator {
   @Input() closeTitle = 'Close';
   @Input() confirmTitle = 'Ok';
   @Input() setInputBackground = true;
 
-  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
+  private pickerComponentRef?: ComponentRef<NgxBoxShadowComponent>;
   private backdrop?: HTMLDivElement;
   private pickerEl?: HTMLElement;
   isDisabled = false;
@@ -84,13 +83,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
 
   writeValue(value: any): void {
     this.value = value;
-    if (value && isValidGradient(value)) {
-      const parsed = parseGradient(value);
-      if (parsed.valid && this.setInputBackground) {
-        this.renderer.setStyle(this.el.nativeElement, 'background', value);
-      }
-      this._onValidateChange();
-    }
+   
   }
 
   toggleColorPicker() {
@@ -100,7 +93,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     }
 
     // ایجاد کامپوننت
-    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);
+    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxBoxShadowComponent);
 
     const instance = this.pickerComponentRef.instance;
     instance.showCloseButton = true;

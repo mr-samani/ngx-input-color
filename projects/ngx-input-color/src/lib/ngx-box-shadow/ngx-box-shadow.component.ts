@@ -11,6 +11,8 @@ import {
   ViewChild,
   AfterViewInit,
   Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -25,7 +27,6 @@ import { getOffsetPosition } from '../../utils/get-offset-position';
 import { IPosition } from '../../models/IPosition';
 import { parseBoxShadowToPx, stringifyBoxShadow } from '../../utils/box-shadow';
 import { NgxInputColorModule } from '../../ngx-input-color.module';
-import { BoxShadowValue } from '../../models/BoxShadowValue';
 
 @Component({
   standalone: true,
@@ -49,7 +50,12 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
    * @default 25
    */
   @Input() maxRange = 25;
-
+  @Input() closeTitle = 'Close';
+  @Input() confirmTitle = 'Ok';
+  @Input() showCloseButton = true;
+  @Output() change = new EventEmitter<string>();
+  @Output() confirm = new EventEmitter<string>();
+  @Output() cancel = new EventEmitter<void>();
   isDisabled = false;
   isDragging = false;
   value: IPosition = { x: 0, y: 0 };
@@ -75,7 +81,6 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.updateRects();
-    this.resetPosition();
   }
   ngOnDestroy(): void {}
   registerOnChange(fn: any): void {
@@ -95,6 +100,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
   }
 
   writeValue(value: any): void {
+    this.resetPosition();
     if (value) {
       const boxShadow = parseBoxShadowToPx(value);
       console.log(boxShadow);
@@ -103,7 +109,6 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
         this.blur = boxShadow.blurRadius;
         this.spread = boxShadow.spreadRadius;
         this.color = boxShadow.color;
-
         this.convertValueToPosition(boxShadow.offsetX, boxShadow.offsetY);
       }
     }
@@ -126,6 +131,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.x = this.center.x - this.thumbRect!.width / 2;
     this.y = this.center.y - this.thumbRect!.height / 2;
     this.line = { x1: this.center.x, y1: this.center.y, x2: this.center.x, y2: this.center.y };
+    this.cd.detectChanges();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -238,7 +244,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.cd.detectChanges();
   }
 
-  onChangeData() {
+  onChangeData(isConfirm: boolean = false) {
     const boxShadow = stringifyBoxShadow({
       inset: false,
       offsetX: this.value.x,
@@ -248,5 +254,16 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
       color: this.color,
     });
     this._onChange(boxShadow);
+    this.change.emit(boxShadow);
+    if (isConfirm) {
+      this.confirm.emit(boxShadow);
+    }
+  }
+
+  stopPropagation(ev: Event) {
+    ev.stopPropagation();
+  }
+  close() {
+    this.cancel.emit();
   }
 }
