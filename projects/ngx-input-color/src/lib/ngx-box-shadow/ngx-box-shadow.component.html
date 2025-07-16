@@ -1,0 +1,12 @@
+<div class="pad-container" #pad>
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" stroke="blue" stroke-width="2" />
+  </svg>
+  <div
+    class="thumb"
+    #thumb
+    [style.left.px]="x"
+    [style.top.px]="y"
+    (mousedown)="dragStart($event)"
+    (touchstart)="dragStart($event)"></div>
+</div>

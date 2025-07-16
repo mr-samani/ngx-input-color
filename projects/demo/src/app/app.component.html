@@ -1,3 +1,9 @@
+<ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" />
+<p>{{ boxShadow }}</p>
+
+<div class="card" [style.box-shadow]="boxShadow"></div>
+
+<!-- 
 <ngx-input-gradient [(ngModel)]="gradient"></ngx-input-gradient>
 <p>{{ gradient }}</p>
 
@@ -5,4 +11,4 @@
 
 <p>{{ color }}</p>
 <input ngxInputGradient [(ngModel)]="gradient" class="form-control" />
-<p>{{ gradient }}</p>
+<p>{{ gradient }}</p> -->
