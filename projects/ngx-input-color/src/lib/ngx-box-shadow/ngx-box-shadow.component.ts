@@ -137,8 +137,8 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.line = {
       x1: this.center.x,
       y1: this.center.y,
-      x2: this.x,
-      y2: this.y,
+      x2: this.x + thumbRec.width / 2,
+      y2: this.y + thumbRec.height / 2,
     };
 
     this.setValueByPosition(thumbRec, padRec);
@@ -151,16 +151,30 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
   }
 
   setValueByPosition(thumbRec: DOMRect, padRec: DOMRect) {
-    const percentageX = this.x / (padRec.width - thumbRec.width);
-    let newValueX = 0 + percentageX * (100 - 0);
-    newValueX = Math.round(newValueX / 1) * 1;
-    let valueX = Math.min(Math.max(newValueX, 0), 100);
-    //-----------------------------
-    const percentageY = this.y / (padRec.height - thumbRec.height);
-    let newValueY = 0 + percentageY * (100 - 0);
-    newValueY = Math.round(newValueY / 1) * 1;
-    let valueY = Math.min(Math.max(newValueY, 0), 100);
+    const padCenterX = (padRec.width - thumbRec.width) / 2;
+    const padCenterY = (padRec.height - thumbRec.height) / 2;
+
+    // فاصله thumb از مرکز
+    const dx = this.x - padCenterX;
+    const dy = this.y - padCenterY;
+
+    // مقیاس تبدیل به -100 تا +100 (یا هرچقدر بخوای)
+    const halfRangeX = (padRec.width - thumbRec.width) / 2;
+    const halfRangeY = (padRec.height - thumbRec.height) / 2;
+
+    let valueX = (dx / halfRangeX) * 100; // -100 تا +100
+    let valueY = (dy / halfRangeY) * 100;
+
+    // رُند کردن
+    valueX = Math.round(valueX);
+    valueY = Math.round(valueY);
+
+    // محدود کردن به -100 تا +100 یا هر مقدار دلخواه
+    valueX = Math.min(Math.max(valueX, -100), 100);
+    valueY = Math.min(Math.max(valueY, -100), 100);
+
     const newValue = { x: valueX, y: valueY };
+
     if (!this.value || this.value.x !== valueX || this.value.y !== valueY) {
       this.valueChanged(newValue);
     }
