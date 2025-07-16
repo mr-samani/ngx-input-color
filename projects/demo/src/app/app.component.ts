@@ -18,5 +18,5 @@ export class AppComponent {
   title = 'demo';
   color = 'pink';
   gradient = 'linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)';
-  boxShadow = '0 0 10px 0 rgba(0, 0, 0, 0.5)';
+  boxShadow = '50px 150px 10px 0px red';
 }

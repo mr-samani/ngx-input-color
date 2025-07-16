@@ -33,3 +33,40 @@
     background: blue;
   }
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0px 10px;
+  border: none;
+  width: 100%;
+  margin-top: 10px;
+  th,
+  td {
+    border: none;
+    padding: 5px;
+    vertical-align: middle;
+  }
+  th {
+    text-align: end;
+  }
+  td {
+  }
+
+  input {
+    width: 80px;
+    border: none;
+    border: 1px solid #91919169;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    direction: ltr;
+    &:focus {
+      outline: none;
+      border: 1px solid #09218d;
+    }
+  }
+}
