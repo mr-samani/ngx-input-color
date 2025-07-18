@@ -147,6 +147,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     if (this.isSupportedEyeDrop) {
       let t = new EyeDropper().open();
       t.then(async (result: { sRGBHex: string }) => {
+        debugger
         this.hexColor = result.sRGBHex;
         this.initColor(new NgxColor(this.hexColor));
         this.cd.detectChanges();

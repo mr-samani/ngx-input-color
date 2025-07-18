@@ -18,56 +18,67 @@
       (touchstart)="dragStart($event)"></div>
   </div>
 
-  <table>
-    <tr>
-      <th>
-        <label for="offsetX">offsetX</label>
-      </th>
-      <td>
+  <div class="ngx-settings">
+    <div class="ngx-setting-item">
+      <div class="ngx-row">
+        <span>Offset X</span>
         <input type="number" id="offsetX" [(ngModel)]="value.x" (ngModelChange)="onChangeValue()" />
-      </td>
-    </tr>
-    <tr>
-      <th>
-        <label for="offsetY">offsetY</label>
-      </th>
-      <td>
+      </div>
+      <input
+        type="range"
+        id="offsetX"
+        [(ngModel)]="value.x"
+        (ngModelChange)="onChangeValue()"
+        step="1"
+        [min]="-maxRange"
+        [max]="maxRange" />
+    </div>
+    <div class="ngx-setting-item">
+      <div class="ngx-row">
+        <span>Offset Y</span>
         <input type="number" id="offsetY" [(ngModel)]="value.y" (ngModelChange)="onChangeValue()" />
-      </td>
-    </tr>
-    <tr>
-      <th>
-        <label for="blur">blur</label>
-      </th>
-      <td>
-        <input type="number" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeData()" />
-      </td>
-    </tr>
-    <tr>
-      <th>
-        <label for="spread">spread</label>
-      </th>
-      <td>
-        <input type="number" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeData()" />
-      </td>
-    </tr>
-    <tr>
-      <th>
-        <label for="color">color</label>
-      </th>
-      <td>
+      </div>
+      <input
+        type="range"
+        id="offsetY"
+        [(ngModel)]="value.y"
+        (ngModelChange)="onChangeValue()"
+        step="1"
+        [min]="-maxRange"
+        [max]="maxRange" />
+    </div>
+    <div class="ngx-setting-item">
+      <div class="ngx-row">
+        <span>Blur</span>
+        <input type="number" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeValue()" />
+      </div>
+      <input type="range" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeValue()" step="1" />
+    </div>
+    <div class="ngx-setting-item">
+      <div class="ngx-row">
+        <span>Spread</span>
+        <input type="number" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeValue()" />
+      </div>
+      <input type="range" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeValue()" step="1" />
+    </div>
+    <div class="ngx-setting-item">
+      <div class="ngx-row">
+        <span>color</span>
         <input
           type="text"
+          readonly
           id="color"
           [(ngModel)]="color"
           ngxInputColor
           [simpleMode]="true"
           [showCloseButton]="false"
           [showConfirmButton]="false"
-          (ngModelChange)="onChangeData()" />
-      </td>
-    </tr>
-  </table>
+          (ngModelChange)="onChangeData()"
+          autocomplete="off" />
+      </div>
+    </div>
+  </div>
+
   <div class="actions">
     <div class="action-buttons">
       <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>

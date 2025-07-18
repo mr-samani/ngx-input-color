@@ -1,5 +1,5 @@
 .ngx-box-shadow-container {
-  width: 260px;
+  width: 180px;
   max-width: 100%;
   border: 1px #bfbfbf solid;
   border-radius: 15px;
@@ -14,7 +14,7 @@
   .actions {
     display: flex;
     gap: 10px;
-    padding: 15px;
+    padding: 15px 0 0;
     justify-content: space-between;
     .action-buttons {
       display: flex;
@@ -26,8 +26,8 @@
       outline: none;
       transition: all 300ms;
       border: 1px #d3d3d3 solid;
-      padding: 10px 12px;
-      min-width: 90px;
+      padding: 6px 8px;
+      min-width: 70px;
       border-radius: 6px;
       &:hover {
         background: #8db6e4;
@@ -43,6 +43,7 @@
   border: 1px #545454 solid;
   box-sizing: border-box;
   direction: ltr;
+  border-radius: 3px;
   &::after,
   &::before {
     content: '';
@@ -72,29 +73,17 @@
   }
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0px 10px;
-  border: none;
-  width: 100%;
-  margin-top: 10px;
-  th,
-  td {
-    border: none;
-    padding: 5px;
-    vertical-align: middle;
+.ngx-settings {
+  .ngx-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
   }
-  th {
-    text-align: end;
-  }
-  td {
-  }
-
-  input {
-    width: 80px;
+  input:not([type='range']) {
+    width: 46px;
     border: none;
     border: 1px solid #91919169;
-    padding: 5px;
+    padding: 2px 4px;
     border-radius: 5px;
     background-color: transparent;
     color: #000;
@@ -106,5 +95,8 @@ table {
       outline: none;
       border: 1px solid #09218d;
     }
+  }
+  input[type='range'] {
+    width: 100%;
   }
 }

@@ -148,9 +148,6 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
 
       // اعمال موقتی برای گرفتن سایز دقیق
       this.renderer.setStyle(pickerEl, 'position', 'absolute');
-      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');
-      this.renderer.setStyle(pickerEl, 'top', '0px');
-      this.renderer.setStyle(pickerEl, 'left', '0px');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
       this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
@@ -181,8 +178,6 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
         top = 8;
       }
 
-      // اعمال نهایی
-      this.renderer.setStyle(pickerEl, 'visibility', 'visible');
       this.renderer.setStyle(pickerEl, 'top', `${top}px`);
       this.renderer.setStyle(pickerEl, 'left', `${left}px`);
     });

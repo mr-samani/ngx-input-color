@@ -163,8 +163,8 @@ export class NgxColor {
   }
 
   isDark(): boolean {
-    const { r, g, b } = this.toRgb();
-    return 0.299 * r + 0.587 * g + 0.114 * b < 128;
+    const { r, g, b, a } = this.toRgb();
+    return a < 0.5 ? false : 0.299 * r + 0.587 * g + 0.114 * b < 128;
   }
 
   isLight(): boolean {

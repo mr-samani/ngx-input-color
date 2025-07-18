@@ -221,11 +221,8 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
 
       const hostRect = this.el.nativeElement.getBoundingClientRect();
       const pickerEl = this.colorPickerEl;
-
+      
       this.renderer.setStyle(pickerEl, 'position', 'absolute');
-      this.renderer.setStyle(pickerEl, 'visibility', 'hidden');
-      this.renderer.setStyle(pickerEl, 'top', '0px');
-      this.renderer.setStyle(pickerEl, 'left', '0px');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
       this._doc.body.appendChild(pickerEl);
@@ -239,7 +236,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
       if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;
       if (top < 8) top = 8;
 
-      this.renderer.setStyle(pickerEl, 'visibility', 'visible');
       this.renderer.setStyle(pickerEl, 'top', `${top}px`);
       this.renderer.setStyle(pickerEl, 'left', `${left}px`);
     });
