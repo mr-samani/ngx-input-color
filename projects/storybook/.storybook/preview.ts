@@ -1,16 +1,13 @@
 import type { Preview } from '@storybook/angular';
 import { setCompodocJson } from '@storybook/addon-docs/angular';
 import docJson from './documentation/documentation.json';
-setCompodocJson(docJson);
-import { Title, Subtitle, Description, Primary, Controls, Stories, ArgTypes } from '@storybook/addon-docs/blocks';
-import { EnumToArrayPipe } from '../../ngx-input-color/src/pipes/enum-to-array.pipe';
-import { ColorInspector } from '../../ngx-input-color/src/models/ColorInspector.enum';
+setCompodocJson(docJson); 
 
 const preview: Preview = {
   // tags: ['autodocs'],
   argTypes: {},
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { },
     controls: {
       matchers: {
         color: /(background|color)$/i,
