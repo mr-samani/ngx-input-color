@@ -1,6 +1,6 @@
 {
   "name": "ngx-input-color",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Angular color input component and color picker (with HSL, HSV, RGB, CMYK, HEX, alpha, eye-dropper, etc)",
   "author": "Mohammadreza Samani <mr.samani1368@gmail.com>",
   "license": "MIT",

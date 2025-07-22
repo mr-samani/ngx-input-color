@@ -1,6 +1,6 @@
 {
   "name": "ngx-input-color",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --port=3600",
@@ -14,7 +14,7 @@
     "compdoc:serve": "compodoc -p tsconfig.compodoc.json -s",
     "compdoc:exportJson": "compodoc -p tsconfig.compodoc.json -e --exportFormat json",
     "build-storybook": "npm run copy-readme  && ng run ngx-input-color:build-storybook && npm run copyScreenShot",
-    "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.png docs\\screenshot.png"
+    "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.jpg docs\\screenshot.jpg"
   },
   "private": true,
   "dependencies": {

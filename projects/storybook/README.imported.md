@@ -9,7 +9,7 @@
 
 [View Demo](https://mr-samani.github.io/ngx-input-color/)
 
-![Screenshot](https://mr-samani.github.io/ngx-input-color/screenshot.png)
+![Screenshot](https://mr-samani.github.io/ngx-input-color/screenshot.jpg)
 
 ---
 
