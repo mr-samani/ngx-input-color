@@ -45,9 +45,20 @@ import { DefaultGradients } from './default-gradients';
       useExisting: NgxInputGradientComponent,
     },
   ],
+  host: {
+    '[class.dark]': 'theme=="dark"',
+  },
   imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+  theme: 'light' | 'dark' | 'auto' = 'auto';
+  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
+    if (!val || val == 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      this.theme = val;
+    }
+  }
   @Output() change = new EventEmitter<string>();
 
   defaultGradients: string[] = [];
@@ -69,6 +80,9 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    if (this.theme == 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
     this.setDefaultGradients();
   }
   ngOnDestroy(): void {}

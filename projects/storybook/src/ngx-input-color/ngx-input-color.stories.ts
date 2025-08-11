@@ -61,6 +61,7 @@ export const Default: Story = {
       outputType: 'HEX',
       simpleMode: false,
       inspector: ColorInspector.Picker,
+      theme: 'auto',
     },
     template: `
     <div class="flex flex-col gap-4">
@@ -115,6 +116,22 @@ export const Default: Story = {
         CMYK
       </label>
     </div>
+    
+    Theme:
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="theme" value="light" [(ngModel)]="theme" />
+        Light
+      </label>
+      <label>
+        <input type="radio" name="theme" value="dark" [(ngModel)]="theme" />
+        Dark
+      </label>
+      <label>
+        <input type="radio" name="theme" value="auto" [(ngModel)]="theme" />
+        Auto
+      </label>
+    </div>
     <input
         type="text"
         [(ngModel)]="myColor"
@@ -122,7 +139,8 @@ export const Default: Story = {
         class="form-control"
         [simpleMode]="simpleMode"
         [outputType]="outputType"
-        [defaultInspector]="inspector" />
+        [defaultInspector]="inspector" 
+        [theme]="theme"/>
 
     </div>`,
   }),

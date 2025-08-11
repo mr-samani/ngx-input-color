@@ -36,6 +36,7 @@ import { isValidGradient, parseGradient } from '../utils/build-gradient';
 })
 export class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground = true;
+  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
 
   private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
   private backdrop?: HTMLDivElement;
@@ -101,8 +102,8 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);
 
     const instance = this.pickerComponentRef.instance;
+    instance.setTheme = this.theme;
     instance.writeValue(this.value);
-
 
     // بک‌دراپ
     this.backdrop = this.renderer.createElement('div');

@@ -45,6 +45,14 @@ import { NgxInputColorModule } from '../../ngx-input-color.module';
   imports: [CommonModule, FormsModule, NgxInputColorModule],
 })
 export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+  theme: 'light' | 'dark' | 'auto' = 'light';
+  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
+    if (!val || val == 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      this.theme = val;
+    }
+  }
   /**
    * The maximum range of the box shadow.
    * @default 25

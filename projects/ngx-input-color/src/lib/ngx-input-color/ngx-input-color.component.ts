@@ -35,8 +35,20 @@ declare const EyeDropper: any;
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.dark]': 'theme=="dark"',
+  },
 })
 export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+  theme: 'light' | 'dark' | 'auto' = 'auto';
+  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
+    if (!val || val == 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      this.theme = val;
+    }
+  }
+
   /** Minifi UI  */
   @Input() simpleMode = false;
 
@@ -88,7 +100,11 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   /** @ignore */
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.theme == 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+  }
   /** @ignore */
   ngOnDestroy(): void {}
   public get ColorFormats(): typeof ColorFormats {

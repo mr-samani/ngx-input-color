@@ -18,6 +18,8 @@ import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspect
 })
 export class AppComponent {
   color = 'pink';
+
+  theme: 'light' | 'dark' | 'auto' = 'auto';
   outputType: OutputType = 'HEX';
   simpleMode = false;
   inspector: ColorInspector = ColorInspector.Picker;

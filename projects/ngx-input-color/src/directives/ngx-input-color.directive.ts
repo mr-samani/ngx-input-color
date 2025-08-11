@@ -46,6 +46,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
   @Input() simpleMode = false;
   @Input() outputType: OutputType = 'HEX';
+  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
   };
@@ -167,6 +168,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     instance.defaultInspector = this.defaultInspector;
     instance.simpleMode = this.simpleMode;
     instance.outputType = this.outputType;
+    instance.setTheme = this.theme;
 
     if (this.color?.isValid) instance.initColor(this.color);
     instance.change.subscribe((c: string) => {
@@ -235,8 +237,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
   }
 
   private async emitChange(c: string) {
-    this.color = new NgxColor(c);
-
     if (this.setInputBackgroundColor) {
       this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);
     }
@@ -254,9 +254,8 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
       this._targetInput.dispatchEvent(event);
     }
 
-    const output = await this.color.getOutputResult(this.outputType);
-    this._onChange(output);
-    this.change.emit(output);
+    this._onChange(c);
+    this.change.emit(c);
     this._onTouched();
   }
 }

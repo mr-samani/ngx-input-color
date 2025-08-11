@@ -1,9 +1,20 @@
+:host {
+  --ngx-color-bg: #fff;
+  --ngx-color-text: #000;
+}
+
+:host-context(.dark) {
+  --ngx-color-bg: #222;
+  --ngx-color-text: #fff;
+}
+
 .ngx-input-color-picker {
   width: 270px;
   max-width: 100%;
   border: 1px #bfbfbf solid;
   border-radius: 15px;
-  background-color: white;
+  background: var(--ngx-color-bg);
+  color: var(--ngx-color-text);
   overflow: hidden;
   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);
   direction: ltr;
@@ -38,7 +49,7 @@
   &:after {
     content: ' ';
     position: absolute;
-    background-color: white;
+    background-color: var(--ngx-color-bg);
     bottom: 0;
     width: 100%;
     left: 0;
@@ -93,13 +104,14 @@
   min-width: 0;
   width: 45px;
   cursor: pointer;
-  background: #f9f9f9;
+  background-color: transparent;
   outline: none;
   transition: all 300ms;
   border: none;
   border-radius: 6px;
   svg {
     width: 18px;
+    fill: var(--ngx-color-text);
   }
 }
 .top-actions {
@@ -113,6 +125,7 @@
     border-radius: 4px;
     padding: 5px 10px;
     background: none;
+    color: var(--ngx-color-text);
     &:focus {
       cursor: pointer;
       background: hsl(216, 100%, 95%);
@@ -120,10 +133,11 @@
     }
     option {
       padding: 10px 20px;
-      background-color: #fff;
+      background: var(--ngx-color-bg);
+      color: var(--ngx-color-text);
       transition: all 300ms;
       &:hover {
-        background: #f0f0f0;
+        background: #f0f0f048;
       }
     }
   }
