@@ -9,7 +9,8 @@ export function parseBoxShadowToPx(shadow: string, contextPx = 16): BoxShadowVal
     shadow = shadow.slice(5).trim();
   }
 
-  const colorRegex = /(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|\b[a-zA-Z]+\b)/;
+  const colorRegex =
+    /(#(?:[a-f0-9]{3}|[a-f0-9]{6}|[a-f0-9]{4}|[a-f0-9]{8})\b|rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)|rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*\d*(?:\.\d+)?\)|hsl\(\s*\d+,\s*\d*(?:\.\d+)?%,\s*\d*(?:\.\d+)?%\)|hsla\(\d+,\s*[\d.]+%,\s*[\d.]+%,\s*\d*(?:\.\d+)?\))/gi;
   const colorMatch = shadow.match(colorRegex);
   let color = 'black';
   if (colorMatch) {

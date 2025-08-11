@@ -11,29 +11,6 @@
   * {
     box-sizing: border-box;
   }
-  .actions {
-    display: flex;
-    gap: 10px;
-    padding: 15px 0 0;
-    justify-content: space-between;
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-    }
-    button {
-      cursor: pointer;
-      background: #f9f9f9;
-      outline: none;
-      transition: all 300ms;
-      border: 1px #d3d3d3 solid;
-      padding: 6px 8px;
-      min-width: 70px;
-      border-radius: 6px;
-      &:hover {
-        background: #8db6e4;
-      }
-    }
-  }
 }
 
 .pad-container {

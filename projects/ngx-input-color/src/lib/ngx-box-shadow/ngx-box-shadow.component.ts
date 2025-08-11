@@ -50,12 +50,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
    * @default 25
    */
   @Input() maxRange = 25;
-  @Input() closeTitle = 'Close';
-  @Input() confirmTitle = 'Ok';
-  @Input() showCloseButton = true;
   @Output() change = new EventEmitter<string>();
-  @Output() confirm = new EventEmitter<string>();
-  @Output() cancel = new EventEmitter<void>();
   isDisabled = false;
   isDragging = false;
   value: IPosition = { x: 0, y: 0 };
@@ -244,7 +239,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.cd.detectChanges();
   }
 
-  onChangeData(isConfirm: boolean = false) {
+  onChangeData() {
     const boxShadow = stringifyBoxShadow({
       inset: false,
       offsetX: this.value.x,
@@ -255,15 +250,9 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     });
     this._onChange(boxShadow);
     this.change.emit(boxShadow);
-    if (isConfirm) {
-      this.confirm.emit(boxShadow);
-    }
   }
 
   stopPropagation(ev: Event) {
     ev.stopPropagation();
-  }
-  close() {
-    this.cancel.emit();
   }
 }

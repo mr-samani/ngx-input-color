@@ -23,7 +23,12 @@ import {
 import { RangeSliderComponent } from '../../range-slider/range-slider.component';
 import { NgxInputColorModule } from '../../ngx-input-color.module';
 import { GradientStop, GradientType } from '../../models/GradientStop';
-import { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../../utils/build-gradient';
+import {
+  buildGradientFromStops,
+  generateRandomColor,
+  isValidGradient,
+  parseGradient,
+} from '../../utils/build-gradient';
 import { DefaultGradients } from './default-gradients';
 
 @Component({
@@ -43,13 +48,7 @@ import { DefaultGradients } from './default-gradients';
   imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-  @Input() closeTitle = 'Close';
-  @Input() confirmTitle = 'Ok';
-  @Input() showCloseButton = true;
-
   @Output() change = new EventEmitter<string>();
-  @Output() confirm = new EventEmitter<string>();
-  @Output() cancel = new EventEmitter<void>();
 
   defaultGradients: string[] = [];
 
@@ -93,8 +92,6 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     return null;
   }
 
- 
-
   writeValue(value: any): void {
     if (value && isValidGradient(value)) {
       const parsed = parseGradient(value);
@@ -131,13 +128,6 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     return id;
   }
 
-  close() {
-    this.cancel.emit();
-  }
-
-  ok() {
-    this.emitChange();
-  }
   stopPropagation(ev: Event) {
     ev.stopPropagation();
   }
@@ -159,6 +149,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
     }
     this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);
     this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, this.rotation);
+    this.emitChange();
   }
 
   updateRangeSlider() {
@@ -169,7 +160,6 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   emitChange() {
     this._onChange(this.resultGradient);
     this.change.emit(this.resultGradient);
-    this.confirm.emit(this.resultGradient);
   }
 
   setDefaultGradients() {

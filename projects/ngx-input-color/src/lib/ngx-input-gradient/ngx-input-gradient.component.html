@@ -29,8 +29,6 @@
             class="color"
             [style.backgroundColor]="rangeValues[selectedIndex].color"
             [ngxInputColor]="ngxGradColor"
-            [showCloseButton]="false"
-            [showConfirmButton]="false"
             [simpleMode]="true"
             (change)="generateGradient($event)"></span>
         </div>
@@ -65,13 +63,6 @@
         *ngFor="let item of defaultGradients; let i = index"
         [style.background]="item"
         (click)="onSelectDefault(item, i)"></span>
-    </div>
-  </div>
-
-  <div class="actions">
-    <div class="action-buttons">
-      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
-      <button (click)="ok()">{{ confirmTitle }}</button>
     </div>
   </div>
 </div>

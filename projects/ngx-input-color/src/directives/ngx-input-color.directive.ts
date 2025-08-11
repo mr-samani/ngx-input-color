@@ -42,13 +42,8 @@ import { DOCUMENT } from '@angular/common';
   ],
 })
 export class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
-  @Input() closeTitle = 'Close';
-  @Input() confirmTitle = 'Ok';
   @Input() setInputBackgroundColor = true;
   @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
-
-  @Input() showCloseButton = true;
-  @Input() showConfirmButton = true;
   @Input() simpleMode = false;
   @Input() outputType: OutputType = 'HEX';
   private boundInputHandler = (e: Event) => {
@@ -72,8 +67,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     }
   }
   @Output() change = new EventEmitter<string>();
-  @Output() confirm = new EventEmitter<string>();
-  @Output() cancel = new EventEmitter<void>();
   private color?: NgxColor;
   private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
   private backdrop?: HTMLDivElement;
@@ -172,11 +165,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     const instance = this.colorPickerComponentRef.instance;
 
     instance.defaultInspector = this.defaultInspector;
-    instance.showCloseButton = true;
-    instance.closeTitle = this.closeTitle;
-    instance.confirmTitle = this.confirmTitle;
-    instance.showCloseButton = this.showCloseButton;
-    instance.showConfirmButton = this.showConfirmButton;
     instance.simpleMode = this.simpleMode;
     instance.outputType = this.outputType;
 
@@ -184,18 +172,10 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     instance.change.subscribe((c: string) => {
       this.emitChange(c);
     });
-    instance.confirm.subscribe((c: string) => {
-      this.emitChange(c);
-      this.destroyColorPicker();
-    });
-
-    instance.cancel.subscribe(() => {
-      this.cancel.emit();
-      this.destroyColorPicker();
-    });
 
     this.backdrop = this.renderer.createElement('div');
     if (this.backdrop) {
+      this.backdrop.className = 'ngx-input-color-backdrop';
       this.backdrop.style.cssText = `
           background: #5e5e5e1e;
           position: fixed;
@@ -205,6 +185,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
           bottom: 0;
           overflow: auto;
           transition: all 300ms;
+          z-index: 1000;
         `;
       this.backdrop.onclick = () => this.destroyColorPicker();
     }
@@ -221,7 +202,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
 
       const hostRect = this.el.nativeElement.getBoundingClientRect();
       const pickerEl = this.colorPickerEl;
-      
+
       this.renderer.setStyle(pickerEl, 'position', 'absolute');
       this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
@@ -276,7 +257,6 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
     const output = await this.color.getOutputResult(this.outputType);
     this._onChange(output);
     this.change.emit(output);
-    this.confirm.emit(output);
     this._onTouched();
   }
 }

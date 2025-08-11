@@ -34,8 +34,6 @@ import { NgxBoxShadowComponent } from '../lib/ngx-box-shadow/ngx-box-shadow.comp
   ],
 })
 export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccessor, Validator {
-  @Input() closeTitle = 'Close';
-  @Input() confirmTitle = 'Ok';
   @Input() setInputBackground = true;
 
   private pickerComponentRef?: ComponentRef<NgxBoxShadowComponent>;
@@ -96,19 +94,7 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
     this.pickerComponentRef = this.viewContainerRef.createComponent(NgxBoxShadowComponent);
 
     const instance = this.pickerComponentRef.instance;
-    instance.showCloseButton = true;
-    instance.closeTitle = this.closeTitle;
-    instance.confirmTitle = this.confirmTitle;
     instance.writeValue(this.value);
-
-    // رویدادها
-    const sub1 = instance.confirm.subscribe((c: any) => {
-      this.confirmColor(c);
-    });
-
-    const sub2 = instance.cancel.subscribe(() => {
-      this.destroyPicker();
-    });
 
     // بک‌دراپ
     this.backdrop = this.renderer.createElement('div');
@@ -122,6 +108,7 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
           bottom: 0;
           overflow: auto;
           transition: all 300ms;
+          z-index: 1000;
         `;
       this.backdrop.onclick = () => this.destroyPicker();
     }
@@ -186,14 +173,5 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
       this.backdrop = undefined;
     }
     this.pickerEl = undefined;
-  }
-
-  confirmColor(c: string) {
-    if (this.setInputBackground) {
-      this.renderer.setStyle(this.el.nativeElement, 'background', c);
-    }
-    this._onChange(c);
-    this.value = c;
-    this.destroyPicker();
   }
 }

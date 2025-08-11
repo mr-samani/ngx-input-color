@@ -71,18 +71,10 @@
           [(ngModel)]="color"
           ngxInputColor
           [simpleMode]="true"
-          [showCloseButton]="false"
-          [showConfirmButton]="false"
           (ngModelChange)="onChangeData()"
           autocomplete="off" />
       </div>
     </div>
   </div>
 
-  <div class="actions">
-    <div class="action-buttons">
-      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
-      <button (click)="onChangeData(true)">{{ confirmTitle }}</button>
-    </div>
-  </div>
 </div>

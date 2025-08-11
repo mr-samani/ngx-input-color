@@ -37,14 +37,6 @@ declare const EyeDropper: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-  /** Title for the close button */
-  @Input() closeTitle = 'Close';
-  /** Title for the confirm button */
-  @Input() confirmTitle = 'Ok';
-  /** Whether to show the close button */
-  @Input() showCloseButton = true;
-  /** Whether to show the confirm button */
-  @Input() showConfirmButton = true;
   /** Minifi UI  */
   @Input() simpleMode = false;
 
@@ -62,10 +54,6 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
 
   /** Emitted when the color value changes */
   @Output() change = new EventEmitter<string>();
-  /** Emitted when the confirm button is clicked */
-  @Output() confirm = new EventEmitter<string>();
-  /** Emitted when the cancel button is clicked */
-  @Output() cancel = new EventEmitter<void>();
 
   /** @ignore */
   format: ColorFormats = ColorFormats.HSVA;
@@ -76,6 +64,8 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   rgbaColor = 'rgba(0, 0, 0, 1)';
   /** @ignore */
   hexColor = '#000000';
+  outputColor = '';
+
   /** @ignore */
   name = 'black';
 
@@ -147,7 +137,6 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     if (this.isSupportedEyeDrop) {
       let t = new EyeDropper().open();
       t.then(async (result: { sRGBHex: string }) => {
-        debugger
         this.hexColor = result.sRGBHex;
         this.initColor(new NgxColor(this.hexColor));
         this.cd.detectChanges();
@@ -164,13 +153,10 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
     this.color = c;
     this.rgbaColor = this.color.toRgbString();
     this.hexColor = this.color.toHexString();
+    this.outputColor = await this.color.getOutputResult(this.outputType);
     this.isDarkColor = this.color.isDark();
     this.name = await this.color.name();
-    if (this.showConfirmButton == false) {
-      this.emitChange();
-    } else {
-      this.change.emit(this.hexColor);
-    }
+    this.emitChange();
   }
 
   /** @ignore */
@@ -179,20 +165,9 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   /** @ignore */
-  close() {
-    this.cancel.emit();
-  }
-
-  /** @ignore */
-  async ok() {
-    this.emitChange();
-    const output = await this.color.getOutputResult(this.outputType);
-    this.confirm.emit(output);
-  }
-  /** @ignore */
   async emitChange() {
-    const output = await this.color.getOutputResult(this.outputType);
-    this._onChange(output);
-    this.change.emit(output);
+    this.outputColor = await this.color.getOutputResult(this.outputType);
+    this._onChange(this.outputColor);
+    this.change.emit(this.outputColor);
   }
 }

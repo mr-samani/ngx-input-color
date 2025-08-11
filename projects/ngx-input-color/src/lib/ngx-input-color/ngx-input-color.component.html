@@ -1,7 +1,7 @@
 <div class="ngx-input-color-picker" (click)="stopPropagation($event)" [class.simple-mode]="simpleMode">
   <div class="ngx-color-preview" [style.background]="rgbaColor" [class.is-dark-color]="isDarkColor" *ngIf="!simpleMode">
-    <div class="rgbacode">{{ rgbaColor | uppercase }}</div>
-    <div class="hexacode">{{ hexColor | uppercase }}</div>
+    <div class="rgbacode">{{ outputColor | uppercase }}</div>
+    <div class="hexacode" *ngIf="outputType !== 'HEX'">{{ hexColor | uppercase }}</div>
     <div class="colorname">{{ name }}</div>
     <div class="color"></div>
   </div>
@@ -42,12 +42,5 @@
       <app-rgb *ngSwitchCase="ColorInspector.RGB" [color]="color" (colorChange)="initColor($event)"></app-rgb>
       <app-cmyk *ngSwitchCase="ColorInspector.CMYK" [color]="color" (colorChange)="initColor($event)"></app-cmyk>
     </ng-container>
-  </div>
-
-  <div class="actions" *ngIf="showCloseButton || showConfirmButton">
-    <div class="action-buttons">
-      <button (click)="close()" *ngIf="showCloseButton">{{ closeTitle }}</button>
-      <button (click)="ok()" *ngIf="showConfirmButton">{{ confirmTitle }}</button>
-    </div>
   </div>
 </div>

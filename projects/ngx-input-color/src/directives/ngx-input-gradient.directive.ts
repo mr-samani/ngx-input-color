@@ -35,8 +35,6 @@ import { isValidGradient, parseGradient } from '../utils/build-gradient';
   ],
 })
 export class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {
-  @Input() closeTitle = 'Close';
-  @Input() confirmTitle = 'Ok';
   @Input() setInputBackground = true;
 
   private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
@@ -103,19 +101,8 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);
 
     const instance = this.pickerComponentRef.instance;
-    instance.showCloseButton = true;
-    instance.closeTitle = this.closeTitle;
-    instance.confirmTitle = this.confirmTitle;
     instance.writeValue(this.value);
 
-    // رویدادها
-    const sub1 = instance.confirm.subscribe((c: any) => {
-      this.confirmColor(c);
-    });
-
-    const sub2 = instance.cancel.subscribe(() => {
-      this.destroyPicker();
-    });
 
     // بک‌دراپ
     this.backdrop = this.renderer.createElement('div');
@@ -129,6 +116,7 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
           bottom: 0;
           overflow: auto;
           transition: all 300ms;
+          z-index: 1000;
         `;
       this.backdrop.onclick = () => this.destroyPicker();
     }
@@ -193,14 +181,5 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       this.backdrop = undefined;
     }
     this.pickerEl = undefined;
-  }
-
-  confirmColor(c: string) {
-    if (this.setInputBackground) {
-      this.renderer.setStyle(this.el.nativeElement, 'background', c);
-    }
-    this._onChange(c);
-    this.value = c;
-    this.destroyPicker();
   }
 }
