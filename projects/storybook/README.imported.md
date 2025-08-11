@@ -20,7 +20,7 @@
 - **Angular Forms Integration:** Works with `ngModel` and reactive forms
 - **EyeDropper API Support:** Pick colors from anywhere on your screen (if supported)
 - **Live Preview:** Instantly see the selected color or gradient
-- **Highly Customizable:** Change button titles, show/hide close/confirm buttons, set input background color, and more
+- **Highly Customizable:**  set input background color, Simple mode and more
 - **Inline & Input Modes:** Use as a popup input or as an always-visible inline component
 - **Unit Tested:** Includes comprehensive unit tests
 
@@ -51,14 +51,14 @@ import { NgxInputColorModule } from 'ngx-input-color';
 #### Color Picker Input
 
 ```html
-<input ngxInputColor [(ngModel)]="color" [closeTitle]="'Cancel'" [confirmTitle]="'Select'" />
+<input ngxInputColor [(ngModel)]="color" />
 <span>Selected: {{ color }}</span>
 ```
 
 #### Gradient Picker Input
 
 ```html
-<input ngxInputGradient [(ngModel)]="gradient" [closeTitle]="'Cancel'" [confirmTitle]="'Select'" />
+<input ngxInputGradient [(ngModel)]="gradient" />
 <span>Selected: {{ gradient }}</span>
 ```
 
@@ -67,14 +67,14 @@ import { NgxInputColorModule } from 'ngx-input-color';
 #### Inline Color Picker
 
 ```html
-<ngx-input-color [(ngModel)]="inlineColor" [showCloseButton]="true" [showConfirmButton]="true" [simpleMode]="false"></ngx-input-color>
+<ngx-input-color [(ngModel)]="inlineColor" [simpleMode]="false"></ngx-input-color>
 <span>Selected: {{ inlineColor }}</span>
 ```
 
 #### Inline Gradient Picker
 
 ```html
-<ngx-input-gradient [(ngModel)]="inlineGradient" [showCloseButton]="true" [confirmTitle]="'Done'"></ngx-input-gradient>
+<ngx-input-gradient [(ngModel)]="inlineGradient"></ngx-input-gradient>
 <span>Selected: {{ inlineGradient }}</span>
 ```
 
@@ -86,17 +86,11 @@ import { NgxInputColorModule } from 'ngx-input-color';
 
 | Name                          | Type                   | Default   | Description                                    |
 | ----------------------------- | ---------------------- | --------- | ---------------------------------------------- |
-| `closeTitle`                  | `string`               | 'Close'   | Text for the close button                      |
-| `confirmTitle`                | `string`               | 'Ok'      | Text for the confirm button                    |
-| `showCloseButton`             | `boolean`              | `false`   | Show/hide the close button                     |
-| `showConfirmButton`           | `boolean`              | `false`   | Show/hide the confirm button                   |
 | `setInputBackgroundColor`     | `boolean`              | `true`    | Set input background to selected color         |
 | `simpleMode`                  | `boolean`              | `false`   | Compact UI for inline use                      |
 | `defaultInspector`            | `ColorInspector` enum  | Picker    | Default inspector (Picker, RGB, HSL, CMYK)     |
 | `[(ngModel)]` / `formControl` | `string`               |           | Two-way binding for the selected color         |
 | `change` (Output)             | `EventEmitter<string>` |           | Emits the color value on change                |
-| `confirm` (Output)            | `EventEmitter<string>` |           | Emits the color value when confirmed           |
-| `cancel` (Output)             | `EventEmitter<void>`   |           | Emits when the color picker is closed/canceled |
 
 #### Supported Color Formats
 
@@ -112,13 +106,8 @@ import { NgxInputColorModule } from 'ngx-input-color';
 
 | Name                          | Type                   | Default   | Description                                    |
 | ----------------------------- | ---------------------- | --------- | ---------------------------------------------- |
-| `closeTitle`                  | `string`               | 'Close'   | Text for the close button                      |
-| `confirmTitle`                | `string`               | 'Ok'      | Text for the confirm button                    |
-| `showCloseButton`             | `boolean`              | `true`    | Show/hide the close button                     |
 | `[(ngModel)]` / `formControl` | `string`               |           | Two-way binding for the selected gradient      |
 | `change` (Output)             | `EventEmitter<string>` |           | Emits the gradient value on change             |
-| `confirm` (Output)            | `EventEmitter<string>` |           | Emits the gradient value when confirmed        |
-| `cancel` (Output)             | `EventEmitter<void>`   |           | Emits when the gradient picker is closed       |
 
 #### Supported Gradient Formats
 
@@ -129,7 +118,7 @@ import { NgxInputColorModule } from 'ngx-input-color';
 
 ## ⚙️ Customization
 
-- All button titles, visibility, and UI modes are fully customizable via component inputs.
+- visibility, and UI modes are fully customizable via component inputs.
 - Works seamlessly with both Template-driven and Reactive Forms.
 
 ---

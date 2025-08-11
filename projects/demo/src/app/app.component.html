@@ -1,5 +1,5 @@
-<ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" /> 
-<p>{{ boxShadow }}</p>
+<!-- <ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" /> 
+<p>{{ boxShadow }}</p> -->
 
 <!-- <input type="text" ngxInputBoxShadow [(ngModel)]="boxShadow" class="form-control" />
 
@@ -13,5 +13,62 @@
 
 <input ngxInputGradient [(ngModel)]="gradient" class="form-control" />
 <p>{{ gradient }}</p> -->
-<input type="text" [(ngModel)]="color" ngxInputColor class="form-control" />
+
+<input
+  type="text"
+  [(ngModel)]="color"
+  ngxInputColor
+  class="form-control"
+  [simpleMode]="simpleMode"
+  [outputType]="outputType"
+  [defaultInspector]="inspector" />
+<div>
+  <label>
+    <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
+    Simple Mode
+  </label>
+</div>
+
+Output:
+<div class="radio-group">
+  <label>
+    <input type="radio" name="outputtype" value="HEX" [(ngModel)]="outputType" />
+    HEX
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="RGB" [(ngModel)]="outputType" />
+    RGB
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="HSV" [(ngModel)]="outputType" />
+    HSV
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="HSL" [(ngModel)]="outputType" />
+    HSL
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="CMYK" [(ngModel)]="outputType" />
+    CMYK
+  </label>
+</div>
+Inspector:
+<div class="radio-group">
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.Picker" [(ngModel)]="inspector" />
+    Picker
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.RGB" [(ngModel)]="inspector" />
+    RGB
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.HSL" [(ngModel)]="inspector" />
+    HSL
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.CMYK" [(ngModel)]="inspector" />
+    CMYK
+  </label>
+</div>
 <p>{{ color }}</p>

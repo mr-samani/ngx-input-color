@@ -11,7 +11,7 @@ obj/
 # src/assets/
 dist/
 
-*.css
+# *.css
 # *.less
 *.min.*
 # package.json

@@ -48,20 +48,82 @@ const meta: Meta<NgxInputColorComponent> = {
 export default meta;
 type Story = StoryObj<NgxInputColorComponent>;
 //_________________________________________________________________________________________________________
+
 export const Default: Story = {
   parameters: {
     controls: {},
   },
-  args: {
-    closeTitle: 'انصراف',
-    confirmTitle: 'تائید',
-  },
+  args: {},
   render: (args) => ({
-    props: { ...args, myColor: '#01a13fff' },
+    props: {
+      ...args,
+      myColor: '#01a13fff',
+      outputType: 'HEX',
+      simpleMode: false,
+      inspector: ColorInspector.Picker,
+    },
     template: `
     <div class="flex flex-col gap-4">
     <h1> {{myColor}}</h1>
-    <ngx-input-color [(ngModel)]="myColor"></ngx-input-color>
+
+    <div>
+      <label>
+        <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
+        Simple Mode
+      </label>
+    </div>
+
+    Output:
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="outputtype" value="HEX" [(ngModel)]="outputType" />
+        HEX
+      </label>
+      <label>
+        <input type="radio" name="outputtype" value="RGB" [(ngModel)]="outputType" />
+        RGB
+      </label>
+      <label>
+        <input type="radio" name="outputtype" value="HSV" [(ngModel)]="outputType" />
+        HSV
+      </label>
+      <label>
+        <input type="radio" name="outputtype" value="HSL" [(ngModel)]="outputType" />
+        HSL
+      </label>
+      <label>
+        <input type="radio" name="outputtype" value="CMYK" [(ngModel)]="outputType" />
+        CMYK
+      </label>
+    </div>
+    Inspector:
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="inspector" [value]="0" [(ngModel)]="inspector" />
+        Picker
+      </label>
+      <label>
+        <input type="radio" name="inspector" [value]="1" [(ngModel)]="inspector" />
+        RGB
+      </label>
+      <label>
+        <input type="radio" name="inspector" [value]="2" [(ngModel)]="inspector" />
+        HSL
+      </label>
+      <label>
+        <input type="radio" name="inspector" [value]="3" [(ngModel)]="inspector" />
+        CMYK
+      </label>
+    </div>
+    <input
+        type="text"
+        [(ngModel)]="myColor"
+        ngxInputColor
+        class="form-control"
+        [simpleMode]="simpleMode"
+        [outputType]="outputType"
+        [defaultInspector]="inspector" />
+
     </div>`,
   }),
 };
@@ -130,8 +192,6 @@ export const Minimal: Story = {
   args: {
     defaultInspector: ColorInspector.Picker,
     simpleMode: true,
-    showCloseButton: false,
-    showConfirmButton: false,
   },
   render: (args) => ({
     props: { ...args, myColor: 'pink' },
@@ -142,8 +202,6 @@ export const Minimal: Story = {
     <ngx-input-color 
         [(ngModel)]="myColor"
         [simpleMode]="simpleMode"
-        [showCloseButton]="showCloseButton"
-        [showConfirmButton]="showConfirmButton"
         ></ngx-input-color>
     </div>`,
   }),
@@ -158,8 +216,6 @@ export const InputDirective: Story = {
   },
   args: {
     simpleMode: true,
-    showCloseButton: false,
-    showConfirmButton: false,
   },
   render: (args) => ({
     props: { ...args, myColor: 'pink' },
@@ -169,9 +225,7 @@ export const InputDirective: Story = {
     <h1> ngxInputColor = {{myColor}}</h1>
     <input ngxInputColor 
         [(ngModel)]="myColor" 
-        [simpleMode]="simpleMode" 
-        [showCloseButton]="showCloseButton" 
-        [showConfirmButton]="showConfirmButton"
+        [simpleMode]="simpleMode"
         class="form-control" />
     </div>`,
   }),
