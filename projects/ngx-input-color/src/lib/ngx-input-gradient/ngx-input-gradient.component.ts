@@ -185,7 +185,8 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   }
 
   onSelectDefault(item: string, i: number) {
-    console.log('onSelectDefault', item, i);
+    // console.log('onSelectDefault', item, i);
     this.writeValue(item);
+    this.emitChange();
   }
 }

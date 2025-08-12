@@ -1,11 +1,14 @@
 import {
+  AfterViewInit,
   ComponentRef,
   Directive,
   ElementRef,
+  EventEmitter,
   HostListener,
   Inject,
   Input,
   OnDestroy,
+  Output,
   Renderer2,
   ViewContainerRef,
   forwardRef,
@@ -34,10 +37,33 @@ import { isValidGradient, parseGradient } from '../utils/build-gradient';
     },
   ],
 })
-export class NgxInputGradientDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground = true;
   @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
+  private _targetInput?: HTMLInputElement;
+  @Input('ngxInputColor') set ngxInputColor(
+    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''
+  ) {
+    this.isHostInput = false;
+    if (el instanceof ElementRef) {
+      this._targetInput = el.nativeElement;
+    } else if (el instanceof HTMLInputElement) {
+      this.isHostInput = true;
+      this._targetInput = el;
+    } else {
+      this._targetInput = undefined;
+    }
 
+    if (this._targetInput) {
+      this._targetInput.addEventListener('input', this.boundInputHandler);
+    }
+  }
+  @Output() change = new EventEmitter<string>();
+
+  private boundInputHandler = (e: Event) => {
+    this.writeValue((e.target as HTMLInputElement).value);
+  };
+  private isHostInput = false;
   private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
   private backdrop?: HTMLDivElement;
   private pickerEl?: HTMLElement;
@@ -60,7 +86,13 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     ev.preventDefault();
     this.toggleColorPicker();
   }
-
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
+        this.writeValue(this._targetInput.value);
+      }
+    });
+  }
   registerOnChange(fn: any): void {
     this._onChange = fn;
   }
@@ -88,6 +120,11 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       if (parsed.valid && this.setInputBackground) {
         this.renderer.setStyle(this.el.nativeElement, 'background', value);
       }
+      // اگر دایرکتیو روی input باشه (ControlValueAccessor)
+      if (this.isHostInput) {
+        const input = this.el.nativeElement as HTMLInputElement;
+        input.value = this.value;
+      }
       this._onValidateChange();
     }
   }
@@ -104,7 +141,9 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
     const instance = this.pickerComponentRef.instance;
     instance.setTheme = this.theme;
     instance.writeValue(this.value);
-
+    instance.change.subscribe((c: string) => {
+      this.emitChange(c);
+    });
     // بک‌دراپ
     this.backdrop = this.renderer.createElement('div');
     if (this.backdrop) {
@@ -130,46 +169,46 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
 
   @HostListener('window:resize', ['$event'])
   setPosition() {
-    setTimeout(() => {
-      if (!this.pickerEl || !this.pickerComponentRef) return;
-      const hostRect = this.el.nativeElement.getBoundingClientRect();
-      const pickerEl = this.pickerEl;
+    //setTimeout(() => {
+    if (!this.pickerEl || !this.pickerComponentRef) return;
+    const hostRect = this.el.nativeElement.getBoundingClientRect();
+    const pickerEl = this.pickerEl;
 
-      // اعمال موقتی برای گرفتن سایز دقیق
-      this.renderer.setStyle(pickerEl, 'position', 'absolute');
-      this.renderer.setStyle(pickerEl, 'z-index', '9999');
+    // اعمال موقتی برای گرفتن سایز دقیق
+    this.renderer.setStyle(pickerEl, 'position', 'absolute');
+    this.renderer.setStyle(pickerEl, 'z-index', '1001');
 
-      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
+    this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
 
-      const pickerRect = pickerEl.getBoundingClientRect();
+    const pickerRect = pickerEl.getBoundingClientRect();
 
-      // وسط‌چین کردن افقی
-      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
-      let top = hostRect.bottom;
+    // وسط‌چین کردن افقی
+    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
+    let top = hostRect.bottom;
 
-      // جلوگیری از بیرون زدن از راست
-      if (left + pickerRect.width > window.innerWidth) {
-        left = window.innerWidth - pickerRect.width - 8;
-      }
+    // جلوگیری از بیرون زدن از راست
+    if (left + pickerRect.width > window.innerWidth) {
+      left = window.innerWidth - pickerRect.width - 8;
+    }
 
-      // جلوگیری از بیرون زدن از چپ
-      if (left < 8) {
-        left = 8;
-      }
+    // جلوگیری از بیرون زدن از چپ
+    if (left < 8) {
+      left = 8;
+    }
 
-      // اگر از پایین بیرون زد، ببر بالا
-      if (top + pickerRect.height > window.innerHeight) {
-        top = hostRect.top - pickerRect.height;
-      }
+    // اگر از پایین بیرون زد، ببر بالا
+    if (top + pickerRect.height > window.innerHeight) {
+      top = hostRect.top - pickerRect.height;
+    }
 
-      // جلوگیری از بیرون زدن از بالا
-      if (top < 8) {
-        top = 8;
-      }
+    // جلوگیری از بیرون زدن از بالا
+    if (top < 8) {
+      top = 8;
+    }
 
-      this.renderer.setStyle(pickerEl, 'top', `${top}px`);
-      this.renderer.setStyle(pickerEl, 'left', `${left}px`);
-    });
+    this.renderer.setStyle(pickerEl, 'top', `${top}px`);
+    this.renderer.setStyle(pickerEl, 'left', `${left}px`);
+    //});
   }
 
   destroyPicker() {
@@ -182,5 +221,28 @@ export class NgxInputGradientDirective implements OnDestroy, ControlValueAccesso
       this.backdrop = undefined;
     }
     this.pickerEl = undefined;
+  }
+
+  private async emitChange(c: string) {
+    if (this.setInputBackground) {
+      this.renderer.setStyle(this.el.nativeElement, 'background', c);
+    }
+
+    // اگر روی input باشیم، مقدار رو در input قرار بده
+    if (this.isHostInput) {
+      const input = this.el.nativeElement as HTMLInputElement;
+      input.value = c;
+    }
+
+    // اگر targetInput وجود داره، در اونم مقدار ست کن
+    if (this._targetInput instanceof HTMLInputElement) {
+      this._targetInput.value = c;
+      const event = new Event('input', { bubbles: true });
+      this._targetInput.dispatchEvent(event);
+    }
+
+    this._onChange(c);
+    this.change.emit(c);
+    this._onTouched();
   }
 }
