@@ -174,6 +174,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
 
     if (this.color?.isValid) instance.initColor(this.color);
     instance.change.subscribe((c: string) => {
+      this.color = new NgxColor(c);
       this.emitChange(c);
     });
 

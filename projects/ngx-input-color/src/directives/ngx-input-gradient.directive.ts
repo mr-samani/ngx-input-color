@@ -142,6 +142,7 @@ export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, Cont
     instance.setTheme = this.theme;
     instance.writeValue(this.value);
     instance.change.subscribe((c: string) => {
+      this.value = c;
       this.emitChange(c);
     });
     // بک‌دراپ
