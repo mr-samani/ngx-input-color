@@ -112,7 +112,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
       if (parsed.valid) {
         this.resultGradient = value;
         this.type = parsed.type;
-        this.rotation = parsed.rotation;
+        this.rotation = +parsed.rotation;
         this.rangeValues = parsed.stops;
       } else {
         this.resultGradient = '';

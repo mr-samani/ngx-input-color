@@ -24,6 +24,7 @@ export class AppComponent {
   simpleMode = false;
   inspector: ColorInspector = ColorInspector.Picker;
 
+  //gradient = ' radial-gradient(circle, rgb(230, 218, 218) 0%, rgb(39, 64, 70) 100%)'; // 'linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)';
   gradient = 'linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)';
   boxShadow = '50px 150px 10px 0px red';
 

@@ -21,7 +21,6 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { ColorInspector } from '../models/ColorInspector.enum';
 import { NgxInputGradientComponent } from '../lib/ngx-input-gradient/ngx-input-gradient.component';
 import { DOCUMENT } from '@angular/common';
 import { isValidGradient, parseGradient } from '../utils/build-gradient';

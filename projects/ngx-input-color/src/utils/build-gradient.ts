@@ -1,25 +1,37 @@
+// gradient-utils.ts
 import { GradientStop, GradientType } from '../models/GradientStop';
 
-export function buildGradientFromStops(stops: GradientStop[], type: GradientType = 'linear', rotation = 0): string {
+export function buildGradientFromStops(
+  stops: GradientStop[],
+  type: GradientType = 'linear',
+  rotation: number | string = 0
+): string {
   if (!stops || stops.length === 0) return '';
 
+  // sort by numeric value
   const sorted = [...stops].sort((a, b) => a.value - b.value);
 
-  const parts: string[] = [];
+  // clamp 0..100 and format stops
+  const parts = sorted.map((s) => {
+    const v = Math.max(0, Math.min(Number(s.value) || 0, 100));
+    return `${s.color.trim()} ${v}%`;
+  });
 
-  for (const stop of sorted) {
-    const value = Math.max(0, Math.min(stop.value, 100));
-    parts.push(`${stop.color} ${value}%`);
-  }
-
-  let f = '';
+  let prefix = '';
   if (type === 'linear') {
-    f = `${rotation}deg, `;
-  } else {
-    f = 'circle, ';
+    // rotation can be number (deg) or string like 'to right' or '45deg'
+    if (typeof rotation === 'number') prefix = `${rotation}deg, `;
+    else if (typeof rotation === 'string' && rotation.trim().length) prefix = `${rotation.trim()}, `;
+  } else if (type === 'radial') {
+    // keep simple "circle" default: caller may put 'circle' in rotation (or pass separate option if needed)
+    prefix = typeof rotation === 'string' && rotation.trim() ? `${rotation.trim()}, ` : 'circle, ';
+  } else if (type === 'conic') {
+    // conic-gradient accepts angle like 'from 45deg at 50% 50%'
+    if (typeof rotation === 'number') prefix = `from ${rotation}deg, `;
+    else if (typeof rotation === 'string' && rotation.trim()) prefix = `${rotation.trim()}, `;
   }
 
-  return `${type}-gradient(${f}${parts.join(', ')})`;
+  return `${type}-gradient(${prefix}${parts.join(', ')})`;
 }
 
 export function generateRandomColor(): string {
@@ -32,29 +44,42 @@ export function generateRandomColor(): string {
 }
 
 export function isValidGradient(value: string): boolean {
-  // Accepts linear-gradient or radial-gradient with any color format
-  return /^(\s*)(linear|radial)-gradient\s*\(/i.test(value);
+  if (!value || typeof value !== 'string') return false;
+  return /^\s*(conic|linear|radial)-gradient\s*\(/i.test(value.trim());
 }
 
+/**
+ * parseGradient
+ * - returns: { type, rotation (number|string), stops, valid }
+ * - stops: array of { id, color, value } where value is 0..100 (percent)
+ * - rotation: number (deg) for linear if parsed as angle, or string (e.g. 'to right' or '45deg')
+ */
 export function parseGradient(value: string): {
   type: GradientType;
   rotation: number;
+  shape?: string;
   stops: GradientStop[];
   valid: boolean;
 } {
   let type: GradientType = 'linear';
   let rotation = 90;
+  let shape: string | undefined;
   let stops: GradientStop[] = [];
   let valid = false;
-  let match = value.match(/^(\s*)(linear|radial)-gradient\s*\((.*)\)$/i);
-  if (!match) return { type, rotation, stops, valid };
-  type = match[2] as GradientType;
-  let content = match[3];
-  // Split by commas, but ignore commas inside parentheses (for rgb, hsl, etc)
-  let parts = [];
-  let buf = '',
-    depth = 0;
-  for (let c of content) {
+
+  if (!value) return { type, rotation, shape, stops, valid };
+
+  const match = value.trim().match(/^(\s*)(conic|linear|radial)-gradient\s*\((.*)\)$/i);
+  if (!match) return { type, rotation, shape, stops, valid };
+
+  type = match[2].toLowerCase() as GradientType;
+  let content = match[3].trim();
+
+  // --- Split arguments by commas, respecting parentheses (for rgba, hsl, etc.)
+  const parts: string[] = [];
+  let buf = '';
+  let depth = 0;
+  for (const c of content) {
     if (c === '(') depth++;
     if (c === ')') depth--;
     if (c === ',' && depth === 0) {
@@ -64,50 +89,61 @@ export function parseGradient(value: string): {
       buf += c;
     }
   }
-  if (buf) parts.push(buf.trim());
-  // First part may be angle/direction (for linear) or shape/position (for radial)
-  let first = parts[0];
+  if (buf.trim()) parts.push(buf.trim());
+
+  // --- Determine starting index for color stops
   let colorStopStart = 0;
+  const first = parts[0];
+
   if (type === 'linear') {
-    let angleMatch = first.match(/^(\d+)(deg)?$/i);
+    // e.g., "90deg" or "to right"
+    const angleMatch = first.match(/^(\d+)(deg)?$/i);
     if (angleMatch) {
-      rotation = parseInt(angleMatch[1], 10);
+      rotation = parseFloat(angleMatch[1]);
       colorStopStart = 1;
-    } else if (/to /.test(first)) {
-      // e.g. 'to right', 'to bottom left' (optional: map to degree)
-      // You can add mapping if needed
+    } else if (/^to /i.test(first)) {
+      // optional direction mapping
       colorStopStart = 1;
     }
   } else if (type === 'radial') {
-    // e.g. 'circle at center', 'ellipse at top left', etc
-    if (!/^(#|rgb|hsl|[a-z])/i.test(first)) colorStopStart = 1;
+    // e.g., "circle", "circle at center", "ellipse at top left"
+    if (!/^#|rgb|hsl|[a-z]+\(/i.test(first)) {
+      shape = first;
+      colorStopStart = 1;
+    }
+  } else if (type === 'conic') {
+    // e.g., "from 0deg at center"
+    if (!/^#|rgb|hsl|[a-z]+\(/i.test(first)) colorStopStart = 1;
   }
-  // Color stop regex: supports hex, rgb(a), hsl(a), color names, with optional position
-  const colorStopRegex =
-    /((#([0-9a-fA-F]{3,8}))|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))(\s+([\d.]+%?|[\d.]+px|[\d.]+em))?/;
+
+  // --- Regex for color stops
+  const colorStopRegex = /((#([0-9a-fA-F]{3,8}))|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))(\s+([\d.]+%?))?/;
+
   for (let i = colorStopStart; i < parts.length; i++) {
-    let stopPart = parts[i];
-    let m = stopPart.match(colorStopRegex);
+    const stopPart = parts[i].trim();
+    const m = stopPart.match(colorStopRegex);
     if (m) {
-      let color = m[1];
-      let posStr = m[8];
+      const color = m[1];
+      const posStr = m[9];
       let value = 0;
-      if (posStr) {
-        if (posStr.endsWith('%')) value = parseFloat(posStr);
-        else value = parseFloat(posStr); // px/em: you may want to normalize or keep as is
-      } else {
-        value = i === colorStopStart ? 0 : 100;
+      if (posStr && posStr.endsWith('%')) value = parseFloat(posStr);
+      else if (posStr) value = parseFloat(posStr);
+      else {
+        // اگر درصدی وجود نداشت، با توجه به ایندکس مقدار دهی کن
+        if (stops.length === 0) value = 0;
+        else if (i === parts.length - 1) value = 100;
+        else value = (100 / (parts.length - colorStopStart - 1)) * stops.length;
       }
+
       stops.push({ color, value, id: generateId(stops) });
     }
   }
+
   valid = stops.length >= 2;
-  return { type, rotation, stops, valid };
+  return { type, rotation, shape, stops, valid };
 }
+
 function generateId(rangeValues: GradientStop[]): string {
-  let id = 'ngx-thumb-' + Math.random().toString(36).substring(2, 9);
-  if (rangeValues.findIndex((x) => x.id == id) >= 0) {
-    return generateId(rangeValues);
-  }
-  return id;
+  const id = 'ngx-stop-' + Math.random().toString(36).substring(2, 9);
+  return rangeValues.find((x) => x.id === id) ? generateId(rangeValues) : id;
 }
