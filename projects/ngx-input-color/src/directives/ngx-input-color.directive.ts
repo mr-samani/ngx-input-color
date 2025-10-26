@@ -202,29 +202,28 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
 
   @HostListener('window:resize')
   setPosition() {
-    // setTimeout(() => {
-    if (!this.colorPickerEl) return;
+    setTimeout(() => {
+      if (!this.colorPickerEl) return;
+      const hostRect = this.el.nativeElement.getBoundingClientRect();
+      const pickerEl = this.colorPickerEl;
 
-    const hostRect = this.el.nativeElement.getBoundingClientRect();
-    const pickerEl = this.colorPickerEl;
+      this.renderer.setStyle(pickerEl, 'position', 'absolute');
+      this.renderer.setStyle(pickerEl, 'z-index', '9999');
 
-    this.renderer.setStyle(pickerEl, 'position', 'absolute');
-    this.renderer.setStyle(pickerEl, 'z-index', '9999');
+      this._doc.body.appendChild(pickerEl);
+      const pickerRect = pickerEl.getBoundingClientRect();
 
-    this._doc.body.appendChild(pickerEl);
-    const pickerRect = pickerEl.getBoundingClientRect();
+      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
+      let top = hostRect.bottom;
 
-    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
-    let top = hostRect.bottom;
+      if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;
+      if (left < 8) left = 8;
+      if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;
+      if (top < 8) top = 8;
 
-    if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;
-    if (left < 8) left = 8;
-    if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;
-    if (top < 8) top = 8;
-
-    this.renderer.setStyle(pickerEl, 'top', `${top}px`);
-    this.renderer.setStyle(pickerEl, 'left', `${left}px`);
-    // });
+      this.renderer.setStyle(pickerEl, 'top', `${top}px`);
+      this.renderer.setStyle(pickerEl, 'left', `${left}px`);
+    });
   }
 
   private destroyColorPicker() {
