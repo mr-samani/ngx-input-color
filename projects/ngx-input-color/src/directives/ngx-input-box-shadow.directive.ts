@@ -18,8 +18,8 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { ColorInspector } from '../models/ColorInspector.enum'; 
-import { DOCUMENT } from '@angular/common'; 
+import { ColorInspector } from '../models/ColorInspector.enum';
+import { DOCUMENT } from '@angular/common';
 import { NgxBoxShadowComponent } from '../lib/ngx-box-shadow/ngx-box-shadow.component';
 
 @Directive({
@@ -81,7 +81,6 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
 
   writeValue(value: any): void {
     this.value = value;
-   
   }
 
   toggleColorPicker() {
@@ -114,53 +113,55 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
     }
     // گرفتن المنت کامپوننت واقعی
     this.pickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
-    this.renderer.appendChild(this.backdrop, this.pickerEl);
-    this.renderer.appendChild(this._doc.body, this.backdrop);
-    this.setPosition();
+
+    this.renderer.setStyle(this.pickerEl, 'visibility', 'hidden');
+
+    setTimeout(() => {
+      this.setPosition();
+    });
   }
 
   @HostListener('window:resize', ['$event'])
+  @HostListener('window:scroll')
   setPosition() {
-    setTimeout(() => {
-      if (!this.pickerEl || !this.pickerComponentRef) return;
-      const hostRect = this.el.nativeElement.getBoundingClientRect();
-      const pickerEl = this.pickerEl;
+    if (!this.pickerEl || !this.pickerComponentRef) return;
+    const hostRect = this.el.nativeElement.getBoundingClientRect();
 
-      // اعمال موقتی برای گرفتن سایز دقیق
-      this.renderer.setStyle(pickerEl, 'position', 'absolute');
-      this.renderer.setStyle(pickerEl, 'z-index', '9999');
+    // اعمال موقتی برای گرفتن سایز دقیق
+    this.renderer.setStyle(this.pickerEl, 'position', 'absolute');
+    this.renderer.setStyle(this.pickerEl, 'z-index', '9999');
 
-      this._doc.body.appendChild(pickerEl); // لازم برای محاسبه دقیق اندازه
+    const pickerRect = this.pickerEl.getBoundingClientRect();
 
-      const pickerRect = pickerEl.getBoundingClientRect();
+    // وسط‌چین کردن افقی
+    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
+    let top = hostRect.bottom;
 
-      // وسط‌چین کردن افقی
-      let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
-      let top = hostRect.bottom;
+    // جلوگیری از بیرون زدن از راست
+    if (left + pickerRect.width > window.innerWidth) {
+      left = window.innerWidth - pickerRect.width - 8;
+    }
 
-      // جلوگیری از بیرون زدن از راست
-      if (left + pickerRect.width > window.innerWidth) {
-        left = window.innerWidth - pickerRect.width - 8;
-      }
+    // جلوگیری از بیرون زدن از چپ
+    if (left < 8) {
+      left = 8;
+    }
 
-      // جلوگیری از بیرون زدن از چپ
-      if (left < 8) {
-        left = 8;
-      }
+    // اگر از پایین بیرون زد، ببر بالا
+    if (top + pickerRect.height > window.innerHeight) {
+      top = hostRect.top - pickerRect.height;
+    }
 
-      // اگر از پایین بیرون زد، ببر بالا
-      if (top + pickerRect.height > window.innerHeight) {
-        top = hostRect.top - pickerRect.height;
-      }
+    // جلوگیری از بیرون زدن از بالا
+    if (top < 8) {
+      top = 8;
+    }
 
-      // جلوگیری از بیرون زدن از بالا
-      if (top < 8) {
-        top = 8;
-      }
-
-      this.renderer.setStyle(pickerEl, 'top', `${top}px`);
-      this.renderer.setStyle(pickerEl, 'left', `${left}px`);
-    });
+    this.renderer.setStyle(this.pickerEl, 'top', `${top}px`);
+    this.renderer.setStyle(this.pickerEl, 'left', `${left}px`);
+    this.renderer.setStyle(this.pickerEl, 'visibility', 'visible');
+    this.renderer.appendChild(this.backdrop, this.pickerEl);
+    this.renderer.appendChild(this._doc.body, this.backdrop);
   }
 
   destroyPicker() {
