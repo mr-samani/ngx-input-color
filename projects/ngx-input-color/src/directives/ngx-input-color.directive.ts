@@ -124,7 +124,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
         this._targetInput.value = colorStr;
       }
 
-      if (this.setInputBackgroundColor && colorStr) {
+      if (this.setInputBackgroundColor) {
         this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);
       }
 

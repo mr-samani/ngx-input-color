@@ -116,7 +116,7 @@ export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, Cont
     this.value = value;
     if (value && isValidGradient(value)) {
       const parsed = parseGradient(value);
-      if (parsed.valid && this.setInputBackground) {
+      if (this.setInputBackground) {
         this.renderer.setStyle(this.el.nativeElement, 'background', value);
       }
       // اگر دایرکتیو روی input باشه (ControlValueAccessor)
@@ -169,7 +169,7 @@ export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, Cont
     });
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize', [])
   @HostListener('window:scroll')
   setPosition() {
     if (!this.pickerEl || !this.pickerComponentRef) return;

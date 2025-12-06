@@ -12,7 +12,8 @@
 
 -->
 <input ngxInputGradient [(ngModel)]="gradient" class="form-control" />
-<p>{{ gradient }}</p> 
+<button type="button" (click)="gradient = ''">x</button>
+<p>{{ gradient }}</p>
 
 <input
   type="text"
@@ -23,6 +24,7 @@
   [outputType]="outputType"
   [defaultInspector]="inspector"
   [theme]="theme" />
+<button type="button" (click)="color = ''">x</button>
 <div>
   <label>
     <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
