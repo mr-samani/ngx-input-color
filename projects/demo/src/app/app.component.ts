@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import {
   NgxInputBoxShadowModule,
   NgxInputColorModule,
@@ -12,7 +12,7 @@ import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspect
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
+  imports: [NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

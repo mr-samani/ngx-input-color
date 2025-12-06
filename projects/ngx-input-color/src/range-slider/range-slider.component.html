@@ -8,16 +8,17 @@
     [class.bg-transparent]="isBgTransparent"
     (mousedown)="addnewRangeOnSliderClick($event)"
     (touchstart)="addnewRangeOnSliderClick($event)">
-    <div
-      class="thumb"
-      [class.is-active]="selectedIndex == i"
-      #thumb
-      *ngFor="let item of values; let i = index"
-      [style.left.px]="item.x"
-      [style.background]="item.color"
-      [title]="item.value"
-      (mousedown)="dragStart($event, i)"
+    @for (item of values; track item; let i = $index) {
+      <div
+        class="thumb"
+        [class.is-active]="selectedIndex == i"
+        #thumb
+        [style.left.px]="item.x"
+        [style.background]="item.color"
+        [title]="item.value"
+        (mousedown)="dragStart($event, i)"
       (touchstart)="dragStart($event, i)"></div>
+    }
   </div>
 </div>
 

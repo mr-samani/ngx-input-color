@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -48,7 +48,7 @@ import { DefaultGradients } from './default-gradients';
   host: {
     '[class.dark]': 'theme=="dark"',
   },
-  imports: [CommonModule, FormsModule, NgxInputColorModule, RangeSliderComponent],
+  imports: [FormsModule, NgxInputColorModule, RangeSliderComponent],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
   theme: 'light' | 'dark' | 'auto' = 'auto';

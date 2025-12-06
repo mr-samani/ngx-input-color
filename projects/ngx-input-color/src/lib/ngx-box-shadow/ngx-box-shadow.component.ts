@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -42,7 +42,7 @@ import { NgxInputColorModule } from '../../ngx-input-color.module';
       useExisting: NgxBoxShadowComponent,
     },
   ],
-  imports: [CommonModule, FormsModule, NgxInputColorModule],
+  imports: [FormsModule, NgxInputColorModule],
 })
 export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   theme: 'light' | 'dark' | 'auto' = 'light';

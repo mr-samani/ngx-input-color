@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef } from '@angular/core';
 import { getOffsetPosition } from '../utils/get-offset-position';
 import {
@@ -13,7 +13,7 @@ import { IPosition } from '../models/IPosition';
 @Component({
   selector: 'saturation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './saturation.component.html',
   styleUrl: './saturation.component.scss',
   providers: [
