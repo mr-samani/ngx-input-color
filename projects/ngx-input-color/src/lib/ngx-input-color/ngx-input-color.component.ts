@@ -23,6 +23,7 @@ import {
 import { ColorInspector } from '../../models/ColorInspector.enum';
 declare const EyeDropper: any;
 @Component({
+  standalone: false,
   selector: 'ngx-input-color',
   templateUrl: './ngx-input-color.component.html',
   styleUrls: ['./ngx-input-color.component.scss'],

@@ -6,6 +6,7 @@ import { CMYK } from '../../../utils/interfaces';
   selector: 'app-cmyk',
   templateUrl: './cmyk.component.html',
   styleUrls: ['./cmyk.component.scss'],
+  standalone: false,
 })
 export class CmykComponent implements OnInit {
   cyanSliderBackground = '';

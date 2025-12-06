@@ -6,6 +6,7 @@ import { RGBA } from '../../../utils/interfaces';
   selector: 'app-rgb',
   templateUrl: './rgb.component.html',
   styleUrls: ['./rgb.component.scss'],
+  standalone: false,
 })
 export class RgbComponent implements OnInit {
   redSliderBackground = '';

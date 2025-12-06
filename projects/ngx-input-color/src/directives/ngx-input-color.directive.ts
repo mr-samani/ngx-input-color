@@ -28,6 +28,7 @@ import { NgxColor, OutputType } from '../utils/color-helper';
 import { DOCUMENT } from '@angular/common';
 
 @Directive({
+  standalone: false,
   selector: '[ngxInputColor]',
   providers: [
     {

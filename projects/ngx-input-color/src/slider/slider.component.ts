@@ -120,7 +120,7 @@ export class SliderComponent implements OnInit, ControlValueAccessor, Validator 
     this.updatePosition(ev);
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.writeValue(this.myControl.value);
   }

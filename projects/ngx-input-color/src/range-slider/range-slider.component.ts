@@ -166,7 +166,7 @@ export class RangeSliderComponent implements OnInit, ControlValueAccessor, Valid
     this.updateThumbPosition(ev);
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.writeValue(this.values);
   }

@@ -1,0 +1,777 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ngx-input-color documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">ngx-input-color documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AppComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>projects/demo/src/app/app.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-root</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../modules/NgxInputColorModule.html" target="_self" >NgxInputColorModule</a></code>
+                                <code><a href="../modules/NgxInputGradientModule.html" target="_self" >NgxInputGradientModule</a></code>
+                            <code>FormsModule</code>
+                                <code><a href="../modules/NgxInputBoxShadowModule.html" target="_self" >NgxInputBoxShadowModule</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./app.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./app.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#boxShadow" >boxShadow</a>
+                            </li>
+                            <li>
+                                <a href="#color" >color</a>
+                            </li>
+                            <li>
+                                <a href="#gradient" >gradient</a>
+                            </li>
+                            <li>
+                                <a href="#inspector" >inspector</a>
+                            </li>
+                            <li>
+                                <a href="#outputType" >outputType</a>
+                            </li>
+                            <li>
+                                <a href="#simpleMode" >simpleMode</a>
+                            </li>
+                            <li>
+                                <a href="#theme" >theme</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#ColorInspector" >ColorInspector</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="boxShadow"></a>
+                    <span class="name">
+                        <span ><b>boxShadow</b></span>
+                        <a href="#boxShadow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;50px 150px 10px 0px red&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/demo/src/app/app.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="color"></a>
+                    <span class="name">
+                        <span ><b>color</b></span>
+                        <a href="#color"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;pink&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/demo/src/app/app.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="gradient"></a>
+                    <span class="name">
+                        <span ><b>gradient</b></span>
+                        <a href="#gradient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/demo/src/app/app.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inspector"></a>
+                    <span class="name">
+                        <span ><b>inspector</b></span>
+                        <a href="#inspector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#ColorInspector" target="_self" >ColorInspector</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>ColorInspector.Picker</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/demo/src/app/app.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="outputType"></a>
+                    <span class="name">
+                        <span ><b>outputType</b></span>
+                        <a href="#outputType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#OutputType" target="_self" >OutputType</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;HEX&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/demo/src/app/app.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="simpleMode"></a>
+                    <span class="name">
+                        <span ><b>simpleMode</b></span>
+                        <a href="#simpleMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">projects/demo/src/app/app.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="theme"></a>
+                    <span class="name">
+                        <span ><b>theme</b></span>
+                        <a href="#theme"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>&quot;light&quot; | &quot;dark&quot; | &quot;auto&quot;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;auto&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">projects/demo/src/app/app.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ColorInspector"></a>
+                        <span class="name"><b>ColorInspector</b><a href="#ColorInspector"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>ColorInspector()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/demo/src/app/app.component.ts:31</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+
+import {
+  NgxInputBoxShadowModule,
+  NgxInputColorModule,
+  NgxInputGradientModule,
+} from &#x27;../../../ngx-input-color/src/public-api&#x27;;
+import { OutputType } from &#x27;../../../ngx-input-color/src/utils/color-helper&#x27;;
+import { ColorInspector } from &#x27;../../../ngx-input-color/src/models/ColorInspector.enum&#x27;;
+
+@Component({
+  selector: &#x27;app-root&#x27;,
+  standalone: true,
+  imports: [NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
+  templateUrl: &#x27;./app.component.html&#x27;,
+  styleUrl: &#x27;./app.component.scss&#x27;,
+})
+export class AppComponent {
+  color &#x3D; &#x27;pink&#x27;;
+
+  theme: &#x27;light&#x27; | &#x27;dark&#x27; | &#x27;auto&#x27; &#x3D; &#x27;auto&#x27;;
+  outputType: OutputType &#x3D; &#x27;HEX&#x27;;
+  simpleMode &#x3D; false;
+  inspector: ColorInspector &#x3D; ColorInspector.Picker;
+
+  //gradient &#x3D; &#x27; radial-gradient(circle, rgb(230, 218, 218) 0%, rgb(39, 64, 70) 100%)&#x27;; // &#x27;linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)&#x27;;
+  gradient &#x3D; &#x27;linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)&#x27;;
+  boxShadow &#x3D; &#x27;50px 150px 10px 0px red&#x27;;
+
+  public get ColorInspector(): typeof ColorInspector {
+    return ColorInspector;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- &lt;ngx-box-shadow [(ngModel)]&#x3D;&quot;boxShadow&quot; class&#x3D;&quot;form-control&quot; /&gt; 
+&lt;p&gt;{{ boxShadow }}&lt;/p&gt; --&gt;
+
+&lt;!-- &lt;input type&#x3D;&quot;text&quot; ngxInputBoxShadow [(ngModel)]&#x3D;&quot;boxShadow&quot; class&#x3D;&quot;form-control&quot; /&gt;
+
+&lt;div class&#x3D;&quot;card&quot; [style.box-shadow]&#x3D;&quot;boxShadow&quot;&gt;&lt;/div&gt; --&gt;
+
+&lt;!-- 
+&lt;ngx-input-gradient [(ngModel)]&#x3D;&quot;gradient&quot;&gt;&lt;/ngx-input-gradient&gt;
+&lt;p&gt;{{ gradient }}&lt;/p&gt;
+
+
+--&gt;
+&lt;input ngxInputGradient [(ngModel)]&#x3D;&quot;gradient&quot; class&#x3D;&quot;form-control&quot; /&gt;
+&lt;button type&#x3D;&quot;button&quot; (click)&#x3D;&quot;gradient &#x3D; &#x27;&#x27;&quot;&gt;x&lt;/button&gt;
+&lt;p&gt;{{ gradient }}&lt;/p&gt;
+
+&lt;input
+  type&#x3D;&quot;text&quot;
+  [(ngModel)]&#x3D;&quot;color&quot;
+  ngxInputColor
+  class&#x3D;&quot;form-control&quot;
+  [simpleMode]&#x3D;&quot;simpleMode&quot;
+  [outputType]&#x3D;&quot;outputType&quot;
+  [defaultInspector]&#x3D;&quot;inspector&quot;
+  [theme]&#x3D;&quot;theme&quot; /&gt;
+&lt;button type&#x3D;&quot;button&quot; (click)&#x3D;&quot;color &#x3D; &#x27;&#x27;&quot;&gt;x&lt;/button&gt;
+&lt;div&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;checkbox&quot; name&#x3D;&quot;simpleMode&quot; [(ngModel)]&#x3D;&quot;simpleMode&quot; /&gt;
+    Simple Mode
+  &lt;/label&gt;
+&lt;/div&gt;
+
+Output:
+&lt;div class&#x3D;&quot;radio-group&quot;&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;outputtype&quot; value&#x3D;&quot;HEX&quot; [(ngModel)]&#x3D;&quot;outputType&quot; /&gt;
+    HEX
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;outputtype&quot; value&#x3D;&quot;RGB&quot; [(ngModel)]&#x3D;&quot;outputType&quot; /&gt;
+    RGB
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;outputtype&quot; value&#x3D;&quot;HSV&quot; [(ngModel)]&#x3D;&quot;outputType&quot; /&gt;
+    HSV
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;outputtype&quot; value&#x3D;&quot;HSL&quot; [(ngModel)]&#x3D;&quot;outputType&quot; /&gt;
+    HSL
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;outputtype&quot; value&#x3D;&quot;CMYK&quot; [(ngModel)]&#x3D;&quot;outputType&quot; /&gt;
+    CMYK
+  &lt;/label&gt;
+&lt;/div&gt;
+Inspector:
+&lt;div class&#x3D;&quot;radio-group&quot;&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;inspector&quot; [value]&#x3D;&quot;ColorInspector.Picker&quot; [(ngModel)]&#x3D;&quot;inspector&quot; /&gt;
+    Picker
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;inspector&quot; [value]&#x3D;&quot;ColorInspector.RGB&quot; [(ngModel)]&#x3D;&quot;inspector&quot; /&gt;
+    RGB
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;inspector&quot; [value]&#x3D;&quot;ColorInspector.HSL&quot; [(ngModel)]&#x3D;&quot;inspector&quot; /&gt;
+    HSL
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;inspector&quot; [value]&#x3D;&quot;ColorInspector.CMYK&quot; [(ngModel)]&#x3D;&quot;inspector&quot; /&gt;
+    CMYK
+  &lt;/label&gt;
+&lt;/div&gt;
+Theme:
+&lt;div class&#x3D;&quot;radio-group&quot;&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;theme&quot; value&#x3D;&quot;light&quot; [(ngModel)]&#x3D;&quot;theme&quot; /&gt;
+    Light
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;theme&quot; value&#x3D;&quot;dark&quot; [(ngModel)]&#x3D;&quot;theme&quot; /&gt;
+    Dark
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;theme&quot; value&#x3D;&quot;auto&quot; [(ngModel)]&#x3D;&quot;theme&quot; /&gt;
+    Auto
+  &lt;/label&gt;
+&lt;/div&gt;
+&lt;p&gt;{{ color }}&lt;/p&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- <ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" /> <p>{{ boxShadow }}</p> --><!-- <input type="text" ngxInputBoxShadow [(ngModel)]="boxShadow" class="form-control" /><div class="card" [style.box-shadow]="boxShadow"></div> --><!-- <ngx-input-gradient [(ngModel)]="gradient"></ngx-input-gradient><p>{{ gradient }}</p>--><input ngxInputGradient [(ngModel)]="gradient" class="form-control" /><button type="button" (click)="gradient = \'\'">x</button><p>{{ gradient }}</p><input  type="text"  [(ngModel)]="color"  ngxInputColor  class="form-control"  [simpleMode]="simpleMode"  [outputType]="outputType"  [defaultInspector]="inspector"  [theme]="theme" /><button type="button" (click)="color = \'\'">x</button><div>  <label>    <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />    Simple Mode  </label></div>Output:<div class="radio-group">  <label>    <input type="radio" name="outputtype" value="HEX" [(ngModel)]="outputType" />    HEX  </label>  <label>    <input type="radio" name="outputtype" value="RGB" [(ngModel)]="outputType" />    RGB  </label>  <label>    <input type="radio" name="outputtype" value="HSV" [(ngModel)]="outputType" />    HSV  </label>  <label>    <input type="radio" name="outputtype" value="HSL" [(ngModel)]="outputType" />    HSL  </label>  <label>    <input type="radio" name="outputtype" value="CMYK" [(ngModel)]="outputType" />    CMYK  </label></div>Inspector:<div class="radio-group">  <label>    <input type="radio" name="inspector" [value]="ColorInspector.Picker" [(ngModel)]="inspector" />    Picker  </label>  <label>    <input type="radio" name="inspector" [value]="ColorInspector.RGB" [(ngModel)]="inspector" />    RGB  </label>  <label>    <input type="radio" name="inspector" [value]="ColorInspector.HSL" [(ngModel)]="inspector" />    HSL  </label>  <label>    <input type="radio" name="inspector" [value]="ColorInspector.CMYK" [(ngModel)]="inspector" />    CMYK  </label></div>Theme:<div class="radio-group">  <label>    <input type="radio" name="theme" value="light" [(ngModel)]="theme" />    Light  </label>  <label>    <input type="radio" name="theme" value="dark" [(ngModel)]="theme" />    Dark  </label>  <label>    <input type="radio" name="theme" value="auto" [(ngModel)]="theme" />    Auto  </label></div><p>{{ color }}</p></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CmykComponent', 'selector': 'app-cmyk'},{'name': 'HslComponent', 'selector': 'app-hsl'},{'name': 'NgxBoxShadowComponent', 'selector': 'ngx-box-shadow'},{'name': 'NgxInputColorComponent', 'selector': 'ngx-input-color'},{'name': 'NgxInputGradientComponent', 'selector': 'ngx-input-gradient'},{'name': 'PickerComponent', 'selector': 'app-picker'},{'name': 'RangeSliderComponent', 'selector': 'range-slider'},{'name': 'RgbComponent', 'selector': 'app-rgb'},{'name': 'SaturationComponent', 'selector': 'saturation'},{'name': 'SliderComponent', 'selector': 'slider'}];
+    var DIRECTIVES = [{'name': 'NgxInputBoxShadowDirective', 'selector': '[ngxInputBoxShadow]'},{'name': 'NgxInputColorDirective', 'selector': '[ngxInputColor]'},{'name': 'NgxInputGradientDirective', 'selector': '[ngxInputGradient]'}];
+    var ACTUAL_COMPONENT = {'name': 'AppComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AppComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

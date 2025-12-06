@@ -7,6 +7,7 @@ import { HSLA } from '../../../utils/interfaces';
   selector: 'app-hsl',
   templateUrl: './hsl.component.html',
   styleUrls: ['./hsl.component.scss'],
+  standalone: false,
 })
 export class HslComponent implements OnInit {
   hue: number = 0;

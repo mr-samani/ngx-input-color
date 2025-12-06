@@ -7,6 +7,7 @@ import { HSVA } from '../../../utils/interfaces';
   selector: 'app-picker',
   templateUrl: './picker.component.html',
   styleUrls: ['./picker.component.scss'],
+  standalone: false,
 })
 export class PickerComponent implements OnInit {
   hue = 300;

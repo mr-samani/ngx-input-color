@@ -6,13 +6,14 @@ import { RangeSliderComponent } from './range-slider/range-slider.component';
 import { NgxInputGradientComponent, NgxInputGradientDirective } from './public-api';
 
 @NgModule({
-  declarations: [NgxInputGradientDirective],
+  declarations: [],
   imports: [
     CommonModule,
     FormsModule,
     SliderComponent,
     RangeSliderComponent,
     NgxInputGradientComponent,
+    NgxInputGradientDirective,
   ],
   exports: [NgxInputGradientComponent, NgxInputGradientDirective],
   providers: [],

@@ -94,7 +94,7 @@ export class SaturationComponent implements ControlValueAccessor {
     this.updatePosition(ev);
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.writeValue(this.myControl.value);
   }

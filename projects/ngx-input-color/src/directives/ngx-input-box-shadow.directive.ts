@@ -18,7 +18,6 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { ColorInspector } from '../models/ColorInspector.enum';
 import { DOCUMENT } from '@angular/common';
 import { NgxBoxShadowComponent } from '../lib/ngx-box-shadow/ngx-box-shadow.component';
 
@@ -121,7 +120,7 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
     });
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   @HostListener('window:scroll')
   setPosition() {
     if (!this.pickerEl || !this.pickerComponentRef) return;

@@ -125,6 +125,8 @@ export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, Cont
         input.value = this.value;
       }
       this._onValidateChange();
+    } else {
+      this.renderer.setStyle(this.el.nativeElement, 'background', '');
     }
   }
 

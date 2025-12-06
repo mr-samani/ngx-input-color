@@ -137,7 +137,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.cd.detectChanges();
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     this.writeValue(this.value);
   }
