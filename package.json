@@ -6,7 +6,6 @@
     "start": "ng serve --open --port=3600",
     "build": "ng build demo",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
     "build:lib": "ng build ngx-input-color",
     "publish:npm": "cd dist/ngx-input-color && npm publish",
     "copy-readme": "copy projects\\library\\README.md projects\\storybook\\README.imported.md",
@@ -14,7 +13,11 @@
     "compdoc:serve": "compodoc -p tsconfig.compodoc.json -s",
     "compdoc:exportJson": "compodoc -p tsconfig.compodoc.json -e --exportFormat json",
     "build-storybook": "npm run copy-readme  && ng run ngx-input-color:build-storybook && npm run copyScreenShot",
-    "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.jpg docs\\screenshot.jpg"
+    "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.jpg docs\\screenshot.jpg",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --maxWorkers=2"
   },
   "private": true,
   "dependencies": {
@@ -37,16 +40,13 @@
     "@compodoc/compodoc": "^1.1.32",
     "@storybook/addon-docs": "^10.1.4",
     "@storybook/angular": "^10.1.4",
-    "@types/jasmine": "~5.1.0",
     "@types/jest": "^30.0.0",
-    "jasmine-core": "~5.1.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
+    "jest": "^30.3.0",
+    "jest-preset-angular": "^16.1.4",
     "ng-packagr": "^21.0.0",
     "storybook": "^10.1.4",
+    "ts-jest": "^29.4.9",
+    "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
   }
 }

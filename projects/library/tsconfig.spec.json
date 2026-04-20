@@ -1,14 +1,16 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine"
-    ]
+    "outDir": "./out-tsc/spec",
+    "types": ["jest", "node"],
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "setup-jest.ts"
   ]
 }

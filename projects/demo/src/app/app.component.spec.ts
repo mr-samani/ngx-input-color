@@ -1,12 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgxInputColor } from 'ngx-input-color/color-picker';
 
-descrbe('Sample App Component', () => {
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
+
+describe('MyComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
 
@@ -14,15 +13,15 @@ descrbe('Sample App Component', () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent, FormsModule, NgxInputColor],
       providers: [
-        provideZonelessChangeDetection(),
-        // provideUserStoreServiceMock(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
+        provideZonelessChangeDetection(), // ← Zoneless
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });
