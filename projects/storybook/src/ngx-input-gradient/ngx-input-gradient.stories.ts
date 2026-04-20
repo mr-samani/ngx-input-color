@@ -1,7 +1,7 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgxInputGradientComponent } from '@ngx-input-gradient';
+import { NgxInputGradientComponent } from 'ngx-input-color/gradient-picker';
 
 const meta: Meta<NgxInputGradientComponent> = {
   title: 'Demo/NgxInputGradient',

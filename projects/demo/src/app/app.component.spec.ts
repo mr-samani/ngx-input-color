@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NgxInputColorDirective } from '@ngx-input-color';
+import { NgxInputColorDirective } from 'ngx-input-color';
 
 descrbe('Sample App Component', () => {
   let fixture: ComponentFixture<AppComponent>;

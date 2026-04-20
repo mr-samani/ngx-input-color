@@ -1,7 +1,7 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgxBoxShadowComponent } from '@ngx-box-shadow';
+import { NgxBoxShadowComponent } from 'ngx-input-color/box-shadow';
 
 const meta: Meta<NgxBoxShadowComponent> = {
   title: 'Demo/NgxBoxShadow',

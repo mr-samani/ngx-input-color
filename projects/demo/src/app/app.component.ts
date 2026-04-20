@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { OutputType, ColorInspector } from '@ngx-input-color';
-
-import { NgxInputColorDirective } from '@ngx-input-color';
-import { NgxInputGradientDirective } from '@ngx-input-gradient';
+import { OutputType, ColorInspector, NgxInputColorDirective } from 'ngx-input-color/color-picker';
+import { NgxInputGradientDirective } from 'ngx-input-color/gradient-picker';
 
 @Component({
   selector: 'app-root',
