@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -15,8 +15,12 @@ import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspect
   imports: [NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
+  public readonly $topColor: WritableSignal<string> = signal<string>('#fff');
+
+  
   color = 'pink';
 
   theme: 'light' | 'dark' | 'auto' = 'auto';
