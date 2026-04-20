@@ -1,0 +1,4 @@
+export * from './components/ngx-input-color.component';
+export * from './directives/ngx-input-color.directive';
+export * from './pipes/enum-to-array.pipe';
+export * from './contracts/ColorInspector.enum';

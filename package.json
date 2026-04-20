@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --port=3600",
-    "build": "ng build",
+    "build": "ng build demo",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:lib": "ng build ngx-input-color",

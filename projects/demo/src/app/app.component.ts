@@ -1,26 +1,21 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import {
-  NgxInputBoxShadowModule,
-  NgxInputColorModule,
-  NgxInputGradientModule,
-} from '../../../ngx-input-color/src/public-api';
-import { OutputType } from '../../../ngx-input-color/src/utils/color-helper';
-import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspector.enum';
+import { OutputType } from '../../../ngx-input-color/src/lib/ngx-input-color/utils/color-helper';
+import { ColorInspector } from '../../../ngx-input-color/src/lib/ngx-input-color/contracts/ColorInspector.enum';
+
+import { NgxInputColorDirective } from '@ngx-input-color';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, NgxInputColorDirective],
 })
 export class AppComponent {
   public readonly $topColor: WritableSignal<string> = signal<string>('#fff');
 
-  
   color = 'pink';
 
   theme: 'light' | 'dark' | 'auto' = 'auto';

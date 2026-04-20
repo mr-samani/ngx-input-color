@@ -9,16 +9,24 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "paths": {},
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": false,
+    "paths": {
+      "@ngx-input-color/shared": ["./projects/ngx-input-color/src/shared"],
+      "@ngx-input-color": ["./projects/ngx-input-color/src/lib/ngx-input-color"],
+      "@ngx-box-shadow": ["./projects/ngx-input-color/src/lib/ngx-box-shadow"],
+      "@ngx-input-gradient": ["./projects/ngx-input-color/src/lib/ngx-input-gradient"]
+    },
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "useDefineForClassFields": false
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "bundler",
+
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    /* very important when using false then optional field in class not set in this.hasOwnProperty(property) */
+    "useDefineForClassFields": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
