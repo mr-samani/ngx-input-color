@@ -108,7 +108,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Directives</li>
-  <li class="breadcrumb-item" >NgxInputColorDirective</li>
+  <li class="breadcrumb-item" >NgxInputColor</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -1949,17 +1949,17 @@ import { DOCUMENT } from &#x27;@angular/common&#x27;;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() &#x3D;&gt; NgxInputColorDirective),
+      useExisting: forwardRef(() &#x3D;&gt; NgxInputColor),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() &#x3D;&gt; NgxInputColorDirective),
+      useExisting: forwardRef(() &#x3D;&gt; NgxInputColor),
       multi: true,
     },
   ],
 })
-export class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackgroundColor &#x3D; true;
   @Input() defaultInspector: ColorInspector &#x3D; ColorInspector.Picker;
   @Input() simpleMode &#x3D; false;
@@ -2222,7 +2222,7 @@ export class NgxInputColorDirective implements AfterViewInit, OnDestroy, Control
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'directive';
-            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputColorDirective.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputColor.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

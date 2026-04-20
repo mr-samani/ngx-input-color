@@ -24,15 +24,15 @@ import { NgxBoxShadowComponent } from '../components/box-shadow.component';
 @Directive({
   selector: '[ngxInputBoxShadow]',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputBoxShadowDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputBoxShadow), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputBoxShadowDirective,
+      useExisting: NgxInputBoxShadow,
     },
   ],
 })
-export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground = true;
 
   private pickerComponentRef?: ComponentRef<NgxBoxShadowComponent>;

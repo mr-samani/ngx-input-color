@@ -1,4 +1,6 @@
-# ngx-input-color & ngx-input-gradient
+# ngx-input-color 
+
+## Color Picker, Gradient Picker and Box Shadow
 
 [![npm version](https://img.shields.io/npm/v/ngx-input-color.svg)](https://www.npmjs.com/package/ngx-input-color)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

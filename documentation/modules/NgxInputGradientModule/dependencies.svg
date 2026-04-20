@@ -50,15 +50,15 @@
 <path fill="none" stroke="black" d="M606,-122.11C606,-141.34 606,-169 606,-169 606,-169 409.37,-169 409.37,-169"/>
 <polygon fill="black" stroke="black" points="409.37,-165.5 399.37,-169 409.37,-172.5 409.37,-165.5"/>
 </g>
-<!-- NgxInputGradientDirective -->
+<!-- NgxInputGradient -->
 <g id="node2" class="node">
-<title>NgxInputGradientDirective</title>
+<title>NgxInputGradient</title>
 <polygon fill="#8dd3c7" stroke="black" points="496.22,-122 493.22,-126 472.22,-126 469.22,-122 325.78,-122 325.78,-86 496.22,-86 496.22,-122"/>
-<text text-anchor="middle" x="411" y="-99.8" font-family="Times,serif" font-size="14.00">NgxInputGradientDirective</text>
+<text text-anchor="middle" x="411" y="-99.8" font-family="Times,serif" font-size="14.00">NgxInputGradient</text>
 </g>
-<!-- NgxInputGradientDirective&#45;&gt;NgxInputGradientModule -->
+<!-- NgxInputGradient&#45;&gt;NgxInputGradientModule -->
 <g id="edge2" class="edge">
-<title>NgxInputGradientDirective&#45;&gt;NgxInputGradientModule</title>
+<title>NgxInputGradient&#45;&gt;NgxInputGradientModule</title>
 <path fill="none" stroke="black" d="M362.37,-122.11C362.37,-122.11 362.37,-140.99 362.37,-140.99"/>
 <polygon fill="black" stroke="black" points="358.87,-140.99 362.37,-150.99 365.87,-140.99 358.87,-140.99"/>
 </g>
@@ -98,15 +98,15 @@
 <path fill="none" stroke="black" stroke-dasharray="5,2" d="M361.68,-187.11C361.68,-187.11 361.68,-205.99 361.68,-205.99"/>
 <polygon fill="black" stroke="black" points="358.18,-205.99 361.68,-215.99 365.18,-205.99 358.18,-205.99"/>
 </g>
-<!-- NgxInputGradientDirective  -->
+<!-- NgxInputGradient  -->
 <g id="node7" class="node">
-<title>NgxInputGradientDirective </title>
+<title>NgxInputGradient </title>
 <polygon fill="#fb8072" stroke="black" points="306.22,-252 131.78,-252 131.78,-216 306.22,-216 306.22,-252"/>
-<text text-anchor="middle" x="219" y="-229.8" font-family="Times,serif" font-size="14.00">NgxInputGradientDirective </text>
+<text text-anchor="middle" x="219" y="-229.8" font-family="Times,serif" font-size="14.00">NgxInputGradient </text>
 </g>
-<!-- NgxInputGradientModule&#45;&gt;NgxInputGradientDirective  -->
+<!-- NgxInputGradientModule&#45;&gt;NgxInputGradient  -->
 <g id="edge6" class="edge">
-<title>NgxInputGradientModule&#45;&gt;NgxInputGradientDirective </title>
+<title>NgxInputGradientModule&#45;&gt;NgxInputGradient </title>
 <path fill="none" stroke="black" stroke-dasharray="5,2" d="M271.51,-187.11C271.51,-187.11 271.51,-205.99 271.51,-205.99"/>
 <polygon fill="black" stroke="black" points="268.01,-205.99 271.51,-215.99 275.01,-205.99 268.01,-205.99"/>
 </g>

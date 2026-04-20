@@ -23,7 +23,7 @@ import { GradientStop, GradientType } from '../contracts/GradientStop';
 import { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../utils/build-gradient';
 import { DefaultGradients } from '../contracts/default-gradients';
 import { RangeSliderComponent } from 'ngx-input-color/shared';
-import { NgxInputColorDirective } from 'ngx-input-color/color-picker';
+import { NgxInputColor } from 'ngx-input-color/color-picker';
 
 @Component({
   selector: 'ngx-input-gradient',
@@ -41,7 +41,7 @@ import { NgxInputColorDirective } from 'ngx-input-color/color-picker';
   host: {
     '[class.dark]': 'theme=="dark"',
   },
-  imports: [FormsModule, RangeSliderComponent, NgxInputColorDirective],
+  imports: [FormsModule, RangeSliderComponent, NgxInputColor],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
   theme: 'light' | 'dark' | 'auto' = 'auto';

@@ -28,15 +28,15 @@ import { isValidGradient, parseGradient } from '../utils/build-gradient';
 @Directive({
   selector: '[ngxInputGradient]',
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradient), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputGradientDirective,
+      useExisting: NgxInputGradient,
     },
   ],
 })
-export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground = true;
   @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
   private _targetInput?: HTMLInputElement;

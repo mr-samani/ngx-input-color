@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgxInputBoxShadow } from 'ngx-input-color/box-shadow';
 
-import { OutputType, ColorInspector, NgxInputColorDirective } from 'ngx-input-color/color-picker';
-import { NgxInputGradientDirective } from 'ngx-input-color/gradient-picker';
+import { OutputType, ColorInspector, NgxInputColor } from 'ngx-input-color/color-picker';
+import { NgxInputGradient } from 'ngx-input-color/gradient-picker';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgxInputColorDirective, NgxInputGradientDirective],
+  imports: [FormsModule, NgxInputColor, NgxInputGradient, NgxInputBoxShadow],
 })
 export class AppComponent {
   public readonly $topColor: WritableSignal<string> = signal<string>('#fff');

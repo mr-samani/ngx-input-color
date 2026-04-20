@@ -75,7 +75,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-NgxInputBoxShadowModule-02c2f261f6bd0c6e70ab5799d2285bd029736e929ab1ed8c78261cb499a331928ef626418d3ce14544af2b07788e127ea258594d697ffb4756139909022decde"' :
                                         'id="xs-directives-links-module-NgxInputBoxShadowModule-02c2f261f6bd0c6e70ab5799d2285bd029736e929ab1ed8c78261cb499a331928ef626418d3ce14544af2b07788e127ea258594d697ffb4756139909022decde"' }>
                                         <li class="link">
-                                            <a href="directives/NgxInputBoxShadowDirective.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputBoxShadowDirective</a>
+                                            <a href="directives/NgxInputBoxShadow.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputBoxShadow</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -118,7 +118,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-NgxInputColorModule-9ecf8b6293e67c694f4c8536a40fe58e39ffc329e637d052af48d95263fa5803c20e011394f0e40179ba9514c0707bbc7dbbb001ab7a467c9a2fb5ff55a55928"' :
                                         'id="xs-directives-links-module-NgxInputColorModule-9ecf8b6293e67c694f4c8536a40fe58e39ffc329e637d052af48d95263fa5803c20e011394f0e40179ba9514c0707bbc7dbbb001ab7a467c9a2fb5ff55a55928"' }>
                                         <li class="link">
-                                            <a href="directives/NgxInputColorDirective.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputColorDirective</a>
+                                            <a href="directives/NgxInputColor.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputColor</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -149,7 +149,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <ul class="links collapse" ${ isNormalMode ? 'id="directives-links-module-NgxInputGradientModule-ff56384ff4e669653f32951f6fa988054d269247c47162f30372ce118ef429f0a02ad21c92c536d5d649ae117e714a9fc1fb65e1762c1b74d687f4c741675ff3"' :
                                         'id="xs-directives-links-module-NgxInputGradientModule-ff56384ff4e669653f32951f6fa988054d269247c47162f30372ce118ef429f0a02ad21c92c536d5d649ae117e714a9fc1fb65e1762c1b74d687f4c741675ff3"' }>
                                         <li class="link">
-                                            <a href="directives/NgxInputGradientDirective.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputGradientDirective</a>
+                                            <a href="directives/NgxInputGradient.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >NgxInputGradient</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -196,10 +196,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </div>
                             <ul class="links collapse " ${ isNormalMode ? 'id="directives-links"' : 'id="xs-directives-links"' }>
                                 <li class="link">
-                                    <a href="directives/NgxInputBoxShadowDirective.html" data-type="entity-link" >NgxInputBoxShadowDirective</a>
+                                    <a href="directives/NgxInputBoxShadow.html" data-type="entity-link" >NgxInputBoxShadow</a>
                                 </li>
                                 <li class="link">
-                                    <a href="directives/NgxInputGradientDirective.html" data-type="entity-link" >NgxInputGradientDirective</a>
+                                    <a href="directives/NgxInputGradient.html" data-type="entity-link" >NgxInputGradient</a>
                                 </li>
                             </ul>
                         </li>

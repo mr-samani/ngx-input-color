@@ -1,20 +1,15 @@
 <input ngxInputColor outputType="HEX" [ngModel]="$topColor()" (ngModelChange)="$topColor.set($event)" />
 
+<ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" />
+<p>{{ boxShadow }}</p>
 
+<input type="text" ngxInputBoxShadow [(ngModel)]="boxShadow" class="form-control" />
 
-<!-- <ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" /> 
-<p>{{ boxShadow }}</p> -->
+<div class="card" [style.box-shadow]="boxShadow"></div>
 
-<!-- <input type="text" ngxInputBoxShadow [(ngModel)]="boxShadow" class="form-control" />
-
-<div class="card" [style.box-shadow]="boxShadow"></div> -->
-
-<!-- 
 <ngx-input-gradient [(ngModel)]="gradient"></ngx-input-gradient>
 <p>{{ gradient }}</p>
 
-
--->
 <input ngxInputGradient [(ngModel)]="gradient" class="form-control" />
 <button type="button" (click)="gradient = ''">x</button>
 <p>{{ gradient }}</p>

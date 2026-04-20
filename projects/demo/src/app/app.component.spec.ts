@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NgxInputColorDirective } from 'ngx-input-color';
+import { NgxInputColor } from 'ngx-input-color/color-picker';
 
 descrbe('Sample App Component', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -12,7 +12,7 @@ descrbe('Sample App Component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, FormsModule, NgxInputColorDirective],
+      imports: [AppComponent, FormsModule, NgxInputColor],
       providers: [
         provideZonelessChangeDetection(),
         // provideUserStoreServiceMock(),

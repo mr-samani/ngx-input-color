@@ -33,17 +33,17 @@ import { DOCUMENT } from '@angular/common';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NgxInputColorDirective),
+      useExisting: forwardRef(() => NgxInputColor),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => NgxInputColorDirective),
+      useExisting: forwardRef(() => NgxInputColor),
       multi: true,
     },
   ],
 })
-export class NgxInputColorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackgroundColor = true;
   @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
   @Input() simpleMode = false;
