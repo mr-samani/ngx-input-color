@@ -24,7 +24,8 @@ import {
 } from '@angular/forms';
 import { ColorInspector } from '../contracts/ColorInspector.enum';
 import { NgxInputColorComponent } from '../components/ngx-input-color.component';
-import { NgxColor, OutputType } from '../utils/color-helper';
+import { NgxColor } from '../utils/color-helper';
+import { OutputType } from '../contracts/OutputType';
 import { DOCUMENT } from '@angular/common';
 
 @Directive({

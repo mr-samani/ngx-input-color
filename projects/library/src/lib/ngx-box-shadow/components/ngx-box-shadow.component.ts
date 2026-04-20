@@ -23,9 +23,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { parseBoxShadowToPx, stringifyBoxShadow } from '../utils/box-shadow';
-import { IPosition } from '../../../shared/IPosition';
-import { getOffsetPosition } from '../../../shared/get-offset-position';
-import { NgxInputColorDirective } from '@ngx-input-color';
+import { IPosition, getOffsetPosition } from '@ngx-input-color/shared';
 
 @Component({
   selector: 'ngx-box-shadow',
@@ -40,7 +38,9 @@ import { NgxInputColorDirective } from '@ngx-input-color';
       useExisting: NgxBoxShadowComponent,
     },
   ],
-  imports: [FormsModule, NgxInputColorDirective],
+  imports: [
+    FormsModule,
+  ],
 })
 export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   theme: 'light' | 'dark' | 'auto' = 'light';

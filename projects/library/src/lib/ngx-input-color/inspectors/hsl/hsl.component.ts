@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-hsl',
   templateUrl: './hsl.component.html',
   styleUrls: ['./hsl.component.scss'],
-  imports: [SliderComponent, FormsModule],
+  imports: [FormsModule,SliderComponent],
 })
 export class HslComponent implements OnInit {
   hue: number = 0;

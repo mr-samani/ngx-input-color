@@ -5,21 +5,21 @@
   "projects": {
     "ngx-input-color": {
       "projectType": "library",
-      "root": "projects/ngx-input-color",
-      "sourceRoot": "projects/ngx-input-color/src",
+      "root": "projects/library",
+      "sourceRoot": "projects/library/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "options": {
-            "project": "projects/ngx-input-color/ng-package.json"
+            "project": "projects/library/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-input-color/tsconfig.lib.prod.json"
+              "tsConfig": "projects/library/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ngx-input-color/tsconfig.lib.json"
+              "tsConfig": "projects/library/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,7 +27,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "tsConfig": "projects/ngx-input-color/tsconfig.spec.json",
+            "tsConfig": "projects/library/tsconfig.spec.json",
             "polyfills": ["zone.js", "zone.js/testing"]
           }
         },

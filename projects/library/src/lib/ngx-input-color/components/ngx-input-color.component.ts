@@ -10,7 +10,8 @@ import {
   Output,
 } from '@angular/core';
 import { ColorFormats } from '../contracts/ColorFormats.enum';
-import { NgxColor, OutputType } from '../utils/color-helper';
+import { NgxColor } from '../utils/color-helper';
+import { OutputType } from '../contracts/OutputType';
 import {
   AbstractControl,
   ControlValueAccessor,

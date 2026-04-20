@@ -1,6 +1,6 @@
 {
   "name": "ngx-input-color",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "Angular color input component and color picker (with HSL, HSV, RGB, CMYK, HEX, alpha, eye-dropper, etc)",
   "author": "Mohammadreza Samani <mr.samani1368@gmail.com>",
   "license": "MIT",
@@ -27,23 +27,11 @@
     "eye-dropper"
   ],
   "peerDependencies": {
-    "@angular/common": ">=18.0.0",
-    "@angular/core": ">=18.0.0"
+    "@angular/common": ">=21.0.0",
+    "@angular/core": ">=21.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false,
-  "module": "fesm2022/ngx-input-color.mjs",
-  "fesm2022": "fesm2022/ngx-input-color.mjs",
-  "typings": "ngx-input-color.d.ts",
-  "exports": {
-    ".": {
-      "types": "./ngx-input-color.d.ts",
-      "default": "./fesm2022/ngx-input-color.mjs"
-    }
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+  "sideEffects": false
 }

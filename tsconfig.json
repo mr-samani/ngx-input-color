@@ -10,10 +10,14 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "paths": {
-      "@ngx-input-color/shared": ["./projects/ngx-input-color/src/shared"],
-      "@ngx-input-color": ["./projects/ngx-input-color/src/lib/ngx-input-color"],
-      "@ngx-box-shadow": ["./projects/ngx-input-color/src/lib/ngx-box-shadow"],
-      "@ngx-input-gradient": ["./projects/ngx-input-color/src/lib/ngx-input-gradient"]
+      "@ngx-input-color/shared/*": ["./projects/library/src/shared/*"],
+      "@ngx-input-color/shared": ["./projects/library/src/shared"],
+      "@ngx-input-color/*": ["./projects/library/src/lib/ngx-input-color/*"],
+      "@ngx-input-color": ["./projects/library/src/lib/ngx-input-color"],
+      "@ngx-box-shadow/*": ["./projects/library/src/lib/ngx-box-shadow/*"],
+      "@ngx-box-shadow": ["./projects/library/src/lib/ngx-box-shadow"],
+      "@ngx-input-gradient/*": ["./projects/library/src/lib/ngx-input-gradient/*"],
+      "@ngx-input-gradient": ["./projects/library/src/lib/ngx-input-gradient"]
     },
     "experimentalDecorators": true,
     "importHelpers": true,

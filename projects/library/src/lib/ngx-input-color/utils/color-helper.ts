@@ -17,9 +17,8 @@ import {
 } from './conversion';
 import { colorNames } from './css-color-names';
 import { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from '../contracts/interfaces';
-export type ColorInput = string | CMYK | HSLA | HSVA | RGBA | NgxColor;
-export type OutputType = 'CMYK' | 'HSL' | 'HSV' | 'RGB' | 'HEX';
-
+import { OutputType } from '../contracts/OutputType';
+import { ColorInput } from '../contracts/ColorInput';
 export class NgxColor {
   private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };
   private _name: string = '';

@@ -1,5 +1,4 @@
 import { NgxColor } from './color-helper';
-import { RGBA, HSLA, HSVA, CMYK } from '../contracts/interfaces';
 
 function expectColorCloseTo(actual: any, expected: any, precision = 0) {
   for (const key of Object.keys(expected)) {

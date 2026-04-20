@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { OutputType } from '../../../ngx-input-color/src/lib/ngx-input-color/utils/color-helper';
-import { ColorInspector } from '../../../ngx-input-color/src/lib/ngx-input-color/contracts/ColorInspector.enum';
+import { OutputType, ColorInspector } from '@ngx-input-color';
 
 import { NgxInputColorDirective } from '@ngx-input-color';
+import { NgxInputGradientDirective } from '@ngx-input-gradient';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgxInputColorDirective],
+  imports: [FormsModule, NgxInputColorDirective, NgxInputGradientDirective],
 })
 export class AppComponent {
   public readonly $topColor: WritableSignal<string> = signal<string>('#fff');

@@ -19,8 +19,7 @@ import {
   Validator,
 } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
-// import { NgxBoxShadowComponent } from '../components/ngx-box-shadow.component';
-import { NgxBoxShadowComponent } from '@ngx-box-shadow';
+import { NgxBoxShadowComponent } from '../components/ngx-box-shadow.component';
 
 @Directive({
   selector: '[ngxInputBoxShadow]',

@@ -9,7 +9,7 @@
     "test": "ng test",
     "build:lib": "ng build ngx-input-color",
     "publish:npm": "cd dist/ngx-input-color && npm publish",
-    "copy-readme": "copy projects\\ngx-input-color\\README.md projects\\storybook\\README.imported.md",
+    "copy-readme": "copy projects\\library\\README.md projects\\storybook\\README.imported.md",
     "storybook": "npm run copy-readme && ng run ngx-input-color:storybook",
     "compdoc:serve": "compodoc -p tsconfig.compodoc.json -s",
     "compdoc:exportJson": "compodoc -p tsconfig.compodoc.json -e --exportFormat json",
