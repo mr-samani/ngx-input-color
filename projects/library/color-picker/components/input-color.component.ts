@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -28,6 +29,7 @@ import { PickerComponent } from '../inspectors/picker/picker.component';
 import { CmykComponent } from '../inspectors/cmyk/cmyk.component';
 import { HslComponent } from '../inspectors/hsl/hsl.component';
 import { RgbComponent } from '../inspectors/rgb/rgb.component';
+import { BrowserService } from 'ngx-input-color/shared';
 declare const EyeDropper: any;
 @Component({
   standalone: true,
@@ -52,7 +54,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   theme: 'light' | 'dark' | 'auto' = 'auto';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
-      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
     } else {
       this.theme = val;
     }
@@ -104,15 +106,14 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   private _onTouched = () => {};
   /**@ignore */
   private _onValidateChange = () => {};
+  browserService = inject(BrowserService);
+
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;
   }
 
   /** @ignore */
   ngOnInit(): void {
-    if (this.theme == 'auto') {
-      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
   }
   /** @ignore */
   ngOnDestroy(): void {}

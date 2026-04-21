@@ -1,0 +1,7 @@
+<input type="text" ngxInputBoxShadow [(ngModel)]="boxShadow" class="form-control" />
+
+<div class="card" [style.box-shadow]="boxShadow"></div>
+
+<p>inline:</p>
+<ngx-box-shadow [(ngModel)]="boxShadow" class="form-control" />
+<p>{{ boxShadow }}</p>

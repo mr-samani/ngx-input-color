@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -22,7 +23,7 @@ import {
 import { GradientStop, GradientType } from '../contracts/GradientStop';
 import { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../utils/build-gradient';
 import { DefaultGradients } from '../contracts/default-gradients';
-import { RangeSliderComponent } from 'ngx-input-color/shared';
+import { BrowserService, RangeSliderComponent } from 'ngx-input-color/shared';
 import { NgxInputColor } from 'ngx-input-color/color-picker';
 
 @Component({
@@ -47,7 +48,7 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   theme: 'light' | 'dark' | 'auto' = 'auto';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
-      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
     } else {
       this.theme = val;
     }
@@ -69,13 +70,12 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   _onTouched = () => {};
   _onValidateChange = () => {};
 
-  @ViewChild('rangeSlider', { static: true }) rangeSlider?: any; // RangeSliderComponent;
+  @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;
+  browserService = inject(BrowserService);
+
   constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    if (this.theme == 'auto') {
-      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
     this.setDefaultGradients();
   }
   ngOnDestroy(): void {}

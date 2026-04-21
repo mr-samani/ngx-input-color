@@ -12,6 +12,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  inject,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -25,6 +26,7 @@ import {
 import { parseBoxShadowToPx, stringifyBoxShadow } from '../utils/box-shadow';
 import { IPosition, getOffsetPosition } from 'ngx-input-color/shared';
 import { NgxInputColor } from 'ngx-input-color/color-picker';
+import { BrowserService } from 'ngx-input-color/shared';
 
 @Component({
   selector: 'ngx-box-shadow',
@@ -45,7 +47,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
   theme: 'light' | 'dark' | 'auto' = 'light';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
-      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      this.theme = this.browserService.prefersDarkMode  ? 'dark' : 'light';
     } else {
       this.theme = val;
     }
@@ -76,6 +78,8 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
   @ViewChild('pad', { static: true }) pad!: ElementRef<HTMLDivElement>;
   @ViewChild('thumb', { static: true }) thumb!: ElementRef<HTMLDivElement>;
 
+  browserService = inject(BrowserService);
+
   constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {}
@@ -103,7 +107,7 @@ export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, 
     this.resetPosition();
     if (value) {
       const boxShadow = parseBoxShadowToPx(value);
-      console.log(boxShadow);
+      // console.log(boxShadow);
       if (boxShadow) {
         this.value = { x: boxShadow.offsetX, y: boxShadow.offsetY };
         this.blur = boxShadow.blurRadius;

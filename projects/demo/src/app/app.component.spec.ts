@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { NgxInputColor } from 'ngx-input-color/color-picker';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-describe('MyComponent', () => {
+describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, FormsModule, NgxInputColor],
-      providers: [
-        // provideZonelessChangeDetection(),
-      ],
+      imports: [AppComponent, RouterTestingModule],
+      providers: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
