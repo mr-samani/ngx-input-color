@@ -1,5 +1,5 @@
 {
-  "extends": "../../ngx-input-color/tsconfig.lib.json",
+  "extends": "../../library/tsconfig.lib.json",
   "compilerOptions": {
     "types": ["node"],
     "allowSyntheticDefaultImports": true,

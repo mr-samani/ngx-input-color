@@ -1,1 +1,1 @@
-projects/ngx-input-color/README.md
+projects/library/README.md

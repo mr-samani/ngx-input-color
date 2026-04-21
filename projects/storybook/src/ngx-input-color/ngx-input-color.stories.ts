@@ -1,10 +1,7 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgxInputColorComponent } from '../../../ngx-input-color/src/public-api';
-import { NgxInputColorModule } from '../../../ngx-input-color/src/ngx-input-color.module';
-import { EnumToArrayPipe } from '../../../ngx-input-color/src/pipes/enum-to-array.pipe';
-import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspector.enum';
+import { NgxInputColorComponent, EnumToArrayPipe, ColorInspector } from 'ngx-input-color/color-picker';
 
 const meta: Meta<NgxInputColorComponent> = {
   title: 'Demo/NgxInputColor',
@@ -32,7 +29,7 @@ const meta: Meta<NgxInputColorComponent> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, FormsModule, EnumToArrayPipe, NgxInputColorModule],
+      imports: [CommonModule, FormsModule, EnumToArrayPipe],
     }),
   ],
   render: (args) => ({

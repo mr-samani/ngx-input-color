@@ -1,38 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-
-import {
-  NgxInputBoxShadowModule,
-  NgxInputColorModule,
-  NgxInputGradientModule,
-} from '../../../ngx-input-color/src/public-api';
-import { OutputType } from '../../../ngx-input-color/src/utils/color-helper';
-import { ColorInspector } from '../../../ngx-input-color/src/models/ColorInspector.enum';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [NgxInputColorModule, NgxInputGradientModule, FormsModule, NgxInputBoxShadowModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterModule],
 })
-export class AppComponent {
-  public readonly $topColor: WritableSignal<string> = signal<string>('#fff');
-
-  
-  color = 'pink';
-
-  theme: 'light' | 'dark' | 'auto' = 'auto';
-  outputType: OutputType = 'HEX';
-  simpleMode = false;
-  inspector: ColorInspector = ColorInspector.Picker;
-
-  //gradient = ' radial-gradient(circle, rgb(230, 218, 218) 0%, rgb(39, 64, 70) 100%)'; // 'linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)';
-  gradient = 'linear-gradient(90deg, #2A9FD3 0%, #8B1ACF 100%)';
-  boxShadow = '50px 150px 10px 0px red';
-
-  public get ColorInspector(): typeof ColorInspector {
-    return ColorInspector;
-  }
-}
+export class AppComponent {}

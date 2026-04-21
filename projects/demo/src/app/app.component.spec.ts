@@ -1,36 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { NgxInputColorModule } from '../../../ngx-input-color/src/public-api';
-import { CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
-descrbe('Sample App Component', () => {
+describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        AppComponent,
-        FormsModule,
-         ...
-        NgxInputColorModule
-      ],
-      providers: [
-        provideZonelessChangeDetection(),
-       // provideUserStoreServiceMock(),
-        provideHttpClient(),
-        provideHttpClientTesting()
-       
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      imports: [AppComponent, RouterTestingModule],
+      providers: [],
     }).compileComponents();
 
-      fixture = TestBed.createComponent(AppComponent);
-      component = fixture.componentInstance;
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });
-
- 

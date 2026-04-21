@@ -108,7 +108,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Directives</li>
-  <li class="breadcrumb-item" >NgxInputBoxShadowDirective</li>
+  <li class="breadcrumb-item" >NgxInputBoxShadow</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -157,7 +157,7 @@
                         <td class="col-md-9">
                             <code>
                                 )
-                                NgxInputBoxShadowDirective
+                                NgxInputBoxShadow
                             </code>
                         </td>
                     </tr>
@@ -1427,15 +1427,15 @@ import { NgxBoxShadowComponent } from &#x27;../lib/ngx-box-shadow/ngx-box-shadow
 @Directive({
   selector: &#x27;[ngxInputBoxShadow]&#x27;,
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputBoxShadowDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputBoxShadow), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputBoxShadowDirective,
+      useExisting: NgxInputBoxShadow,
     },
   ],
 })
-export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground &#x3D; true;
 
   private pickerComponentRef?: ComponentRef&lt;NgxBoxShadowComponent&gt;;
@@ -1622,7 +1622,7 @@ export class NgxInputBoxShadowDirective implements OnDestroy, ControlValueAccess
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'directive';
-            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputBoxShadowDirective.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputBoxShadow.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

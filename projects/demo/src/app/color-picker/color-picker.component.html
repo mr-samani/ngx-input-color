@@ -1,0 +1,75 @@
+<input
+  type="text"
+  [(ngModel)]="color"
+  ngxInputColor
+  class="form-control"
+  [simpleMode]="simpleMode"
+  [outputType]="outputType"
+  [defaultInspector]="inspector"
+  [theme]="theme" />
+<button type="button" (click)="color = ''">x</button>
+<div>
+  <label>
+    <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
+    Simple Mode
+  </label>
+</div>
+
+Output:
+<div class="radio-group">
+  <label>
+    <input type="radio" name="outputtype" value="HEX" [(ngModel)]="outputType" />
+    HEX
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="RGB" [(ngModel)]="outputType" />
+    RGB
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="HSV" [(ngModel)]="outputType" />
+    HSV
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="HSL" [(ngModel)]="outputType" />
+    HSL
+  </label>
+  <label>
+    <input type="radio" name="outputtype" value="CMYK" [(ngModel)]="outputType" />
+    CMYK
+  </label>
+</div>
+Inspector:
+<div class="radio-group">
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.Picker" [(ngModel)]="inspector" />
+    Picker
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.RGB" [(ngModel)]="inspector" />
+    RGB
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.HSL" [(ngModel)]="inspector" />
+    HSL
+  </label>
+  <label>
+    <input type="radio" name="inspector" [value]="ColorInspector.CMYK" [(ngModel)]="inspector" />
+    CMYK
+  </label>
+</div>
+Theme:
+<div class="radio-group">
+  <label>
+    <input type="radio" name="theme" value="light" [(ngModel)]="theme" />
+    Light
+  </label>
+  <label>
+    <input type="radio" name="theme" value="dark" [(ngModel)]="theme" />
+    Dark
+  </label>
+  <label>
+    <input type="radio" name="theme" value="auto" [(ngModel)]="theme" />
+    Auto
+  </label>
+</div>
+<p>{{ color }}</p>

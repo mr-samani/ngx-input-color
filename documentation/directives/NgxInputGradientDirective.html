@@ -108,7 +108,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Directives</li>
-  <li class="breadcrumb-item" >NgxInputGradientDirective</li>
+  <li class="breadcrumb-item" >NgxInputGradient</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -158,7 +158,7 @@
                         <td class="col-md-9">
                             <code>
                                 )
-                                NgxInputGradientDirective
+                                NgxInputGradient
                             </code>
                         </td>
                     </tr>
@@ -1818,15 +1818,15 @@ import { isValidGradient, parseGradient } from &#x27;../utils/build-gradient&#x2
 @Directive({
   selector: &#x27;[ngxInputGradient]&#x27;,
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputGradientDirective), multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() &#x3D;&gt; NgxInputGradient), multi: true },
     {
       provide: NG_VALIDATORS,
       multi: true,
-      useExisting: NgxInputGradientDirective,
+      useExisting: NgxInputGradient,
     },
   ],
 })
-export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   @Input() setInputBackground &#x3D; true;
   @Input() theme: &#x27;light&#x27; | &#x27;dark&#x27; | &#x27;auto&#x27; &#x3D; &#x27;auto&#x27;;
   private _targetInput?: HTMLInputElement;
@@ -2085,7 +2085,7 @@ export class NgxInputGradientDirective implements AfterViewInit, OnDestroy, Cont
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'directive';
-            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputGradientDirective.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'NgxInputGradient.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
