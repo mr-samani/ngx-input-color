@@ -42,38 +42,59 @@ pnpm add ngx-input-color
 
 ## 🛠️ Usage
 
-### 1. Import the Module
+### Import in standalone component or module
 
 ```typescript
-import { NgxInputColorModule } from 'ngx-input-color';
+
+import { NgxInputColor } from 'ngx-input-color/color-picker';
+
+@Component({
+  selector: 'app-component',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [FormsModule, NgxInputColor,...],
+})
+...
 ```
 
-### 2. Input Mode (Popup)
+### Input Mode (Popup)
 
-#### Color Picker Input
+- Color Picker Input
 
 ```html
 <input ngxInputColor [(ngModel)]="color" />
 <span>Selected: {{ color }}</span>
 ```
 
-#### Gradient Picker Input
+ - Gradient Picker Input
 
-```html
-<input ngxInputGradient [(ngModel)]="gradient" />
-<span>Selected: {{ gradient }}</span>
+```typescript
+import { NgxInputGradient } from 'ngx-input-color/gradient-picker';
+
+@Component({
+  selector: 'app-component',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [FormsModule, NgxInputGradient,...],
+  template:`
+  <input ngxInputGradient [(ngModel)]="gradient" />
+  <span>Selected: {{ gradient }}</span>
+  `
+})
+...
+
 ```
 
-### 3. Inline Mode (Always Visible)
+### Inline Mode (Always Visible)
 
-#### Inline Color Picker
+- Inline Color Picker
 
 ```html
 <ngx-input-color [(ngModel)]="inlineColor" [simpleMode]="false"></ngx-input-color>
 <span>Selected: {{ inlineColor }}</span>
 ```
 
-#### Inline Gradient Picker
+- Inline Gradient Picker
 
 ```html
 <ngx-input-gradient [(ngModel)]="inlineGradient"></ngx-input-gradient>
@@ -156,4 +177,6 @@ MIT
 
 ---
 
-> Developed by [Mohammadreza Samani](https://github.com/mr-samani)
+> Developer: [Mohammadreza Samani](https://github.com/mr-samani)
+
+> Made With 🧡 From IRAN

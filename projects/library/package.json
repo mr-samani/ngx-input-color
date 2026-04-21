@@ -16,6 +16,8 @@
     "angular",
     "color",
     "color-picker",
+    "gradient-picker",
+    "box-shadow",
     "input",
     "ngx",
     "hsl",
