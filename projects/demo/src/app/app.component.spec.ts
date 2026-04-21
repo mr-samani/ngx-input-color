@@ -1,9 +1,7 @@
-import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { NgxInputColor } from 'ngx-input-color/color-picker';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { NgxInputColor } from 'ngx-input-color/color-picker';
 
 describe('MyComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -13,7 +11,7 @@ describe('MyComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent, FormsModule, NgxInputColor],
       providers: [
-        provideZonelessChangeDetection(), // ← Zoneless
+        // provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

@@ -6,7 +6,7 @@
     "ngx-input-color": {
       "projectType": "library",
       "root": "projects/library",
-      "sourceRoot": "projects/library/src",
+      "sourceRoot": "projects/library",
       "prefix": "lib",
       "architect": {
         "build": {
@@ -25,11 +25,7 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "tsConfig": "projects/library/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
+          "builder": "@angular/build:unit-test"
         },
         "storybook": {
           "builder": "@storybook/angular:start-storybook",
@@ -136,20 +132,7 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/demo/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/demo/public"
-              }
-            ],
-            "styles": ["projects/demo/src/styles.scss"],
-            "scripts": []
-          }
+          "builder": "@angular/build:unit-test"
         }
       }
     }
