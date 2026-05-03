@@ -13,6 +13,7 @@
   [step]="1"
   (change)="generateColor()"
   background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)"></slider>
+@if(useAlphaChannel){
 <slider
   [(ngModel)]="alpha"
   [min]="0"
@@ -21,3 +22,4 @@
   (change)="generateColor()"
   [isBgTransparent]="true"
   [background]="'linear-gradient(to right,transparent,' + alphaBgColor + ')'"></slider>
+}

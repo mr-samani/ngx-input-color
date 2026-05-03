@@ -28,6 +28,8 @@ export class HslComponent implements OnInit {
     this.alpha = hsla.a ?? 1;
     this.baseColor = c.toHexString(false);
   }
+  
+  @Input() useAlphaChannel: boolean = true;
   @Output() colorChange = new EventEmitter<NgxColor | undefined>();
   constructor() {}
 
