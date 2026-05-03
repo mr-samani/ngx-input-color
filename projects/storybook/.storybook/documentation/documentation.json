@@ -1358,12 +1358,12 @@
         },
         {
             "name": "NgxColor",
-            "id": "class-NgxColor-b791e728bd1d67c420e022e52ec062edd71cb3b2365bc242d8d6dc6e07f4780e550362a51359295160b6059b9544e5ecd2a83e378285350594990fdea4e01a81",
+            "id": "class-NgxColor-028d562f8b6a213f7c66da2bba58938be6714a98ddd09f521231dec24657d3669bcc35aeacb201545e8b94fff384caf9e77e0dad589a74de22df34b8e326e3ae",
             "file": "projects/library/color-picker/utils/color-helper.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {\r\n  cmykToRgb,\r\n  hexToRgb,\r\n  hslToRgba,\r\n  hsvToRgb,\r\n  parseCmykString,\r\n  parseHslString,\r\n  parseHsvString,\r\n  parseRgbString,\r\n  rgbaToHex,\r\n  rgbToCmyk,\r\n  rgbToCmykString,\r\n  rgbToHsl,\r\n  rgbToHslaString,\r\n  rgbToHsv,\r\n  rgbToHsvString,\r\n} from './conversion';\r\nimport { colorNames } from './css-color-names';\r\nimport { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from '../contracts/color-interface';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { ColorInput } from '../contracts/ColorInput';\r\nexport class NgxColor {\r\n  private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };\r\n  private _name: string = '';\r\n\r\n  constructor(input?: ColorInput) {\r\n    if (!input) return;\r\n    if (input instanceof NgxColor) {\r\n      this._rgb = { ...input._rgb };\r\n      this._name = input._name;\r\n      return;\r\n    }\r\n    if (typeof input === 'object') {\r\n      if ('r' in input && 'g' in input && 'b' in input) {\r\n        this._rgb = { r: +input.r, g: +input.g, b: +input.b, a: (input as any).a !== undefined ? +input.a : 1 };\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'l' in input) {\r\n        this._rgb = NgxColor.hslaToRgba(input as HSLA);\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'v' in input) {\r\n        this._rgb = NgxColor.hsvaToRgba(input as HSVA);\r\n        return;\r\n      }\r\n      if ('c' in input && 'm' in input && 'y' in input && 'k' in input) {\r\n        this._rgb = NgxColor.cmykToRgba(input as CMYK);\r\n        return;\r\n      }\r\n    }\r\n    if (typeof input === 'string') {\r\n      const name = input.trim().toLowerCase();\r\n      if (colorNames[name]) {\r\n        this._rgb = hexToRgb(colorNames[name]);\r\n        this._name = name;\r\n        return;\r\n      } else if (/^#?[0-9a-f]{3,8}$/i.test(name)) {\r\n        this._rgb = hexToRgb(name);\r\n        return;\r\n      }\r\n      if (name.includes('rgb')) {\r\n        this._rgb = parseRgbString(name);\r\n        return;\r\n      }\r\n      if (name.includes('hsl')) {\r\n        this._rgb = NgxColor.hslaToRgba(parseHslString(name));\r\n        return;\r\n      }\r\n      if (name.includes('hsv')) {\r\n        this._rgb = NgxColor.hsvaToRgba(parseHsvString(name));\r\n        return;\r\n      }\r\n      if (name.includes('cmyk')) {\r\n        this._rgb = NgxColor.cmykToRgba(parseCmykString(name));\r\n        return;\r\n      }\r\n      throw new Error('Unknown color string: ' + input);\r\n    }\r\n  }\r\n\r\n  get isValid(): boolean {\r\n    return (\r\n      typeof this._rgb.r === 'number' &&\r\n      typeof this._rgb.g === 'number' &&\r\n      typeof this._rgb.b === 'number' &&\r\n      !isNaN(this._rgb.r) &&\r\n      !isNaN(this._rgb.g) &&\r\n      !isNaN(this._rgb.b)\r\n    );\r\n  }\r\n\r\n  async name() {\r\n    if (this._name) return this._name;\r\n    const hex = this.toHexString();\r\n    for (const [n, h] of Object.entries(colorNames)) {\r\n      if (h.toLowerCase() === hex.toLowerCase()) return n;\r\n    }\r\n    return '';\r\n  }\r\n\r\n  toRgb(): RGBA {\r\n    return this._rgb;\r\n  }\r\n\r\n  toRgbString(): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a === 1\r\n      ? `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`\r\n      : `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${+a.toFixed(3)})`;\r\n  }\r\n\r\n  toHexString(allowAlpha = true): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return rgbaToHex(r, g, b, a, allowAlpha && a < 1);\r\n  }\r\n\r\n  toHsl(): HSLA {\r\n    return NgxColor.rgbToHsla(this.toRgb());\r\n  }\r\n\r\n  toHsv(): HSVA {\r\n    return NgxColor.rgbToHsva(this.toRgb());\r\n  }\r\n\r\n  toCmyk(): CMYK {\r\n    return NgxColor.rgbToCmyk(this.toRgb());\r\n  }\r\n\r\n  static cmykToRgba(cmyk: CMYK): RGBA {\r\n    const { c, m, y, k } = cmyk;\r\n    return { ...cmykToRgb(c, m, y, k), a: (cmyk as any).a !== undefined ? +(cmyk as any).a : 1 };\r\n  }\r\n\r\n  static rgbToCmyk(rgba: RGBA): CMYK {\r\n    const { r, g, b } = rgba;\r\n    return rgbToCmyk(r, g, b);\r\n  }\r\n\r\n  static rgbToHsla(rgba: RGBA): HSLA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsl(r, g, b), a };\r\n  }\r\n\r\n  static rgbToHsva(rgba: RGBA): HSVA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsv(r, g, b), a };\r\n  }\r\n\r\n  static hsvaToRgba(hsva: HSVA): RGBA {\r\n    const { h, s, v, a } = hsva;\r\n    return { ...hsvToRgb(h, s, v), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  static hslaToRgba(hsla: HSLA): RGBA {\r\n    const { h, s, l, a } = hsla;\r\n    return { ...hslToRgba(h, s, l), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  equals(other?: NgxColor): boolean {\r\n    if (!other) return false;\r\n    return this.toHexString().toLowerCase() === other.toHexString().toLowerCase();\r\n  }\r\n\r\n  isDark(): boolean {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a < 0.5 ? false : 0.299 * r + 0.587 * g + 0.114 * b < 128;\r\n  }\r\n\r\n  isLight(): boolean {\r\n    return !this.isDark();\r\n  }\r\n\r\n  async getOutputResult(outputType: OutputType): Promise<string> {\r\n    const { r, g, b, a } = this._rgb;\r\n\r\n    switch (outputType) {\r\n      case 'CMYK':\r\n        return rgbToCmykString(r, g, b);\r\n\r\n      case 'HSL':\r\n        return rgbToHslaString(r, g, b, a);\r\n\r\n      case 'HSV':\r\n        return rgbToHsvString(r, g, b, a);\r\n\r\n      case 'RGB':\r\n        return a < 1 ? `rgba(${r}, ${g}, ${b}, ${+a.toFixed(2)})` : `rgb(${r}, ${g}, ${b})`;\r\n\r\n      case 'HEX':\r\n        return this.toHexString(true);\r\n\r\n      default:\r\n        let name = await this.name();\r\n        return name ?? this.toHexString(true);\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  cmykToRgb,\r\n  hexToRgb,\r\n  hslToRgba,\r\n  hsvToRgb,\r\n  parseCmykString,\r\n  parseHslString,\r\n  parseHsvString,\r\n  parseRgbString,\r\n  rgbaToHex,\r\n  rgbToCmyk,\r\n  rgbToCmykString,\r\n  rgbToHsl,\r\n  rgbToHslaString,\r\n  rgbToHsv,\r\n  rgbToHsvString,\r\n} from './conversion';\r\nimport { colorNames } from './css-color-names';\r\nimport { CMYK, HSLA, HSVA, RGBA } from '../contracts/color-interface';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { ColorInput } from '../contracts/ColorInput';\r\nexport class NgxColor {\r\n  private _rgb: RGBA = { r: 0, g: 0, b: 0, a: 1 };\r\n  private _name: string = '';\r\n\r\n  constructor(input?: ColorInput) {\r\n    if (!input) return;\r\n    if (input instanceof NgxColor) {\r\n      this._rgb = { ...input._rgb };\r\n      this._name = input._name;\r\n      return;\r\n    }\r\n    if (typeof input === 'object') {\r\n      if ('r' in input && 'g' in input && 'b' in input) {\r\n        this._rgb = { r: +input.r, g: +input.g, b: +input.b, a: (input as any).a !== undefined ? +input.a : 1 };\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'l' in input) {\r\n        this._rgb = NgxColor.hslaToRgba(input as HSLA);\r\n        return;\r\n      }\r\n      if ('h' in input && 's' in input && 'v' in input) {\r\n        this._rgb = NgxColor.hsvaToRgba(input as HSVA);\r\n        return;\r\n      }\r\n      if ('c' in input && 'm' in input && 'y' in input && 'k' in input) {\r\n        this._rgb = NgxColor.cmykToRgba(input as CMYK);\r\n        return;\r\n      }\r\n    }\r\n    if (typeof input === 'string') {\r\n      const name = input.trim().toLowerCase();\r\n      if (colorNames[name]) {\r\n        this._rgb = hexToRgb(colorNames[name]);\r\n        this._name = name;\r\n        return;\r\n      } else if (/^#?[0-9a-f]{3,8}$/i.test(name)) {\r\n        this._rgb = hexToRgb(name);\r\n        return;\r\n      }\r\n      if (name.includes('rgb')) {\r\n        this._rgb = parseRgbString(name);\r\n        return;\r\n      }\r\n      if (name.includes('hsl')) {\r\n        this._rgb = NgxColor.hslaToRgba(parseHslString(name));\r\n        return;\r\n      }\r\n      if (name.includes('hsv')) {\r\n        this._rgb = NgxColor.hsvaToRgba(parseHsvString(name));\r\n        return;\r\n      }\r\n      if (name.includes('cmyk')) {\r\n        this._rgb = NgxColor.cmykToRgba(parseCmykString(name));\r\n        return;\r\n      }\r\n      throw new Error('Unknown color string: ' + input);\r\n    }\r\n  }\r\n\r\n  get isValid(): boolean {\r\n    return (\r\n      typeof this._rgb.r === 'number' &&\r\n      typeof this._rgb.g === 'number' &&\r\n      typeof this._rgb.b === 'number' &&\r\n      !isNaN(this._rgb.r) &&\r\n      !isNaN(this._rgb.g) &&\r\n      !isNaN(this._rgb.b)\r\n    );\r\n  }\r\n\r\n  async name() {\r\n    if (this._name) return this._name;\r\n    const hex = this.toHexString();\r\n    for (const [n, h] of Object.entries(colorNames)) {\r\n      if (h.toLowerCase() === hex.toLowerCase()) return n;\r\n    }\r\n    return '';\r\n  }\r\n\r\n  toRgb(): RGBA {\r\n    return this._rgb;\r\n  }\r\n\r\n  toRgbString(): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a === 1\r\n      ? `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`\r\n      : `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${+a.toFixed(3)})`;\r\n  }\r\n\r\n  toHexString(allowAlpha = true): string {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return rgbaToHex(r, g, b, a, allowAlpha && a < 1);\r\n  }\r\n\r\n  toHsl(): HSLA {\r\n    return NgxColor.rgbToHsla(this.toRgb());\r\n  }\r\n\r\n  toHsv(): HSVA {\r\n    return NgxColor.rgbToHsva(this.toRgb());\r\n  }\r\n\r\n  toCmyk(): CMYK {\r\n    return NgxColor.rgbToCmyk(this.toRgb());\r\n  }\r\n\r\n  static cmykToRgba(cmyk: CMYK): RGBA {\r\n    const { c, m, y, k } = cmyk;\r\n    return { ...cmykToRgb(c, m, y, k), a: (cmyk as any).a !== undefined ? +(cmyk as any).a : 1 };\r\n  }\r\n\r\n  static rgbToCmyk(rgba: RGBA): CMYK {\r\n    const { r, g, b } = rgba;\r\n    return rgbToCmyk(r, g, b);\r\n  }\r\n\r\n  static rgbToHsla(rgba: RGBA): HSLA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsl(r, g, b), a };\r\n  }\r\n\r\n  static rgbToHsva(rgba: RGBA): HSVA {\r\n    const { r, g, b, a } = rgba;\r\n    return { ...rgbToHsv(r, g, b), a };\r\n  }\r\n\r\n  static hsvaToRgba(hsva: HSVA): RGBA {\r\n    const { h, s, v, a } = hsva;\r\n    return { ...hsvToRgb(h, s, v), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  static hslaToRgba(hsla: HSLA): RGBA {\r\n    const { h, s, l, a } = hsla;\r\n    return { ...hslToRgba(h, s, l), a: a !== undefined ? a : 1 };\r\n  }\r\n\r\n  equals(other?: NgxColor): boolean {\r\n    if (!other) return false;\r\n    return this.toHexString().toLowerCase() === other.toHexString().toLowerCase();\r\n  }\r\n\r\n  isDark(): boolean {\r\n    const { r, g, b, a } = this.toRgb();\r\n    return a < 0.5 ? false : 0.299 * r + 0.587 * g + 0.114 * b < 128;\r\n  }\r\n\r\n  isLight(): boolean {\r\n    return !this.isDark();\r\n  }\r\n\r\n  async getOutputResult(outputType: OutputType): Promise<string> {\r\n    const { r, g, b, a } = this._rgb;\r\n\r\n    switch (outputType) {\r\n      case 'CMYK':\r\n        return rgbToCmykString(r, g, b);\r\n\r\n      case 'HSL':\r\n        return rgbToHslaString(r, g, b, a);\r\n\r\n      case 'HSV':\r\n        return rgbToHsvString(r, g, b, a);\r\n\r\n      case 'RGB':\r\n        return a < 1 ? `rgba(${r}, ${g}, ${b}, ${+a.toFixed(2)})` : `rgb(${r}, ${g}, ${b})`;\r\n\r\n      case 'HEX':\r\n        return this.toHexString(true);\r\n\r\n      default:\r\n        let name = await this.name();\r\n        return name ?? this.toHexString(true);\r\n    }\r\n  }\r\n\r\n  removeAlphaChannel() {\r\n    this._rgb.a = 1;\r\n  }\r\n}\r\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -1607,6 +1607,16 @@
                     "modifierKind": [
                         131
                     ]
+                },
+                {
+                    "name": "removeAlphaChannel",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 198,
+                    "deprecated": false,
+                    "deprecationMessage": ""
                 },
                 {
                     "name": "rgbToCmyk",
@@ -2462,12 +2472,12 @@
         },
         {
             "name": "NgxInputColor",
-            "id": "directive-NgxInputColor-e3c40647b4334b55e8319a30fe9249ff1ae1d8d4baa21a4ddb59f42da9376c7a444e1b8bdddad659465fa5285d094e97bab35c68a14f57199d828e090b9eb689",
+            "id": "directive-NgxInputColor-ca75f72b1e18d96ed7b8ea2c81624b2fc393d4e7d5d2a5e09a056f78185451fb6d5ed9edc63d3538ac870bc51ef753542a948e7e54e7969069cb47bc0b0f86aa",
             "file": "projects/library/color-picker/directives/ngx-input-color.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ComponentRef,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n  Inject,\r\n  afterNextRender,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../components/input-color.component';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { DOCUMENT } from '@angular/common';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n  @Input() simpleMode = false;\r\n  @Input() outputType: OutputType = 'HEX';\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  private color?: NgxColor;\r\n  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.colorPickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);\r\n    const instance = this.colorPickerComponentRef.instance;\r\n\r\n    instance.defaultInspector = this.defaultInspector;\r\n    instance.simpleMode = this.simpleMode;\r\n    instance.outputType = this.outputType;\r\n    instance.setTheme = this.theme;\r\n\r\n    if (this.color?.isValid) instance.initColor(this.color);\r\n    instance.change.subscribe((c: string) => {\r\n      this.color = new NgxColor(c);\r\n      this.emitChange(c);\r\n    });\r\n\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-input-color-backdrop';\r\n      this.backdrop.style.cssText = `\r\n          background: #5e5e5e1e;\r\n          position: fixed;\r\n          top: 0;\r\n          left: 0;\r\n          right: 0;\r\n          bottom: 0;\r\n          overflow: auto;\r\n          transition: all 300ms;\r\n          z-index: 9998;\r\n        `;\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'hidden');\r\n    setTimeout(() => {\r\n      this.setPosition();\r\n    });\r\n  }\r\n\r\n  @HostListener('window:resize')\r\n  @HostListener('window:scroll')\r\n  setPosition() {\r\n    if (!this.colorPickerEl) return;\r\n    const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n    const pickerRect = this.colorPickerEl.querySelector('.ngx-input-color-picker')?.getBoundingClientRect();\r\n    if (!pickerRect) return;\r\n    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n    let top = hostRect.bottom;\r\n\r\n    if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;\r\n    if (left < 8) left = 8;\r\n    if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;\r\n    if (top < 8) top = 8;\r\n\r\n    this.renderer.setStyle(this.colorPickerEl, 'position', 'absolute');\r\n    this.renderer.setStyle(this.colorPickerEl, 'z-index', '9999');\r\n    this.renderer.setStyle(this.colorPickerEl, 'top', `${top}px`);\r\n    this.renderer.setStyle(this.colorPickerEl, 'left', `${left}px`);\r\n    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'visible');\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.colorPickerComponentRef?.destroy();\r\n    this.colorPickerComponentRef = undefined;\r\n\r\n    if (this.backdrop) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ComponentRef,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n  Inject,\r\n  afterNextRender,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../components/input-color.component';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { DOCUMENT } from '@angular/common';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n  @Input() simpleMode = false;\r\n  @Input() outputType: OutputType = 'HEX';\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private useAlphaChannel: boolean = true;\r\n  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {\r\n    this.useAlphaChannel = val == true;\r\n    if (!this.useAlphaChannel && this.color) {\r\n      this.color.removeAlphaChannel();\r\n      this.color.getOutputResult(this.outputType).then((c) => {\r\n        this.emitChange(c);\r\n      });\r\n    }\r\n  }\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  private color?: NgxColor;\r\n  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;\r\n  private backdrop?: HTMLDivElement;\r\n  private colorPickerEl?: HTMLElement;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    @Inject(DOCUMENT) private _doc: Document,\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.colorPickerComponentRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);\r\n    const instance = this.colorPickerComponentRef.instance;\r\n\r\n    instance.defaultInspector = this.defaultInspector;\r\n    instance.simpleMode = this.simpleMode;\r\n    instance.outputType = this.outputType;\r\n    instance.setTheme = this.theme;\r\n    instance.setUseAlphaChannel = this.useAlphaChannel;\r\n\r\n    if (this.color?.isValid) instance.initColor(this.color);\r\n    instance.change.subscribe((c: string) => {\r\n      this.color = new NgxColor(c);\r\n      this.emitChange(c);\r\n    });\r\n\r\n    this.backdrop = this.renderer.createElement('div');\r\n    if (this.backdrop) {\r\n      this.backdrop.className = 'ngx-input-color-backdrop';\r\n      this.backdrop.style.cssText = `\r\n          background: #5e5e5e1e;\r\n          position: fixed;\r\n          top: 0;\r\n          left: 0;\r\n          right: 0;\r\n          bottom: 0;\r\n          overflow: auto;\r\n          transition: all 300ms;\r\n          z-index: 9998;\r\n        `;\r\n      this.backdrop.onclick = () => this.destroyColorPicker();\r\n    }\r\n    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;\r\n    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'hidden');\r\n    setTimeout(() => {\r\n      this.setPosition();\r\n    });\r\n  }\r\n\r\n  @HostListener('window:resize')\r\n  @HostListener('window:scroll')\r\n  setPosition() {\r\n    if (!this.colorPickerEl) return;\r\n    const hostRect = this.el.nativeElement.getBoundingClientRect();\r\n    const pickerRect = this.colorPickerEl.querySelector('.ngx-input-color-picker')?.getBoundingClientRect();\r\n    if (!pickerRect) return;\r\n    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;\r\n    let top = hostRect.bottom;\r\n\r\n    if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;\r\n    if (left < 8) left = 8;\r\n    if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;\r\n    if (top < 8) top = 8;\r\n\r\n    this.renderer.setStyle(this.colorPickerEl, 'position', 'absolute');\r\n    this.renderer.setStyle(this.colorPickerEl, 'z-index', '9999');\r\n    this.renderer.setStyle(this.colorPickerEl, 'top', `${top}px`);\r\n    this.renderer.setStyle(this.colorPickerEl, 'left', `${left}px`);\r\n    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'visible');\r\n    this.renderer.appendChild(this.backdrop, this.colorPickerEl);\r\n    this.renderer.appendChild(this._doc.body, this.backdrop);\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.colorPickerComponentRef?.destroy();\r\n    this.colorPickerComponentRef = undefined;\r\n\r\n    if (this.backdrop) {\r\n      this.renderer.removeChild(this._doc.body, this.backdrop);\r\n      this.backdrop = undefined;\r\n    }\r\n\r\n    this.colorPickerEl = undefined;\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputColor]",
             "providers": [
                 {
@@ -2491,7 +2501,7 @@
                     "name": "ngxInputColor",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 57,
+                    "line": 67,
                     "type": "",
                     "decorators": []
                 },
@@ -2530,6 +2540,14 @@
                     "line": 51,
                     "type": "\"light\" | \"dark\" | \"auto\"",
                     "decorators": []
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 53,
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -2538,7 +2556,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 74,
+                    "line": 84,
                     "type": "EventEmitter"
                 }
             ],
@@ -2561,7 +2579,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 105
+                    "line": 115
                 },
                 {
                     "name": "window:resize",
@@ -2569,7 +2587,7 @@
                     "argsDecorator": [],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 208
+                    "line": 219
                 },
                 {
                     "name": "window:scroll",
@@ -2577,7 +2595,7 @@
                     "argsDecorator": [],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 208
+                    "line": 219
                 }
             ],
             "propertiesClass": [
@@ -2589,7 +2607,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 82
+                    "line": 92
                 },
                 {
                     "name": "_onTouched",
@@ -2599,7 +2617,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 83
+                    "line": 93
                 },
                 {
                     "name": "_onValidateChange",
@@ -2609,7 +2627,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 84
+                    "line": 94
                 },
                 {
                     "name": "_targetInput",
@@ -2618,7 +2636,7 @@
                     "type": "HTMLInputElement",
                     "optional": true,
                     "description": "",
-                    "line": 55,
+                    "line": 65,
                     "modifierKind": [
                         121
                     ]
@@ -2630,7 +2648,7 @@
                     "type": "HTMLDivElement",
                     "optional": true,
                     "description": "",
-                    "line": 77,
+                    "line": 87,
                     "modifierKind": [
                         121
                     ]
@@ -2643,7 +2661,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 52,
+                    "line": 62,
                     "modifierKind": [
                         121
                     ]
@@ -2655,7 +2673,7 @@
                     "type": "NgxColor",
                     "optional": true,
                     "description": "",
-                    "line": 75,
+                    "line": 85,
                     "modifierKind": [
                         121
                     ]
@@ -2667,7 +2685,7 @@
                     "type": "ComponentRef<NgxInputColorComponent>",
                     "optional": true,
                     "description": "",
-                    "line": 76,
+                    "line": 86,
                     "modifierKind": [
                         121
                     ]
@@ -2679,7 +2697,7 @@
                     "type": "HTMLElement",
                     "optional": true,
                     "description": "",
-                    "line": 78,
+                    "line": 88,
                     "modifierKind": [
                         121
                     ]
@@ -2692,7 +2710,7 @@
                     "type": "boolean",
                     "optional": false,
                     "description": "",
-                    "line": 80
+                    "line": 90
                 },
                 {
                     "name": "isDisabled",
@@ -2702,7 +2720,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 81
+                    "line": 91
                 },
                 {
                     "name": "isHostInput",
@@ -2712,7 +2730,20 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 79,
+                    "line": 89,
+                    "modifierKind": [
+                        121
+                    ]
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": false,
+                    "description": "",
+                    "line": 52,
                     "modifierKind": [
                         121
                     ]
@@ -2725,7 +2756,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 230,
+                    "line": 241,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2745,7 +2776,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 242,
+                    "line": 253,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2770,7 +2801,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 93,
+                    "line": 103,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2780,7 +2811,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 100,
+                    "line": 110,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2797,7 +2828,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 105,
+                    "line": 115,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2831,7 +2862,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 140,
+                    "line": 150,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2859,7 +2890,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 144,
+                    "line": 154,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2888,7 +2919,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 152,
+                    "line": 162,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2917,7 +2948,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 148,
+                    "line": 158,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2938,7 +2969,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 208,
+                    "line": 219,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2958,7 +2989,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 163,
+                    "line": 173,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2978,7 +3009,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 156,
+                    "line": 166,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3006,7 +3037,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 111,
+                    "line": 121,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3059,7 +3090,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 84,
+                "line": 94,
                 "jsdoctags": [
                     {
                         "name": "_doc",
@@ -3100,6 +3131,36 @@
                 ]
             },
             "accessors": {
+                "setUseAlphaChannel": {
+                    "name": "setUseAlphaChannel",
+                    "setSignature": {
+                        "name": "setUseAlphaChannel",
+                        "type": "void",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "args": [
+                            {
+                                "name": "val",
+                                "type": "boolean",
+                                "deprecated": false,
+                                "deprecationMessage": ""
+                            }
+                        ],
+                        "returnType": "void",
+                        "line": 53,
+                        "jsdoctags": [
+                            {
+                                "name": "val",
+                                "type": "boolean",
+                                "deprecated": false,
+                                "deprecationMessage": "",
+                                "tagName": {
+                                    "text": "param"
+                                }
+                            }
+                        ]
+                    }
+                },
                 "ngxInputColor": {
                     "name": "ngxInputColor",
                     "setSignature": {
@@ -3116,7 +3177,7 @@
                             }
                         ],
                         "returnType": "void",
-                        "line": 57,
+                        "line": 67,
                         "jsdoctags": [
                             {
                                 "name": "el",
@@ -4192,7 +4253,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 40px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}",
+                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 40px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}\r\n",
                     "styleUrl": "./cmyk.component.scss"
                 }
             ],
@@ -4244,7 +4305,7 @@
         },
         {
             "name": "ColorPickerComponent",
-            "id": "component-ColorPickerComponent-cf4a717e60890b106d625310d944c8186358b7bb0a212f02864b91a48f40bf61bed917b0d0877bc5fed62342f8fe14c6479a839297097960fe7a273d126e8b58",
+            "id": "component-ColorPickerComponent-fdfe602405724c93071072bff164d22f018b8678f6e79a1151895f66eba1d6ae6cb703f2c8fa34a4395df242127f150f4ea764b7c78a9e463ad1dd65a90fa0fa",
             "file": "projects/demo/src/app/color-picker/color-picker.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4312,6 +4373,16 @@
                     "optional": false,
                     "description": "",
                     "line": 14
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
                 }
             ],
             "methodsClass": [
@@ -4321,7 +4392,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 21,
+                    "line": 22,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -4333,7 +4404,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnInit } from '@angular/core';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { ColorInspector, NgxInputColor, OutputType } from 'ngx-input-color/color-picker';\r\n\r\n@Component({\r\n  selector: 'app-color-picker',\r\n  templateUrl: './color-picker.component.html',\r\n  styleUrls: ['./color-picker.component.scss'],\r\n  imports: [FormsModule, NgxInputColor],\r\n})\r\nexport class ColorPickerComponent implements OnInit {\r\n  color = 'pink';\r\n\r\n  theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  outputType: OutputType = 'HEX';\r\n  simpleMode = false;\r\n  inspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, OnInit } from '@angular/core';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { ColorInspector, NgxInputColor, OutputType } from 'ngx-input-color/color-picker';\r\n\r\n@Component({\r\n  selector: 'app-color-picker',\r\n  templateUrl: './color-picker.component.html',\r\n  styleUrls: ['./color-picker.component.scss'],\r\n  imports: [FormsModule, NgxInputColor],\r\n})\r\nexport class ColorPickerComponent implements OnInit {\r\n  color = 'pink';\r\n\r\n  theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  outputType: OutputType = 'HEX';\r\n  simpleMode = false;\r\n  inspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  useAlphaChannel = true;\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -4348,7 +4419,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 17
+                "line": 19
             },
             "implements": [
                 "OnInit"
@@ -4360,11 +4431,11 @@
                         "name": "ColorInspector",
                         "type": "",
                         "returnType": "",
-                        "line": 22
+                        "line": 23
                     }
                 }
             },
-            "templateData": "<input\r\n  type=\"text\"\r\n  [(ngModel)]=\"color\"\r\n  ngxInputColor\r\n  class=\"form-control\"\r\n  [simpleMode]=\"simpleMode\"\r\n  [outputType]=\"outputType\"\r\n  [defaultInspector]=\"inspector\"\r\n  [theme]=\"theme\" />\r\n<button type=\"button\" (click)=\"color = ''\">x</button>\r\n<div>\r\n  <label>\r\n    <input type=\"checkbox\" name=\"simpleMode\" [(ngModel)]=\"simpleMode\" />\r\n    Simple Mode\r\n  </label>\r\n</div>\r\n\r\nOutput:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HEX\" [(ngModel)]=\"outputType\" />\r\n    HEX\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"RGB\" [(ngModel)]=\"outputType\" />\r\n    RGB\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HSV\" [(ngModel)]=\"outputType\" />\r\n    HSV\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HSL\" [(ngModel)]=\"outputType\" />\r\n    HSL\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"CMYK\" [(ngModel)]=\"outputType\" />\r\n    CMYK\r\n  </label>\r\n</div>\r\nInspector:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.Picker\" [(ngModel)]=\"inspector\" />\r\n    Picker\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.RGB\" [(ngModel)]=\"inspector\" />\r\n    RGB\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.HSL\" [(ngModel)]=\"inspector\" />\r\n    HSL\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.CMYK\" [(ngModel)]=\"inspector\" />\r\n    CMYK\r\n  </label>\r\n</div>\r\nTheme:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"light\" [(ngModel)]=\"theme\" />\r\n    Light\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"dark\" [(ngModel)]=\"theme\" />\r\n    Dark\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"auto\" [(ngModel)]=\"theme\" />\r\n    Auto\r\n  </label>\r\n</div>\r\n<p>{{ color }}</p>\r\n"
+            "templateData": "<input\r\n  type=\"text\"\r\n  [(ngModel)]=\"color\"\r\n  ngxInputColor\r\n  class=\"form-control\"\r\n  [simpleMode]=\"simpleMode\"\r\n  [outputType]=\"outputType\"\r\n  [defaultInspector]=\"inspector\"\r\n  [theme]=\"theme\"\r\n  [useAlphaChannel]=\"useAlphaChannel\" />\r\n<button type=\"button\" (click)=\"color = ''\">x</button>\r\n<div>\r\n  <label>\r\n    <input type=\"checkbox\" name=\"simpleMode\" [(ngModel)]=\"simpleMode\" />\r\n    Simple Mode\r\n  </label>\r\n</div>\r\n\r\n<div>\r\n  <label>\r\n    <input type=\"checkbox\" name=\"alphaChannel\" [(ngModel)]=\"useAlphaChannel\" />\r\n    Alpha channel\r\n  </label>\r\n</div>\r\n\r\nOutput:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HEX\" [(ngModel)]=\"outputType\" />\r\n    HEX\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"RGB\" [(ngModel)]=\"outputType\" />\r\n    RGB\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HSV\" [(ngModel)]=\"outputType\" />\r\n    HSV\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"HSL\" [(ngModel)]=\"outputType\" />\r\n    HSL\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"outputtype\" value=\"CMYK\" [(ngModel)]=\"outputType\" />\r\n    CMYK\r\n  </label>\r\n</div>\r\nInspector:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.Picker\" [(ngModel)]=\"inspector\" />\r\n    Picker\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.RGB\" [(ngModel)]=\"inspector\" />\r\n    RGB\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.HSL\" [(ngModel)]=\"inspector\" />\r\n    HSL\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"inspector\" [value]=\"ColorInspector.CMYK\" [(ngModel)]=\"inspector\" />\r\n    CMYK\r\n  </label>\r\n</div>\r\nTheme:\r\n<div class=\"radio-group\">\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"light\" [(ngModel)]=\"theme\" />\r\n    Light\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"dark\" [(ngModel)]=\"theme\" />\r\n    Dark\r\n  </label>\r\n  <label>\r\n    <input type=\"radio\" name=\"theme\" value=\"auto\" [(ngModel)]=\"theme\" />\r\n    Auto\r\n  </label>\r\n</div>\r\n<p>{{ color }}</p>\r\n"
         },
         {
             "name": "GradientPickerComponent",
@@ -4441,7 +4512,7 @@
         },
         {
             "name": "HslComponent",
-            "id": "component-HslComponent-2acf76cb1bc1cd5cdd862225aac5b81463147fcaa7843085ef813468f3a9672fb7486ef0260fdd913d9f8f0cd0b3abd736a6ee4f569bb45e96e9f618d54ae56b",
+            "id": "component-HslComponent-46cfe6b36798b3aa737861ba9f7c9d205e611d7a5f8e1dab846b05bb582a55b4dcbf440a9470d319dafd296df147683f17ccfadcc51f794dc033355ed9852158",
             "file": "projects/library/color-picker/inspectors/hsl/hsl.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4465,6 +4536,15 @@
                     "line": 21,
                     "type": "",
                     "decorators": []
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -4473,7 +4553,7 @@
                     "defaultValue": "new EventEmitter<NgxColor | undefined>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 31,
+                    "line": 33,
                     "type": "EventEmitter"
                 }
             ],
@@ -4548,7 +4628,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 36,
+                    "line": 38,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -4558,7 +4638,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 34,
+                    "line": 36,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -4570,11 +4650,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { HSLA } from '../../contracts/color-interface';\r\nimport { SliderComponent } from 'ngx-input-color/shared';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'app-hsl',\r\n  templateUrl: './hsl.component.html',\r\n  styleUrls: ['./hsl.component.scss'],\r\n  imports: [FormsModule, SliderComponent],\r\n})\r\nexport class HslComponent implements OnInit {\r\n  hue: number = 0;\r\n  saturation: number = 0;\r\n  luminance: number = 0;\r\n  alpha: number = 1;\r\n  baseColor = 'rgb(0,0,0)';\r\n  private inputColor?: NgxColor;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const hsla = c.toHsl();\r\n    this.hue = hsla.h;\r\n    this.saturation = hsla.s;\r\n    this.luminance = hsla.l;\r\n    this.alpha = hsla.a ?? 1;\r\n    this.baseColor = c.toHexString(false);\r\n  }\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsla: HSLA = { h: this.hue, s: this.saturation, l: this.luminance, a: this.alpha };\r\n      const color = new NgxColor(hsla);\r\n      this.baseColor = color.toHexString(false);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { HSLA } from '../../contracts/color-interface';\r\nimport { SliderComponent } from 'ngx-input-color/shared';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'app-hsl',\r\n  templateUrl: './hsl.component.html',\r\n  styleUrls: ['./hsl.component.scss'],\r\n  imports: [FormsModule, SliderComponent],\r\n})\r\nexport class HslComponent implements OnInit {\r\n  hue: number = 0;\r\n  saturation: number = 0;\r\n  luminance: number = 0;\r\n  alpha: number = 1;\r\n  baseColor = 'rgb(0,0,0)';\r\n  private inputColor?: NgxColor;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const hsla = c.toHsl();\r\n    this.hue = hsla.h;\r\n    this.saturation = hsla.s;\r\n    this.luminance = hsla.l;\r\n    this.alpha = hsla.a ?? 1;\r\n    this.baseColor = c.toHexString(false);\r\n  }\r\n  \r\n  @Input() useAlphaChannel: boolean = true;\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsla: HSLA = { h: this.hue, s: this.saturation, l: this.luminance, a: this.alpha };\r\n      const color = new NgxColor(hsla);\r\n      this.baseColor = color.toHexString(false);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 48px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}",
+                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 48px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}\r\n",
                     "styleUrl": "./hsl.component.scss"
                 }
             ],
@@ -4585,7 +4665,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 31
+                "line": 33
             },
             "implements": [
                 "OnInit"
@@ -4622,7 +4702,7 @@
                     }
                 }
             },
-            "templateData": "<slider\r\n  [(ngModel)]=\"hue\"\r\n  [min]=\"0\"\r\n  [max]=\"360\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  background=\"linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)\">\r\n  <div class=\"slider-title\">\r\n    <span>Hue</span>\r\n    <input type=\"number\" [(ngModel)]=\"hue\" min=\"0\" max=\"360\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"saturation\"\r\n  [min]=\"0\"\r\n  [max]=\"100\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"'linear-gradient(to right,#808080,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Saturation</span>\r\n    <input type=\"number\" [(ngModel)]=\"saturation\" min=\"0\" max=\"100\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"luminance\"\r\n  [min]=\"0\"\r\n  [max]=\"100\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"'linear-gradient(to right,black,' + baseColor + ',white)'\">\r\n  <div class=\"slider-title\">\r\n    <span>Luminance</span>\r\n    <input type=\"number\" [(ngModel)]=\"luminance\" min=\"0\" max=\"100\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Alpha</span>\r\n    <input type=\"number\" [(ngModel)]=\"alpha\" min=\"0\" max=\"1\" step=\"0.1\" />\r\n  </div>\r\n</slider>\r\n"
+            "templateData": "<slider\r\n  [(ngModel)]=\"hue\"\r\n  [min]=\"0\"\r\n  [max]=\"360\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  background=\"linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)\">\r\n  <div class=\"slider-title\">\r\n    <span>Hue</span>\r\n    <input type=\"number\" [(ngModel)]=\"hue\" min=\"0\" max=\"360\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"saturation\"\r\n  [min]=\"0\"\r\n  [max]=\"100\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"'linear-gradient(to right,#808080,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Saturation</span>\r\n    <input type=\"number\" [(ngModel)]=\"saturation\" min=\"0\" max=\"100\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"luminance\"\r\n  [min]=\"0\"\r\n  [max]=\"100\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"'linear-gradient(to right,black,' + baseColor + ',white)'\">\r\n  <div class=\"slider-title\">\r\n    <span>Luminance</span>\r\n    <input type=\"number\" [(ngModel)]=\"luminance\" min=\"0\" max=\"100\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n@if(useAlphaChannel){\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Alpha</span>\r\n    <input type=\"number\" [(ngModel)]=\"alpha\" min=\"0\" max=\"1\" step=\"0.1\" />\r\n  </div>\r\n</slider>\r\n}\r\n"
         },
         {
             "name": "NgxBoxShadowComponent",
@@ -5585,7 +5665,7 @@
         },
         {
             "name": "NgxInputColorComponent",
-            "id": "component-NgxInputColorComponent-7d9c84dfb9b0e5579e4d42c9a734f862059d18b12208c746c76c7fd388e10279d418aa2c984ff7166a574715cf2cce61ce62c80ddf50aa69b12ff4f2f05e9d3a",
+            "id": "component-NgxInputColorComponent-1d9e6b26a7de98181138c9c329df5d0c9b30b7414e0321b6b43d96cfd12c0d7f6d3b5042ece3c2f781faa2e4bd1b71acbe33157ace7cdde1ef166b1543b576a5",
             "file": "projects/library/color-picker/components/input-color.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -5671,6 +5751,14 @@
                     "line": 55,
                     "type": "",
                     "decorators": []
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 79,
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -5681,7 +5769,7 @@
                     "deprecationMessage": "",
                     "rawdescription": "\nEmitted when the color value changes",
                     "description": "<p>Emitted when the color value changes</p>\n",
-                    "line": 79,
+                    "line": 88,
                     "type": "EventEmitter"
                 }
             ],
@@ -5694,7 +5782,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 109
+                    "line": 118
                 },
                 {
                     "name": "outputColor",
@@ -5704,7 +5792,7 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 90
+                    "line": 99
                 },
                 {
                     "name": "theme",
@@ -5715,6 +5803,16 @@
                     "optional": false,
                     "description": "",
                     "line": 54
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "optional": false,
+                    "description": "",
+                    "line": 78
                 }
             ],
             "methodsClass": [
@@ -5732,7 +5830,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 177,
+                    "line": 185,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\n call from directive\n/* @ignore\n",
@@ -5761,11 +5859,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  inject,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../contracts/ColorFormats.enum';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  FormsModule,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { CommonModule } from '@angular/common';\r\nimport { EnumToArrayPipe } from '../pipes/enum-to-array.pipe';\r\nimport { PickerComponent } from '../inspectors/picker/picker.component';\r\nimport { CmykComponent } from '../inspectors/cmyk/cmyk.component';\r\nimport { HslComponent } from '../inspectors/hsl/hsl.component';\r\nimport { RgbComponent } from '../inspectors/rgb/rgb.component';\r\nimport { BrowserService } from 'ngx-input-color/shared';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  standalone: true,\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './input-color.component.html',\r\n  styleUrls: ['./input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  host: {\r\n    '[class.dark]': 'theme==\"dark\"',\r\n  },\r\n  imports: [CommonModule, FormsModule, EnumToArrayPipe, PickerComponent, CmykComponent, HslComponent, RgbComponent],\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {\r\n    if (!val || val == 'auto') {\r\n      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n    } else {\r\n      this.theme = val;\r\n    }\r\n  }\r\n\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() outputType: OutputType = 'HEX';\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  outputColor = '';\r\n\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  browserService = inject(BrowserService);\r\n\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {\r\n  }\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.outputColor = await this.color.getOutputResult(this.outputType);\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    this.emitChange();\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  async emitChange() {\r\n    this.outputColor = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(this.outputColor);\r\n    this.change.emit(this.outputColor);\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  inject,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n} from '@angular/core';\r\nimport { ColorFormats } from '../contracts/ColorFormats.enum';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  FormsModule,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { CommonModule } from '@angular/common';\r\nimport { EnumToArrayPipe } from '../pipes/enum-to-array.pipe';\r\nimport { PickerComponent } from '../inspectors/picker/picker.component';\r\nimport { CmykComponent } from '../inspectors/cmyk/cmyk.component';\r\nimport { HslComponent } from '../inspectors/hsl/hsl.component';\r\nimport { RgbComponent } from '../inspectors/rgb/rgb.component';\r\nimport { BrowserService } from 'ngx-input-color/shared';\r\ndeclare const EyeDropper: any;\r\n@Component({\r\n  standalone: true,\r\n  selector: 'ngx-input-color',\r\n  templateUrl: './input-color.component.html',\r\n  styleUrls: ['./input-color.component.scss'],\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputColorComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputColorComponent,\r\n    },\r\n  ],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  host: {\r\n    '[class.dark]': 'theme==\"dark\"',\r\n  },\r\n  imports: [CommonModule, FormsModule, EnumToArrayPipe, PickerComponent, CmykComponent, HslComponent, RgbComponent],\r\n})\r\nexport class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {\r\n    if (!val || val == 'auto') {\r\n      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n    } else {\r\n      this.theme = val;\r\n    }\r\n  }\r\n\r\n  /** Minifi UI  */\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() outputType: OutputType = 'HEX';\r\n\r\n  /**\r\n   * default inspectors\r\n   * - ColorInspector.Picker\r\n   * - ColorInspector.RGB\r\n   * - ColorInspector.HSL\r\n   *\r\n   * @alias defaultInspector\r\n   */\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n\r\n  useAlphaChannel: boolean = true;\r\n  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {\r\n    this.useAlphaChannel = val == true;\r\n    if (!this.useAlphaChannel) {\r\n      this.color.removeAlphaChannel();\r\n      this.emitChange();\r\n    }\r\n  }\r\n\r\n  /** Emitted when the color value changes */\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  /** @ignore */\r\n  format: ColorFormats = ColorFormats.HSVA;\r\n  /** @ignore */\r\n  isDarkColor = true;\r\n\r\n  /** @ignore */\r\n  rgbaColor = 'rgba(0, 0, 0, 1)';\r\n  /** @ignore */\r\n  hexColor = '#000000';\r\n  outputColor = '';\r\n\r\n  /** @ignore */\r\n  name = 'black';\r\n\r\n  /** @ignore */\r\n  isSupportedEyeDrop: boolean;\r\n\r\n  /** @ignore */\r\n  color: NgxColor = new NgxColor();\r\n\r\n  /** @ignore */\r\n  isDisabled = false;\r\n  /**@ignore */\r\n  private _onChange = (value: string) => {};\r\n  /**@ignore */\r\n  private _onTouched = () => {};\r\n  /**@ignore */\r\n  private _onValidateChange = () => {};\r\n  browserService = inject(BrowserService);\r\n\r\n  constructor(private cd: ChangeDetectorRef) {\r\n    this.isSupportedEyeDrop = 'EyeDropper' in window;\r\n  }\r\n\r\n  /** @ignore */\r\n  ngOnInit(): void {}\r\n  /** @ignore */\r\n  ngOnDestroy(): void {}\r\n  public get ColorFormats(): typeof ColorFormats {\r\n    return ColorFormats;\r\n  }\r\n  public get ColorInspector(): typeof ColorInspector {\r\n    return ColorInspector;\r\n  }\r\n  /** @ignore */\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  /** @ignore */\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  /** @ignore */\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  /** @ignore */\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  /** @ignore */\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.color && this.color.isValid === false) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  /** @ignore */\r\n  writeValue(value: any): void {\r\n    try {\r\n      const c = value ? new NgxColor(value) : new NgxColor('#000');\r\n      this.initColor(c);\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      const c = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.initColor(c);\r\n    }\r\n  }\r\n  /** @ignore */\r\n  openEyeDrop() {\r\n    if (this.isSupportedEyeDrop) {\r\n      let t = new EyeDropper().open();\r\n      t.then(async (result: { sRGBHex: string }) => {\r\n        this.hexColor = result.sRGBHex;\r\n        this.initColor(new NgxColor(this.hexColor));\r\n        this.cd.detectChanges();\r\n      });\r\n    }\r\n  }\r\n\r\n  /**\r\n   *  call from directive\r\n  /* @ignore \r\n   */\r\n  async initColor(c?: NgxColor) {\r\n    if (!c) return;\r\n    this.color = c;\r\n    this.rgbaColor = this.color.toRgbString();\r\n    this.hexColor = this.color.toHexString();\r\n    this.outputColor = await this.color.getOutputResult(this.outputType);\r\n    this.isDarkColor = this.color.isDark();\r\n    this.name = await this.color.name();\r\n    this.emitChange();\r\n  }\r\n\r\n  /** @ignore */\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  /** @ignore */\r\n  async emitChange() {\r\n    this.outputColor = await this.color.getOutputResult(this.outputType);\r\n    this._onChange(this.outputColor);\r\n    this.change.emit(this.outputColor);\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-color-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .inner {\r\n    padding: 0 12px 12px;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n  &.simple-mode {\r\n    width: 220px;\r\n    --ngx-thumb-size: 24px;\r\n    .inner {\r\n      padding: 12px;\r\n    }\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n  &.is-dark-color {\r\n    color: #ffff;\r\n  }\r\n  &:after {\r\n    content: ' ';\r\n    position: absolute;\r\n    background-color: var(--ngx-color-bg);\r\n    bottom: 0;\r\n    width: 100%;\r\n    left: 0;\r\n    right: 0;\r\n    height: 15px;\r\n    border-radius: 18px 18px 0 0;\r\n  }\r\n  &::before {\r\n    content: ' ';\r\n    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n      linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    z-index: -1;\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n.button-groups {\r\n  display: flex;\r\n  border-radius: 4px;\r\n  overflow: hidden;\r\n  border: 1px #d3d3d3 solid;\r\n\r\n  button {\r\n    cursor: pointer;\r\n    background: #f9f9f9;\r\n    outline: none;\r\n    border: none;\r\n    transition: all 300ms;\r\n    border-left: 1px #d3d3d3 solid;\r\n    padding: 10px 12px;\r\n    flex: auto;\r\n    &:hover {\r\n      background: #8db6e4;\r\n    }\r\n    &:first-child {\r\n      border-left-width: 0;\r\n    }\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n.ngx-btn-eyedroper {\r\n  padding: 2px;\r\n  min-width: 0;\r\n  width: 45px;\r\n  cursor: pointer;\r\n  background-color: transparent;\r\n  outline: none;\r\n  transition: all 300ms;\r\n  border: none;\r\n  border-radius: 6px;\r\n  svg {\r\n    width: 18px;\r\n    fill: var(--ngx-color-text);\r\n  }\r\n}\r\n.top-actions {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 0 0 12px;\r\n  select {\r\n    outline: none;\r\n    border: none;\r\n    border-radius: 4px;\r\n    padding: 5px 10px;\r\n    background: none;\r\n    color: var(--ngx-color-text);\r\n    &:focus {\r\n      cursor: pointer;\r\n      background: hsl(216, 100%, 95%);\r\n      color: hsl(216, 100%, 50%);\r\n    }\r\n    option {\r\n      padding: 10px 20px;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      transition: all 300ms;\r\n      &:hover {\r\n        background: #f0f0f048;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-color-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .ngx-c-inner {\r\n    padding: 12px;\r\n    background: var(--ngx-color-bg);\r\n    color: var(--ngx-color-text);\r\n    border-radius: 15px;\r\n    margin-top: -15px;\r\n    position: relative;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n  &.simple-mode {\r\n    width: 220px;\r\n    --ngx-thumb-size: 24px;\r\n    .ngx-c-inner {\r\n      padding: 12px;\r\n      margin: 0;\r\n    }\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n  background-color: #fff;\r\n  &.is-dark-color {\r\n    color: #ffff;\r\n  }\r\n  &:after,\r\n  &:before {\r\n    content: ' ';\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n  }\r\n  &::before {\r\n    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n      linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n  }\r\n  &:after {\r\n    background: var(--ngx-selected-color);\r\n  }\r\n\r\n  .rgbacode,\r\n  .colorname,\r\n  .color {\r\n    text-shadow: 0 0 1px #000000;\r\n    position: relative;\r\n    z-index: 1;\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n.button-groups {\r\n  display: flex;\r\n  border-radius: 4px;\r\n  overflow: hidden;\r\n  border: 1px #d3d3d3 solid;\r\n\r\n  button {\r\n    cursor: pointer;\r\n    background: #f9f9f9;\r\n    outline: none;\r\n    border: none;\r\n    transition: all 300ms;\r\n    border-left: 1px #d3d3d3 solid;\r\n    padding: 10px 12px;\r\n    flex: auto;\r\n    &:hover {\r\n      background: #8db6e4;\r\n    }\r\n    &:first-child {\r\n      border-left-width: 0;\r\n    }\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n.ngx-btn-eyedroper {\r\n  padding: 2px;\r\n  min-width: 0;\r\n  width: 45px;\r\n  cursor: pointer;\r\n  background-color: transparent;\r\n  outline: none;\r\n  transition: all 300ms;\r\n  border: none;\r\n  border-radius: 6px;\r\n  svg {\r\n    width: 18px;\r\n    fill: var(--ngx-color-text);\r\n  }\r\n}\r\n.top-actions {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 0 0 12px;\r\n  select {\r\n    outline: none;\r\n    border: none;\r\n    border-radius: 4px;\r\n    padding: 5px 10px;\r\n    background: none;\r\n    color: var(--ngx-color-text);\r\n    &:focus {\r\n      cursor: pointer;\r\n      background: hsl(216, 100%, 95%);\r\n      color: hsl(216, 100%, 50%);\r\n    }\r\n    option {\r\n      padding: 10px 20px;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      transition: all 300ms;\r\n      &:hover {\r\n        background: #f0f0f048;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./input-color.component.scss"
                 }
             ],
@@ -5783,7 +5881,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 109,
+                "line": 118,
                 "jsdoctags": [
                     {
                         "name": "cd",
@@ -5833,13 +5931,43 @@
                         ]
                     }
                 },
+                "setUseAlphaChannel": {
+                    "name": "setUseAlphaChannel",
+                    "setSignature": {
+                        "name": "setUseAlphaChannel",
+                        "type": "void",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "args": [
+                            {
+                                "name": "val",
+                                "type": "boolean",
+                                "deprecated": false,
+                                "deprecationMessage": ""
+                            }
+                        ],
+                        "returnType": "void",
+                        "line": 79,
+                        "jsdoctags": [
+                            {
+                                "name": "val",
+                                "type": "boolean",
+                                "deprecated": false,
+                                "deprecationMessage": "",
+                                "tagName": {
+                                    "text": "param"
+                                }
+                            }
+                        ]
+                    }
+                },
                 "ColorFormats": {
                     "name": "ColorFormats",
                     "getSignature": {
                         "name": "ColorFormats",
                         "type": "",
                         "returnType": "",
-                        "line": 120
+                        "line": 128
                     }
                 },
                 "ColorInspector": {
@@ -5848,11 +5976,11 @@
                         "name": "ColorInspector",
                         "type": "",
                         "returnType": "",
-                        "line": 123
+                        "line": 131
                     }
                 }
             },
-            "templateData": "<div class=\"ngx-input-color-picker\" (click)=\"stopPropagation($event)\" [class.simple-mode]=\"simpleMode\">\r\n  @if (!simpleMode) {\r\n    <div class=\"ngx-color-preview\" [style.background]=\"rgbaColor\" [class.is-dark-color]=\"isDarkColor\">\r\n      <div class=\"rgbacode\">{{ outputColor | uppercase }}</div>\r\n      @if (outputType !== 'HEX') {\r\n        <div class=\"hexacode\">{{ hexColor | uppercase }}</div>\r\n      }\r\n      <div class=\"colorname\">{{ name }}</div>\r\n      <div class=\"color\"></div>\r\n    </div>\r\n  }\r\n  <div class=\"inner\">\r\n    <div class=\"top-actions\">\r\n      <select [(ngModel)]=\"defaultInspector\">\r\n        @for (inspector of ColorInspector | enumToArray; track inspector) {\r\n          <option [value]=\"inspector\">\r\n            {{ ColorInspector[+inspector] }}\r\n          </option>\r\n        }\r\n      </select>\r\n\r\n      <button type=\"button\" (click)=\"openEyeDrop()\" class=\"ngx-btn-eyedroper\">\r\n        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\">\r\n          <defs>\r\n            <style>\r\n              .fa-secondary {\r\n              opacity: 0.4;\r\n            }\r\n          </style>\r\n        </defs>\r\n        <path\r\n          class=\"fa-primary\"\r\n          d=\"M482.8 29.23C521.7 68.21 521.7 131.4 482.8 170.4L381.2 271.9L390.6 281.4C403.1 293.9 403.1 314.1 390.6 326.6C378.1 339.1 357.9 339.1 345.4 326.6L185.4 166.6C172.9 154.1 172.9 133.9 185.4 121.4C197.9 108.9 218.1 108.9 230.6 121.4L240.1 130.8L341.6 29.23C380.6-9.744 443.8-9.744 482.8 29.23L482.8 29.23zM132.1 416H96V379.9C96 375.6 97.69 371.6 100.7 368.6L149.3 320H234.7L143.4 411.3C140.4 414.3 136.4 416 132.1 416H132.1z\" />\r\n          <path\r\n            class=\"fa-secondary\"\r\n            d=\"M244 225.3L100.7 368.6C97.69 371.6 96 375.6 96 379.9V416H132.1C136.4 416 140.4 414.3 143.4 411.3L286.7 268L332 313.3L188.7 456.6C173.7 471.6 153.3 480 132.1 480H89.69L49.75 506.6C37.06 515.1 20.16 513.4 9.372 502.6C-1.414 491.8-3.087 474.9 5.374 462.2L32 422.3V379.9C32 358.7 40.43 338.3 55.43 323.3L198.7 180L244 225.3z\" />\r\n          </svg>\r\n        </button>\r\n      </div>\r\n\r\n      @switch (+defaultInspector) {\r\n        @case (ColorInspector.Picker) {\r\n          <app-picker\r\n            [color]=\"color\"\r\n            (colorChange)=\"initColor($event)\"\r\n          [simpleMode]=\"simpleMode\"></app-picker>\r\n        }\r\n        @case (ColorInspector.HSL) {\r\n          <app-hsl [color]=\"color\" (colorChange)=\"initColor($event)\"></app-hsl>\r\n        }\r\n        @case (ColorInspector.RGB) {\r\n          <app-rgb [color]=\"color\" (colorChange)=\"initColor($event)\"></app-rgb>\r\n        }\r\n        @case (ColorInspector.CMYK) {\r\n          <app-cmyk [color]=\"color\" (colorChange)=\"initColor($event)\"></app-cmyk>\r\n        }\r\n      }\r\n    </div>\r\n  </div>\r\n"
+            "templateData": "<div class=\"ngx-input-color-picker\" (click)=\"stopPropagation($event)\" [class.simple-mode]=\"simpleMode\">\r\n  @if (!simpleMode) {\r\n  <div class=\"ngx-color-preview\" [ngStyle]=\"{ '--ngx-selected-color': rgbaColor }\" [class.is-dark-color]=\"isDarkColor\">\r\n    <div class=\"rgbacode\">{{ outputColor | uppercase }}</div>\r\n    @if (outputType !== 'HEX') {\r\n    <div class=\"hexacode\">{{ hexColor | uppercase }}</div>\r\n    }\r\n    <div class=\"colorname\">{{ name }}</div>\r\n    <div class=\"color\"></div>\r\n  </div>\r\n  }\r\n  <div class=\"ngx-c-inner\">\r\n    <div class=\"top-actions\">\r\n      <select [(ngModel)]=\"defaultInspector\">\r\n        @for (inspector of ColorInspector | enumToArray; track inspector) {\r\n        <option [value]=\"inspector\">\r\n          {{ ColorInspector[+inspector] }}\r\n        </option>\r\n        }\r\n      </select>\r\n      @if (isSupportedEyeDrop) {\r\n      <button type=\"button\" (click)=\"openEyeDrop()\" class=\"ngx-btn-eyedroper\">\r\n        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\">\r\n          <defs>\r\n            <style>\r\n              .fa-secondary {\r\n                opacity: 0.4;\r\n              }\r\n            </style>\r\n          </defs>\r\n          <path\r\n            class=\"fa-primary\"\r\n            d=\"M482.8 29.23C521.7 68.21 521.7 131.4 482.8 170.4L381.2 271.9L390.6 281.4C403.1 293.9 403.1 314.1 390.6 326.6C378.1 339.1 357.9 339.1 345.4 326.6L185.4 166.6C172.9 154.1 172.9 133.9 185.4 121.4C197.9 108.9 218.1 108.9 230.6 121.4L240.1 130.8L341.6 29.23C380.6-9.744 443.8-9.744 482.8 29.23L482.8 29.23zM132.1 416H96V379.9C96 375.6 97.69 371.6 100.7 368.6L149.3 320H234.7L143.4 411.3C140.4 414.3 136.4 416 132.1 416H132.1z\" />\r\n          <path\r\n            class=\"fa-secondary\"\r\n            d=\"M244 225.3L100.7 368.6C97.69 371.6 96 375.6 96 379.9V416H132.1C136.4 416 140.4 414.3 143.4 411.3L286.7 268L332 313.3L188.7 456.6C173.7 471.6 153.3 480 132.1 480H89.69L49.75 506.6C37.06 515.1 20.16 513.4 9.372 502.6C-1.414 491.8-3.087 474.9 5.374 462.2L32 422.3V379.9C32 358.7 40.43 338.3 55.43 323.3L198.7 180L244 225.3z\" />\r\n        </svg>\r\n      </button>\r\n      }\r\n    </div>\r\n\r\n    @switch (+defaultInspector) { @case (ColorInspector.Picker) {\r\n    <app-picker\r\n      [color]=\"color\"\r\n      (colorChange)=\"initColor($event)\"\r\n      [simpleMode]=\"simpleMode\"\r\n      [useAlphaChannel]=\"useAlphaChannel\"></app-picker>\r\n    } @case (ColorInspector.HSL) {\r\n    <app-hsl [color]=\"color\" (colorChange)=\"initColor($event)\" [useAlphaChannel]=\"useAlphaChannel\"></app-hsl>\r\n    } @case (ColorInspector.RGB) {\r\n    <app-rgb [color]=\"color\" (colorChange)=\"initColor($event)\" [useAlphaChannel]=\"useAlphaChannel\"></app-rgb>\r\n    } @case (ColorInspector.CMYK) {\r\n    <app-cmyk [color]=\"color\" (colorChange)=\"initColor($event)\"></app-cmyk>\r\n    } }\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "NgxInputGradientComponent",
@@ -6417,7 +6545,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-gradient-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .inner {\r\n    padding: 0 12px 12px;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n\r\n  &:after {\r\n    content: ' ';\r\n    position: absolute;\r\n    background: var(--ngx-color-bg);\r\n    bottom: 0;\r\n    width: 100%;\r\n    left: 0;\r\n    right: 0;\r\n    height: 15px;\r\n    border-radius: 18px 18px 0 0;\r\n  }\r\n  &::before {\r\n    content: ' ';\r\n    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n      linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    z-index: -1;\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n\r\n.ngx-row {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 12px;\r\n  .ngx-col-6 {\r\n    width: 47%;\r\n  }\r\n\r\n  .input-color {\r\n    position: relative;\r\n    input {\r\n      padding-right: 26px;\r\n    }\r\n    .color {\r\n      position: absolute;\r\n      top: 4px;\r\n      right: 5px;\r\n      cursor: pointer;\r\n      display: inline-block;\r\n      width: 24px;\r\n      height: 24px;\r\n      border-radius: 4px;\r\n      border: 1px solid #ccc;\r\n      transition: all 300ms;\r\n      &:hover {\r\n        border-color: #8db6e4;\r\n      }\r\n    }\r\n  }\r\n\r\n  select,\r\n  input {\r\n    outline: none;\r\n    border: 1px solid #ececec;\r\n    border-radius: 4px;\r\n    padding: 8px 10px;\r\n    background: none;\r\n    width: 100%;\r\n    color: var(--ngx-color-text);\r\n    &:focus {\r\n      cursor: pointer;\r\n      background: hsl(216, 100%, 95%);\r\n      color: hsl(216, 100%, 50%);\r\n    }\r\n    option {\r\n      padding: 10px 20px;\r\n      background-color: #fff;\r\n      transition: all 300ms;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      &:hover {\r\n        background: #f0f0f0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n.text-end {\r\n  text-align: end;\r\n}\r\n.remove-btn {\r\n  background: none;\r\n  border: none;\r\n  outline: none;\r\n  color: #0077ff;\r\n  transition: color 300ms;\r\n  &:hover {\r\n    color: #0462cc;\r\n  }\r\n}\r\n\r\n.default-list {\r\n  display: flex;\r\n  gap: 6px;\r\n  flex-wrap: wrap;\r\n  margin: 16px 0;\r\n  span {\r\n    width: 36px;\r\n    height: 26px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    transition: transform 300ms;\r\n    &:hover {\r\n      transform: scale(1.2);\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-gradient-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .ngx-c-inner {\r\n    padding: 0 12px 12px;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n\r\n  &:after {\r\n    content: ' ';\r\n    position: absolute;\r\n    background: var(--ngx-color-bg);\r\n    bottom: 0;\r\n    width: 100%;\r\n    left: 0;\r\n    right: 0;\r\n    height: 15px;\r\n    border-radius: 18px 18px 0 0;\r\n  }\r\n  &::before {\r\n    content: ' ';\r\n    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n      linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    z-index: -1;\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n\r\n.ngx-row {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 12px;\r\n  .ngx-col-6 {\r\n    width: 47%;\r\n  }\r\n\r\n  .input-color {\r\n    position: relative;\r\n    input {\r\n      padding-right: 26px;\r\n    }\r\n    .color {\r\n      position: absolute;\r\n      top: 4px;\r\n      right: 5px;\r\n      cursor: pointer;\r\n      display: inline-block;\r\n      width: 24px;\r\n      height: 24px;\r\n      border-radius: 4px;\r\n      border: 1px solid #ccc;\r\n      transition: all 300ms;\r\n      &:hover {\r\n        border-color: #8db6e4;\r\n      }\r\n    }\r\n  }\r\n\r\n  select,\r\n  input {\r\n    outline: none;\r\n    border: 1px solid #ececec;\r\n    border-radius: 4px;\r\n    padding: 8px 10px;\r\n    background: none;\r\n    width: 100%;\r\n    color: var(--ngx-color-text);\r\n    &:focus {\r\n      cursor: pointer;\r\n      background: hsl(216, 100%, 95%);\r\n      color: hsl(216, 100%, 50%);\r\n    }\r\n    option {\r\n      padding: 10px 20px;\r\n      background-color: #fff;\r\n      transition: all 300ms;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      &:hover {\r\n        background: #f0f0f0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n.text-end {\r\n  text-align: end;\r\n}\r\n.remove-btn {\r\n  background: none;\r\n  border: none;\r\n  outline: none;\r\n  color: #0077ff;\r\n  transition: color 300ms;\r\n  &:hover {\r\n    color: #0462cc;\r\n  }\r\n}\r\n\r\n.default-list {\r\n  display: flex;\r\n  gap: 6px;\r\n  flex-wrap: wrap;\r\n  margin: 16px 0;\r\n  span {\r\n    width: 36px;\r\n    height: 26px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    transition: transform 300ms;\r\n    &:hover {\r\n      transform: scale(1.2);\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./input-gradient.component.scss"
                 }
             ],
@@ -6486,11 +6614,11 @@
                     }
                 }
             },
-            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [style.background]=\"resultGradient\"></div>\r\n  <div class=\"inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n    #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n      <div class=\"ngx-row\">\r\n        <div class=\"ngx-input-group ngx-col-6\">\r\n          <div class=\"label\">Color</div>\r\n          <div class=\"input-color\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n              name=\"color\"\r\n              #ngxGradColor\r\n              (ngModelChange)=\"generateGradient()\" />\r\n              <span\r\n                class=\"color\"\r\n                [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n                [ngxInputColor]=\"ngxGradColor\"\r\n                [simpleMode]=\"true\"\r\n              (change)=\"generateGradient($event)\"></span>\r\n            </div>\r\n          </div>\r\n          <div class=\"ngx-col-6\">\r\n            <div class=\"label\">Position</div>\r\n            <input\r\n              type=\"number\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n              min=\"0\"\r\n              max=\"100\"\r\n              name=\"posiition\"\r\n              (change)=\"generateGradient(); updateRangeSlider()\" />\r\n            </div>\r\n            <div class=\"ngx-col-6\">\r\n              <div class=\"label\">Rotation</div>\r\n              <select [(ngModel)]=\"rotation\" (change)=\"generateGradient()\" name=\"rotation\">\r\n                @for (item of rotationList; track item) {\r\n                  <option [value]=\"item\">{{ item + '°' }}</option>\r\n                }\r\n              </select>\r\n            </div>\r\n            <div class=\"ngx-col-6\">\r\n              <div class=\"label\">Type</div>\r\n              <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n                <option value=\"linear\">linear</option>\r\n                <option value=\"radial\">radial</option>\r\n              </select>\r\n            </div>\r\n          </div>\r\n        }\r\n\r\n        <div class=\"default-list\">\r\n          @for (item of defaultGradients; track item; let i = $index) {\r\n            <span\r\n              [style.background]=\"item\"\r\n            (click)=\"onSelectDefault(item, i)\"></span>\r\n          }\r\n        </div>\r\n      </div>\r\n    </div>\r\n"
+            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [style.background]=\"resultGradient\"></div>\r\n  <div class=\"ngx-c-inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n      #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n    <div class=\"ngx-row\">\r\n      <div class=\"ngx-input-group ngx-col-6\">\r\n        <div class=\"label\">Color</div>\r\n        <div class=\"input-color\">\r\n          <input\r\n            type=\"text\"\r\n            [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n            name=\"color\"\r\n            #ngxGradColor\r\n            (ngModelChange)=\"generateGradient()\" />\r\n          <span\r\n            class=\"color\"\r\n            [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n            [ngxInputColor]=\"ngxGradColor\"\r\n            [simpleMode]=\"true\"\r\n            (change)=\"generateGradient($event)\"></span>\r\n        </div>\r\n      </div>\r\n      <div class=\"ngx-col-6\">\r\n        <div class=\"label\">Position</div>\r\n        <input\r\n          type=\"number\"\r\n          [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n          min=\"0\"\r\n          max=\"100\"\r\n          name=\"posiition\"\r\n          (change)=\"generateGradient(); updateRangeSlider()\" />\r\n      </div>\r\n      <div class=\"ngx-col-6\">\r\n        <div class=\"label\">Rotation</div>\r\n        <select [(ngModel)]=\"rotation\" (change)=\"generateGradient()\" name=\"rotation\">\r\n          @for (item of rotationList; track item) {\r\n          <option [value]=\"item\">{{ item + '°' }}</option>\r\n          }\r\n        </select>\r\n      </div>\r\n      <div class=\"ngx-col-6\">\r\n        <div class=\"label\">Type</div>\r\n        <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n          <option value=\"linear\">linear</option>\r\n          <option value=\"radial\">radial</option>\r\n        </select>\r\n      </div>\r\n    </div>\r\n    }\r\n\r\n    <div class=\"default-list\">\r\n      @for (item of defaultGradients; track item; let i = $index) {\r\n      <span [style.background]=\"item\" (click)=\"onSelectDefault(item, i)\"></span>\r\n      }\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "PickerComponent",
-            "id": "component-PickerComponent-8f9cc232bb49d537ca3fd1ea485f2a3dd79677f0a0cdfd845252f693ad7ebba699e2cd4717f3c8b488d306197d039f5b96d6572cb9c95c5edd48e4f5fe0033f8",
+            "id": "component-PickerComponent-bebb5effb5042ac5a3a84b5f5300f7ca24d702667879641b8af70b60cb185e428e26c720a98dd52c89561766a5e2dc06a8f6049b3a826d27b7fd6c8139a3eaf2",
             "file": "projects/library/color-picker/inspectors/picker/picker.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -6523,6 +6651,15 @@
                     "line": 21,
                     "type": "boolean",
                     "decorators": []
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 35,
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -6531,7 +6668,7 @@
                     "defaultValue": "new EventEmitter<NgxColor | undefined>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 34,
+                    "line": 36,
                     "type": "EventEmitter"
                 }
             ],
@@ -6606,7 +6743,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 40,
+                    "line": 42,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -6616,7 +6753,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 40,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -6628,11 +6765,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { HSVA } from '../../contracts/color-interface';\r\nimport { SaturationComponent, SliderComponent, IPosition } from 'ngx-input-color/shared';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'app-picker',\r\n  templateUrl: './picker.component.html',\r\n  styleUrls: ['./picker.component.scss'],\r\n  imports: [FormsModule, SliderComponent, SaturationComponent],\r\n})\r\nexport class PickerComponent implements OnInit {\r\n  hue = 300;\r\n  baseColor = 'rgb(0,0,0)';\r\n  alphaBgColor = '#000';\r\n\r\n  board: IPosition = { x: 1, y: 0 };\r\n  alpha = 1;\r\n  private inputColor?: NgxColor;\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const shva = c.toHsv();\r\n    this.hue = shva.h;\r\n    this.board = { x: shva.s, y: 100 - shva.v };\r\n    this.alpha = shva.a ?? 1;\r\n    const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n    this.baseColor = pureColor.toHexString(false);\r\n    this.alphaBgColor = this.inputColor.toHexString(false);\r\n  }\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsva: HSVA = { h: this.hue, s: this.board.x, v: 100 - this.board.y, a: this.alpha };\r\n      const color = new NgxColor(hsva);\r\n      const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n      this.baseColor = pureColor.toHexString(false);\r\n      this.alphaBgColor = color.toHexString(false);\r\n\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { HSVA } from '../../contracts/color-interface';\r\nimport { SaturationComponent, SliderComponent, IPosition } from 'ngx-input-color/shared';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'app-picker',\r\n  templateUrl: './picker.component.html',\r\n  styleUrls: ['./picker.component.scss'],\r\n  imports: [FormsModule, SliderComponent, SaturationComponent],\r\n})\r\nexport class PickerComponent implements OnInit {\r\n  hue = 300;\r\n  baseColor = 'rgb(0,0,0)';\r\n  alphaBgColor = '#000';\r\n\r\n  board: IPosition = { x: 1, y: 0 };\r\n  alpha = 1;\r\n  private inputColor?: NgxColor;\r\n  @Input() simpleMode = false;\r\n\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const shva = c.toHsv();\r\n    this.hue = shva.h;\r\n    this.board = { x: shva.s, y: 100 - shva.v };\r\n    this.alpha = shva.a ?? 1;\r\n    const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n    this.baseColor = pureColor.toHexString(false);\r\n    this.alphaBgColor = this.inputColor.toHexString(false);\r\n  }\r\n  \r\n  @Input() useAlphaChannel: boolean = true;\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const hsva: HSVA = { h: this.hue, s: this.board.x, v: 100 - this.board.y, a: this.alpha };\r\n      const color = new NgxColor(hsva);\r\n      const pureColor = new NgxColor({ h: this.hue, s: 100, v: 100, a: 1 });\r\n      this.baseColor = pureColor.toHexString(false);\r\n      this.alphaBgColor = color.toHexString(false);\r\n\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "  .color-sliders {\r\n    display: flex;\r\n    gap: 5px;\r\n    .sliders {\r\n      flex: 1;\r\n    }\r\n  }",
+                    "data": ".color-sliders {\r\n  display: flex;\r\n  gap: 5px;\r\n  .sliders {\r\n    flex: 1;\r\n  }\r\n}\r\n",
                     "styleUrl": "./picker.component.scss"
                 }
             ],
@@ -6643,7 +6780,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 34
+                "line": 36
             },
             "implements": [
                 "OnInit"
@@ -6680,7 +6817,7 @@
                     }
                 }
             },
-            "templateData": "<saturation\r\n  [height]=\"simpleMode ? 150 : 160\"\r\n  [(ngModel)]=\"board\"\r\n  [min]=\"{ x: 0, y: 0 }\"\r\n  [max]=\"{ x: 100, y: 100 }\"\r\n  [step]=\"1\"\r\n  [color]=\"baseColor\"\r\n  (change)=\"generateColor()\"></saturation>\r\n<slider\r\n  [(ngModel)]=\"hue\"\r\n  [min]=\"0\"\r\n  [max]=\"360\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  background=\"linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)\"></slider>\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + alphaBgColor + ')'\"></slider>\r\n"
+            "templateData": "<saturation\r\n  [height]=\"simpleMode ? 150 : 160\"\r\n  [(ngModel)]=\"board\"\r\n  [min]=\"{ x: 0, y: 0 }\"\r\n  [max]=\"{ x: 100, y: 100 }\"\r\n  [step]=\"1\"\r\n  [color]=\"baseColor\"\r\n  (change)=\"generateColor()\"></saturation>\r\n<slider\r\n  [(ngModel)]=\"hue\"\r\n  [min]=\"0\"\r\n  [max]=\"360\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  background=\"linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)\"></slider>\r\n@if(useAlphaChannel){\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + alphaBgColor + ')'\"></slider>\r\n}\r\n"
         },
         {
             "name": "RangeSliderComponent",
@@ -7494,7 +7631,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "$sliderHeight: 12px;\r\n\r\n.slider-container {\r\n  max-width: 100%;\r\n  padding: 1px 0;\r\n\r\n  .slider {\r\n    position: relative;\r\n    box-shadow: inset hsla(250, 3%, 0%, 0.075) 0 0 0 1px;\r\n    border-radius: 10px;\r\n    height: $sliderHeight;\r\n    width: 100%;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    margin: 10px 0;\r\n\r\n    &.bg-transparent {\r\n      background: transparent;\r\n      &::before,\r\n      &::after {\r\n        position: absolute;\r\n        top: 1px;\r\n        left: 1px;\r\n        right: 1px;\r\n        bottom: 1px;\r\n        border-radius: 9px;\r\n      }\r\n      &::before {\r\n        content: ' ';\r\n        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n          linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n          linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n        background-size: 16px 16px;\r\n        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n      }\r\n      &::after {\r\n        content: ' ';\r\n        background: var(--ngx-slider-bg);\r\n      }\r\n    }\r\n\r\n    &.add-range-cursor {\r\n      cursor: copy;\r\n    }\r\n  }\r\n\r\n  .thumb {\r\n    box-shadow: hsla(250, 3%, 0%, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.05) 0 10px 10px -5px, inset #fff 0 0 0 6px;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    height: var(--ngx-thumb-size, 30px);\r\n    width: var(--ngx-thumb-size, 30px);\r\n    display: block;\r\n    border-radius: 100%;\r\n    top: calc($sliderHeight / 2 - (var(--ngx-thumb-size, 30px) / 2));\r\n    position: absolute;\r\n    cursor: grab;\r\n    z-index: 100;\r\n    &.is-active {\r\n      outline: 1px rgb(89, 0, 255) solid;\r\n    }\r\n  }\r\n}\r\n",
+                    "data": "$sliderHeight: 12px;\r\n\r\n.slider-container {\r\n  max-width: 100%;\r\n  padding: 1px 0;\r\n\r\n  .slider {\r\n    position: relative;\r\n    box-shadow: inset hsla(250, 3%, 0%, 0.075) 0 0 0 1px;\r\n    border-radius: 10px;\r\n    height: $sliderHeight;\r\n    width: 100%;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    margin: 10px 0;\r\n\r\n    &.bg-transparent {\r\n      background: transparent;\r\n      &::before,\r\n      &::after {\r\n        position: absolute;\r\n        top: 1px;\r\n        left: 1px;\r\n        right: 1px;\r\n        bottom: 1px;\r\n        border-radius: 9px;\r\n      }\r\n      &::before {\r\n        content: ' ';\r\n        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n          linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n          linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n        background-size: 16px 16px;\r\n        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n      }\r\n      &::after {\r\n        content: ' ';\r\n        background: var(--ngx-slider-bg);\r\n      }\r\n    }\r\n\r\n    &.add-range-cursor {\r\n      cursor: copy;\r\n    }\r\n  }\r\n\r\n  .thumb {\r\n    box-shadow: hsla(250, 3%, 0%, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.05) 0 10px 10px -5px, inset #fff 0 0 0 6px;\r\n    height: var(--ngx-thumb-size, 30px);\r\n    width: var(--ngx-thumb-size, 30px);\r\n    display: block;\r\n    border-radius: 100%;\r\n    top: calc($sliderHeight / 2 - (var(--ngx-thumb-size, 30px) / 2));\r\n    position: absolute;\r\n    cursor: grab;\r\n    z-index: 100;\r\n    &.is-active {\r\n      outline: 1px rgb(89, 0, 255) solid;\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./range-slider.component.scss"
                 }
             ],
@@ -7534,7 +7671,7 @@
         },
         {
             "name": "RgbComponent",
-            "id": "component-RgbComponent-e14a446d8e44e287e967173b19ceadd3a5cddc24b81081068219a8ac3fe2c5739364e39e896c765b752c3519bf1ac350fb2d4dd887897934b10354ab52605a48",
+            "id": "component-RgbComponent-4e8d1caeb3770ea9f6751cd9db5c09499a9a4fb81062edcb2e238322e90cbac7b859ea3cc4807724df15c6b95567cc6f6cd7becb63412ab5a1bd75c17d6287da",
             "file": "projects/library/color-picker/inspectors/rgb/rgb.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -7558,6 +7695,15 @@
                     "line": 25,
                     "type": "",
                     "decorators": []
+                },
+                {
+                    "name": "useAlphaChannel",
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 36,
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -7566,7 +7712,7 @@
                     "defaultValue": "new EventEmitter<NgxColor | undefined>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 35,
+                    "line": 37,
                     "type": "EventEmitter"
                 }
             ],
@@ -7671,7 +7817,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 40,
+                    "line": 42,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -7681,7 +7827,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 40,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -7698,7 +7844,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 54,
+                    "line": 56,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -7724,11 +7870,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { RGBA } from '../../contracts/color-interface';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { SliderComponent } from 'ngx-input-color/shared';\r\n\r\n@Component({\r\n  selector: 'app-rgb',\r\n  templateUrl: './rgb.component.html',\r\n  styleUrls: ['./rgb.component.scss'],\r\n  imports: [FormsModule, SliderComponent],\r\n})\r\nexport class RgbComponent implements OnInit {\r\n  redSliderBackground = '';\r\n  greenSliderBackground = '';\r\n  blueSliderBackground = '';\r\n\r\n  baseColor = 'rgb(0,0,0)';\r\n  red: number = 0;\r\n  green: number = 0;\r\n  blue: number = 0;\r\n  alpha: number = 1;\r\n\r\n  private inputColor?: NgxColor;\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const rgba = c.toRgb();\r\n    this.red = rgba.r;\r\n    this.green = rgba.g;\r\n    this.blue = rgba.b;\r\n    this.alpha = rgba.a ?? 1;\r\n    this.updateRgbSliderColor(rgba as any);\r\n  }\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const rgba: RGBA = { r: this.red, g: this.green, b: this.blue, a: this.alpha };\r\n      const color = new NgxColor(rgba);\r\n      this.updateRgbSliderColor(rgba);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n\r\n  private updateRgbSliderColor(rgba: RGBA) {\r\n    const { r, g, b } = rgba;\r\n    this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;\r\n    this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;\r\n    this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;\r\n    this.baseColor = `rgb(${r}, ${g}, ${b})`;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';\r\nimport { NgxColor } from '../../utils/color-helper';\r\nimport { RGBA } from '../../contracts/color-interface';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { SliderComponent } from 'ngx-input-color/shared';\r\n\r\n@Component({\r\n  selector: 'app-rgb',\r\n  templateUrl: './rgb.component.html',\r\n  styleUrls: ['./rgb.component.scss'],\r\n  imports: [FormsModule, SliderComponent],\r\n})\r\nexport class RgbComponent implements OnInit {\r\n  redSliderBackground = '';\r\n  greenSliderBackground = '';\r\n  blueSliderBackground = '';\r\n\r\n  baseColor = 'rgb(0,0,0)';\r\n  red: number = 0;\r\n  green: number = 0;\r\n  blue: number = 0;\r\n  alpha: number = 1;\r\n\r\n  private inputColor?: NgxColor;\r\n  @Input() set color(c: NgxColor) {\r\n    if (c.equals(this.inputColor)) return;\r\n    this.inputColor = c;\r\n    const rgba = c.toRgb();\r\n    this.red = rgba.r;\r\n    this.green = rgba.g;\r\n    this.blue = rgba.b;\r\n    this.alpha = rgba.a ?? 1;\r\n    this.updateRgbSliderColor(rgba as any);\r\n  }\r\n  \r\n  @Input() useAlphaChannel: boolean = true;\r\n  @Output() colorChange = new EventEmitter<NgxColor | undefined>();\r\n  constructor() {}\r\n\r\n  ngOnInit() {}\r\n\r\n  generateColor() {\r\n    try {\r\n      const rgba: RGBA = { r: this.red, g: this.green, b: this.blue, a: this.alpha };\r\n      const color = new NgxColor(rgba);\r\n      this.updateRgbSliderColor(rgba);\r\n      if (color.equals(this.inputColor) == false) {\r\n        this.inputColor = color;\r\n        this.colorChange.emit(color);\r\n      }\r\n    } catch (error) {\r\n      this.colorChange.emit(undefined);\r\n    }\r\n  }\r\n\r\n  private updateRgbSliderColor(rgba: RGBA) {\r\n    const { r, g, b } = rgba;\r\n    this.redSliderBackground = `linear-gradient(to right, rgb(0, ${g}, ${b}), rgb(255, ${g}, ${b}))`;\r\n    this.greenSliderBackground = `linear-gradient(to right, rgb(${r}, 0, ${b}), rgb(${r}, 255, ${b}))`;\r\n    this.blueSliderBackground = `linear-gradient(to right, rgb(${r}, ${g}, 0), rgb(${r}, ${g}, 255))`;\r\n    this.baseColor = `rgb(${r}, ${g}, ${b})`;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 40px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}",
+                    "data": ".slider-title {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  input {\r\n    transition: box-shadow 0.1s;\r\n    box-shadow: inset hsl(250, 3%, 85%) 0 0 0 1px, inset white 0 0 0 100px;\r\n    border: none;\r\n    width: 40px;\r\n    color: hsl(250, 3%, 0%);\r\n    font-family: 'Inter', sans-serif;\r\n    padding: 5px 6px;\r\n    border-radius: 5px;\r\n    font-size: 12px;\r\n  }\r\n}\r\n",
                     "styleUrl": "./rgb.component.scss"
                 }
             ],
@@ -7739,7 +7885,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "args": [],
-                "line": 35
+                "line": 37
             },
             "implements": [
                 "OnInit"
@@ -7776,7 +7922,7 @@
                     }
                 }
             },
-            "templateData": "<slider\r\n  [(ngModel)]=\"red\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"redSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Red</span>\r\n    <input type=\"number\" [(ngModel)]=\"red\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"green\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"greenSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Green</span>\r\n    <input type=\"number\" [(ngModel)]=\"green\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"blue\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"blueSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Blue</span>\r\n    <input type=\"number\" [(ngModel)]=\"blue\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Alpha</span>\r\n    <input type=\"number\" [(ngModel)]=\"alpha\" min=\"0\" max=\"1\" step=\"0.1\" />\r\n  </div>\r\n</slider>\r\n"
+            "templateData": "<slider\r\n  [(ngModel)]=\"red\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"redSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Red</span>\r\n    <input type=\"number\" [(ngModel)]=\"red\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"green\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"greenSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Green</span>\r\n    <input type=\"number\" [(ngModel)]=\"green\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n<slider\r\n  [(ngModel)]=\"blue\"\r\n  [min]=\"0\"\r\n  [max]=\"255\"\r\n  [step]=\"1\"\r\n  (change)=\"generateColor()\"\r\n  [background]=\"blueSliderBackground\">\r\n  <div class=\"slider-title\">\r\n    <span>Blue</span>\r\n    <input type=\"number\" [(ngModel)]=\"blue\" min=\"0\" max=\"255\" step=\"1\" />\r\n  </div>\r\n</slider>\r\n@if(useAlphaChannel){\r\n<slider\r\n  [(ngModel)]=\"alpha\"\r\n  [min]=\"0\"\r\n  [max]=\"1\"\r\n  [step]=\"0.1\"\r\n  (change)=\"generateColor()\"\r\n  [isBgTransparent]=\"true\"\r\n  [background]=\"'linear-gradient(to right,transparent,' + baseColor + ')'\">\r\n  <div class=\"slider-title\">\r\n    <span>Alpha</span>\r\n    <input type=\"number\" [(ngModel)]=\"alpha\" min=\"0\" max=\"1\" step=\"0.1\" />\r\n  </div>\r\n</slider>\r\n}\r\n"
         },
         {
             "name": "SaturationComponent",
@@ -9227,7 +9373,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "$sliderHeight: 12px;\r\n\r\n.slider-container {\r\n  max-width: 100%;\r\n  padding: 1px 0;\r\n\r\n  .slider {\r\n    position: relative;\r\n    box-shadow: inset hsla(250, 3%, 0%, 0.075) 0 0 0 1px;\r\n    border-radius: 10px;\r\n    height: $sliderHeight;\r\n    width: 100%;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    margin: 10px 0;\r\n\r\n    &.bg-transparent {\r\n      background: transparent;\r\n      &::before,\r\n      &::after {\r\n        position: absolute;\r\n        top: 1px;\r\n        left: 1px;\r\n        right: 1px;\r\n        bottom: 1px;\r\n        border-radius: 9px;\r\n      }\r\n      &::before {\r\n        content: ' ';\r\n        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n          linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n          linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n        background-size: 16px 16px;\r\n        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n      }\r\n      &::after {\r\n        content: ' ';\r\n        background: var(--ngx-slider-bg);\r\n      }\r\n    }\r\n  }\r\n\r\n  .thumb {\r\n    box-shadow: hsla(250, 3%, 0%, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.05) 0 10px 10px -5px, inset #fff 0 0 0 6px;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    height: var(--ngx-thumb-size, 30px);\r\n    width: var(--ngx-thumb-size, 30px);\r\n    display: block;\r\n    border-radius: 100%;\r\n    top: calc($sliderHeight / 2 - (var(--ngx-thumb-size, 30px) / 2));\r\n    position: absolute;\r\n    cursor: grab;\r\n    z-index: 100;\r\n  }\r\n}\r\n",
+                    "data": "$sliderHeight: 12px;\r\n\r\n.slider-container {\r\n  max-width: 100%;\r\n  padding: 1px 0;\r\n\r\n  .slider {\r\n    position: relative;\r\n    box-shadow: inset hsla(250, 3%, 0%, 0.075) 0 0 0 1px;\r\n    border-radius: 10px;\r\n    height: $sliderHeight;\r\n    width: 100%;\r\n    background: var(--ngx-slider-bg, rgb(140, 51, 250));\r\n    margin: 10px 0;\r\n\r\n    &.bg-transparent {\r\n      background: transparent;\r\n      &::before,\r\n      &::after {\r\n        position: absolute;\r\n        top: 1px;\r\n        left: 1px;\r\n        right: 1px;\r\n        bottom: 1px;\r\n        border-radius: 9px;\r\n      }\r\n      &::before {\r\n        content: ' ';\r\n        background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),\r\n          linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%),\r\n          linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n        background-size: 16px 16px;\r\n        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;\r\n      }\r\n      &::after {\r\n        content: ' ';\r\n        background: var(--ngx-slider-bg);\r\n      }\r\n    }\r\n  }\r\n\r\n  .thumb {\r\n    box-shadow: hsla(250, 3%, 0%, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.05) 0 10px 10px -5px, inset #fff 0 0 0 6px;\r\n    height: var(--ngx-thumb-size, 30px);\r\n    width: var(--ngx-thumb-size, 30px);\r\n    display: block;\r\n    border-radius: 100%;\r\n    top: calc($sliderHeight / 2 - (var(--ngx-thumb-size, 30px) / 2));\r\n    position: absolute;\r\n    cursor: grab;\r\n    z-index: 100;\r\n  }\r\n}\r\n",
                     "styleUrl": "./slider.component.scss"
                 }
             ],
@@ -13549,7 +13695,7 @@
                 "linktype": "component",
                 "name": "ColorPickerComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/8",
+                "coverageCount": "0/9",
                 "status": "low"
             },
             {
@@ -13613,8 +13759,8 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "NgxInputColorComponent",
-                "coveragePercent": 36,
-                "coverageCount": "4/11",
+                "coveragePercent": 30,
+                "coverageCount": "4/13",
                 "status": "medium"
             },
             {
@@ -13696,7 +13842,7 @@
                 "linktype": "directive",
                 "name": "NgxInputColor",
                 "coveragePercent": 0,
-                "coverageCount": "0/37",
+                "coverageCount": "0/39",
                 "status": "low"
             },
             {
@@ -13714,7 +13860,7 @@
                 "linktype": "component",
                 "name": "HslComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/12",
+                "coverageCount": "0/13",
                 "status": "low"
             },
             {
@@ -13723,7 +13869,7 @@
                 "linktype": "component",
                 "name": "PickerComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/13",
+                "coverageCount": "0/14",
                 "status": "low"
             },
             {
@@ -13732,7 +13878,7 @@
                 "linktype": "component",
                 "name": "RgbComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/16",
+                "coverageCount": "0/17",
                 "status": "low"
             },
             {
@@ -13759,7 +13905,7 @@
                 "linktype": "classe",
                 "name": "NgxColor",
                 "coveragePercent": 0,
-                "coverageCount": "0/21",
+                "coverageCount": "0/22",
                 "status": "low"
             },
             {

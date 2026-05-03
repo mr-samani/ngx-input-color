@@ -1,7 +1,7 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgxInputColorComponent, EnumToArrayPipe, ColorInspector } from 'ngx-input-color/color-picker';
+import { NgxInputColorComponent, EnumToArrayPipe, ColorInspector, NgxInputColor } from 'ngx-input-color/color-picker';
 
 const meta: Meta<NgxInputColorComponent> = {
   title: 'Demo/NgxInputColor',
@@ -29,7 +29,7 @@ const meta: Meta<NgxInputColorComponent> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, FormsModule, EnumToArrayPipe],
+      imports: [CommonModule, FormsModule, EnumToArrayPipe, NgxInputColorComponent, NgxInputColor],
     }),
   ],
   render: (args) => ({
@@ -57,6 +57,7 @@ export const Default: Story = {
       myColor: '#01a13fff',
       outputType: 'HEX',
       simpleMode: false,
+      useAlphaChannel: true,
       inspector: ColorInspector.Picker,
       theme: 'auto',
     },
@@ -68,6 +69,12 @@ export const Default: Story = {
       <label>
         <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
         Simple Mode
+      </label>
+    </div>
+   <div>
+      <label>
+        <input type="checkbox" name="useAlphaChannel" [(ngModel)]="useAlphaChannel" />
+       Use Alpha Channel
       </label>
     </div>
 
@@ -135,6 +142,7 @@ export const Default: Story = {
         ngxInputColor
         class="form-control"
         [simpleMode]="simpleMode"
+        [useAlphaChannel]="useAlphaChannel"
         [outputType]="outputType"
         [defaultInspector]="inspector" 
         [theme]="theme"/>

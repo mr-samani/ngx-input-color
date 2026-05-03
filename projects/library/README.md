@@ -1,4 +1,4 @@
-# ngx-input-color 
+# ngx-input-color
 
 ## Color Picker, Gradient Picker and Box Shadow
 
@@ -22,7 +22,7 @@
 - **Angular Forms Integration:** Works with `ngModel` and reactive forms
 - **EyeDropper API Support:** Pick colors from anywhere on your screen (if supported)
 - **Live Preview:** Instantly see the selected color or gradient
-- **Highly Customizable:**  set input background color, Simple mode and more
+- **Highly Customizable:** set input background color, Simple mode and more
 - **Inline & Input Modes:** Use as a popup input or as an always-visible inline component
 - **Unit Tested:** Includes comprehensive unit tests
 
@@ -66,7 +66,7 @@ import { NgxInputColor } from 'ngx-input-color/color-picker';
 <span>Selected: {{ color }}</span>
 ```
 
- - Gradient Picker Input
+- Gradient Picker Input
 
 ```typescript
 import { NgxInputGradient } from 'ngx-input-color/gradient-picker';
@@ -107,13 +107,14 @@ import { NgxInputGradient } from 'ngx-input-color/gradient-picker';
 
 ### NgxInputColor (Input & Inline)
 
-| Name                          | Type                   | Default   | Description                                    |
-| ----------------------------- | ---------------------- | --------- | ---------------------------------------------- |
-| `setInputBackgroundColor`     | `boolean`              | `true`    | Set input background to selected color         |
-| `simpleMode`                  | `boolean`              | `false`   | Compact UI for inline use                      |
-| `defaultInspector`            | `ColorInspector` enum  | Picker    | Default inspector (Picker, RGB, HSL, CMYK)     |
-| `[(ngModel)]` / `formControl` | `string`               |           | Two-way binding for the selected color         |
-| `change` (Output)             | `EventEmitter<string>` |           | Emits the color value on change                |
+| Name                          | Type                   | Default | Description                                |
+| ----------------------------- | ---------------------- | ------- | ------------------------------------------ |
+| `setInputBackgroundColor`     | `boolean`              | `true`  | Set input background to selected color     |
+| `simpleMode`                  | `boolean`              | `false` | Compact UI                                 |
+| `useAlphaChannel`             | `boolean`              | `true`  | Use alpha channel                 |
+| `defaultInspector`            | `ColorInspector` enum  | Picker  | Default inspector (Picker, RGB, HSL, CMYK) |
+| `[(ngModel)]` / `formControl` | `string`               |         | Two-way binding for the selected color     |
+| `change` (Output)             | `EventEmitter<string>` |         | Emits the color value on change            |
 
 #### Supported Color Formats
 
@@ -127,10 +128,10 @@ import { NgxInputGradient } from 'ngx-input-color/gradient-picker';
 
 ### NgxInputGradient (Input & Inline)
 
-| Name                          | Type                   | Default   | Description                                    |
-| ----------------------------- | ---------------------- | --------- | ---------------------------------------------- |
-| `[(ngModel)]` / `formControl` | `string`               |           | Two-way binding for the selected gradient      |
-| `change` (Output)             | `EventEmitter<string>` |           | Emits the gradient value on change             |
+| Name                          | Type                   | Default | Description                               |
+| ----------------------------- | ---------------------- | ------- | ----------------------------------------- |
+| `[(ngModel)]` / `formControl` | `string`               |         | Two-way binding for the selected gradient |
+| `change` (Output)             | `EventEmitter<string>` |         | Emits the gradient value on change        |
 
 #### Supported Gradient Formats
 
