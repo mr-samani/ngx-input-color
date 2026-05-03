@@ -49,6 +49,16 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   @Input() simpleMode = false;
   @Input() outputType: OutputType = 'HEX';
   @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
+  private useAlphaChannel: boolean = true;
+  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {
+    this.useAlphaChannel = val == true;
+    if (!this.useAlphaChannel && this.color) {
+      this.color.removeAlphaChannel();
+      this.color.getOutputResult(this.outputType).then((c) => {
+        this.emitChange(c);
+      });
+    }
+  }
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
   };
@@ -173,6 +183,7 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
     instance.simpleMode = this.simpleMode;
     instance.outputType = this.outputType;
     instance.setTheme = this.theme;
+    instance.setUseAlphaChannel = this.useAlphaChannel;
 
     if (this.color?.isValid) instance.initColor(this.color);
     instance.change.subscribe((c: string) => {

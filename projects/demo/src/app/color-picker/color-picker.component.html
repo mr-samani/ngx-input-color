@@ -6,12 +6,20 @@
   [simpleMode]="simpleMode"
   [outputType]="outputType"
   [defaultInspector]="inspector"
-  [theme]="theme" />
+  [theme]="theme"
+  [useAlphaChannel]="useAlphaChannel" />
 <button type="button" (click)="color = ''">x</button>
 <div>
   <label>
     <input type="checkbox" name="simpleMode" [(ngModel)]="simpleMode" />
     Simple Mode
+  </label>
+</div>
+
+<div>
+  <label>
+    <input type="checkbox" name="alphaChannel" [(ngModel)]="useAlphaChannel" />
+    Alpha channel
   </label>
 </div>
 

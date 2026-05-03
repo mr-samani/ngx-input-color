@@ -75,6 +75,15 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
    */
   @Input() defaultInspector: ColorInspector = ColorInspector.Picker;
 
+  useAlphaChannel: boolean = true;
+  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {
+    this.useAlphaChannel = val == true;
+    if (!this.useAlphaChannel) {
+      this.color.removeAlphaChannel();
+      this.emitChange();
+    }
+  }
+
   /** Emitted when the color value changes */
   @Output() change = new EventEmitter<string>();
 
@@ -113,8 +122,7 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   /** @ignore */
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   /** @ignore */
   ngOnDestroy(): void {}
   public get ColorFormats(): typeof ColorFormats {

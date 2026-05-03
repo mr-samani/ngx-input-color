@@ -1,7 +1,11 @@
-  .color-sliders {
-    display: flex;
-    gap: 5px;
-    .sliders {
-      flex: 1;
-    }
+:host {
+  display: block;
+  padding: 8px;
+}
+.color-sliders {
+  display: flex;
+  gap: 5px;
+  .sliders {
+    flex: 1;
   }
+}

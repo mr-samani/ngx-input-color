@@ -16,7 +16,7 @@ import {
   rgbToHsvString,
 } from './conversion';
 import { colorNames } from './css-color-names';
-import { CMYK, HSL, HSLA, HSV, HSVA, RGB, RGBA } from '../contracts/color-interface';
+import { CMYK, HSLA, HSVA, RGBA } from '../contracts/color-interface';
 import { OutputType } from '../contracts/OutputType';
 import { ColorInput } from '../contracts/ColorInput';
 export class NgxColor {
@@ -193,5 +193,9 @@ export class NgxColor {
         let name = await this.name();
         return name ?? this.toHexString(true);
     }
+  }
+
+  removeAlphaChannel() {
+    this._rgb.a = 1;
   }
 }

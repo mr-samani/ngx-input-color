@@ -16,6 +16,7 @@ export class ColorPickerComponent implements OnInit {
   simpleMode = false;
   inspector: ColorInspector = ColorInspector.Picker;
 
+  useAlphaChannel = true;
   constructor() {}
 
   ngOnInit() {}
