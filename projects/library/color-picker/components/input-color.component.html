@@ -1,6 +1,6 @@
 <div class="ngx-input-color-picker" (click)="stopPropagation($event)" [class.simple-mode]="simpleMode">
   @if (!simpleMode) {
-  <div class="ngx-color-preview" [style.background]="rgbaColor" [class.is-dark-color]="isDarkColor">
+  <div class="ngx-color-preview" [ngStyle]="{ '--ngx-selected-color': rgbaColor }" [class.is-dark-color]="isDarkColor">
     <div class="rgbacode">{{ outputColor | uppercase }}</div>
     @if (outputType !== 'HEX') {
     <div class="hexacode">{{ hexColor | uppercase }}</div>
