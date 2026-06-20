@@ -1,11 +1,9 @@
 import {
   AfterViewInit,
-  ComponentRef,
   Directive,
   ElementRef,
   EventEmitter,
   HostListener,
-  Inject,
   Input,
   OnDestroy,
   Output,
@@ -22,8 +20,8 @@ import {
   Validator,
 } from '@angular/forms';
 import { NgxInputGradientComponent } from '../components/input-gradient.component';
-import { DOCUMENT } from '@angular/common';
 import { isValidGradient, parseGradient } from '../utils/build-gradient';
+import { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';
 
 @Directive({
   selector: '[ngxInputGradient]',
@@ -41,7 +39,7 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
   @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
   private _targetInput?: HTMLInputElement;
   @Input('ngxInputColor') set ngxInputColor(
-    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''
+    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',
   ) {
     this.isHostInput = false;
     if (el instanceof ElementRef) {
@@ -63,9 +61,7 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
     this.writeValue((e.target as HTMLInputElement).value);
   };
   private isHostInput = false;
-  private pickerComponentRef?: ComponentRef<NgxInputGradientComponent>;
-  private backdrop?: HTMLDivElement;
-  private pickerEl?: HTMLElement;
+  private pickerRef?: DialogOverlayRef<NgxInputGradientComponent>;
   isDisabled = false;
 
   value = '';
@@ -74,10 +70,10 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
   _onTouched = () => {};
   _onValidateChange = () => {};
   constructor(
-    @Inject(DOCUMENT) private _doc: Document,
     private el: ElementRef,
     private renderer: Renderer2,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private dialogService: DialogService,
   ) {}
 
   @HostListener('click', ['$event']) onClick(ev: Event) {
@@ -131,101 +127,40 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
   }
 
   toggleColorPicker() {
-    if (this.pickerComponentRef) {
+    if (this.pickerRef) {
       this.destroyPicker();
       return;
     }
 
-    // ایجاد کامپوننت
-    this.pickerComponentRef = this.viewContainerRef.createComponent(NgxInputGradientComponent);
+    this.pickerRef = this.dialogService.open({
+      anchor: this.el.nativeElement,
+      component: NgxInputGradientComponent,
+      viewContainerRef: this.viewContainerRef,
+      alignment: 'start',
+      placement: 'auto',
+      backdropColor: '#5e5e5e1f',
+      configure: (instance, ref) => {
+        instance.setTheme = this.theme;
+        instance.writeValue(this.value);
 
-    const instance = this.pickerComponentRef.instance;
-    instance.setTheme = this.theme;
-    instance.writeValue(this.value);
-    instance.change.subscribe((c: string) => {
-      this.value = c;
-      this.emitChange(c);
+        instance.change.subscribe((c: string) => {
+          this.value = c;
+          this.emitChange(c);
+        });
+
+        // instance.closed.subscribe(() => ref.close());
+      },
+      onClosed: () => {
+        this.pickerRef = undefined;
+      },
     });
-    // بک‌دراپ
-    this.backdrop = this.renderer.createElement('div');
-    if (this.backdrop) {
-      this.backdrop.style.cssText = `
-          background: #5e5e5e1e;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          overflow: auto;
-          transition: all 300ms;
-          z-index: 1000;
-        `;
-      this.backdrop.onclick = () => this.destroyPicker();
-    }
-    // گرفتن المنت کامپوننت واقعی
-    this.pickerEl = (this.pickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
-    this.renderer.setStyle(this.pickerEl, 'visibility', 'hidden');
-
-    setTimeout(() => {
-      this.setPosition();
-    });
-  }
-
-  @HostListener('window:resize', [])
-  @HostListener('window:scroll')
-  setPosition() {
-    if (!this.pickerEl || !this.pickerComponentRef) return;
-    const hostRect = this.el.nativeElement.getBoundingClientRect();
-
-    // اعمال موقتی برای گرفتن سایز دقیق
-    this.renderer.setStyle(this.pickerEl, 'position', 'absolute');
-    this.renderer.setStyle(this.pickerEl, 'z-index', '1001');
-
-    this._doc.body.appendChild(this.pickerEl); // لازم برای محاسبه دقیق اندازه
-
-    const pickerRect = this.pickerEl.getBoundingClientRect();
-
-    // وسط‌چین کردن افقی
-    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
-    let top = hostRect.bottom;
-
-    // جلوگیری از بیرون زدن از راست
-    if (left + pickerRect.width > window.innerWidth) {
-      left = window.innerWidth - pickerRect.width - 8;
-    }
-
-    // جلوگیری از بیرون زدن از چپ
-    if (left < 8) {
-      left = 8;
-    }
-
-    // اگر از پایین بیرون زد، ببر بالا
-    if (top + pickerRect.height > window.innerHeight) {
-      top = hostRect.top - pickerRect.height;
-    }
-
-    // جلوگیری از بیرون زدن از بالا
-    if (top < 8) {
-      top = 8;
-    }
-
-    this.renderer.setStyle(this.pickerEl, 'top', `${top}px`);
-    this.renderer.setStyle(this.pickerEl, 'left', `${left}px`);
-    this.renderer.setStyle(this.pickerEl, 'visibility', 'visible');
-    this.renderer.appendChild(this.backdrop, this.pickerEl);
-    this.renderer.appendChild(this._doc.body, this.backdrop);
   }
 
   destroyPicker() {
-    if (this.pickerComponentRef) {
-      this.pickerComponentRef.destroy();
-      this.pickerComponentRef = undefined;
+    if (this.pickerRef) {
+      this.pickerRef.close();
+      this.pickerRef = undefined;
     }
-    if (this.backdrop && this.backdrop.parentNode) {
-      this.renderer.removeChild(this._doc.body, this.backdrop);
-      this.backdrop = undefined;
-    }
-    this.pickerEl = undefined;
   }
 
   private async emitChange(c: string) {

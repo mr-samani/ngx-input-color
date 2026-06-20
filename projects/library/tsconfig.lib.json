@@ -5,10 +5,9 @@
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
-   // "inlineSources": true,
-    "types": []
+    // "inlineSources": true,
+    "types": [],
+    "composite": true
   },
-  "exclude": [
-    "**/*.spec.ts"
-  ]
+  "exclude": ["**/*.spec.ts"]
 }

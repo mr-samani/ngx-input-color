@@ -7,3 +7,7 @@ export * from './utils/get-offset-position';
 export * from './contracts/IPosition';
 
 export * from './services/browser.service';
+
+export * from './dialog/dialog-options';
+export * from './dialog/dialog-overlay-ref';
+export * from './dialog/dialog.service';

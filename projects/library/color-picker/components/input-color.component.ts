@@ -31,6 +31,10 @@ import { HslComponent } from '../inspectors/hsl/hsl.component';
 import { RgbComponent } from '../inspectors/rgb/rgb.component';
 import { BrowserService } from 'ngx-input-color/shared';
 declare const EyeDropper: any;
+
+
+
+
 @Component({
   standalone: true,
   selector: 'ngx-input-color',

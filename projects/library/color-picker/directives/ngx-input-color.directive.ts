@@ -3,7 +3,6 @@ import {
   forwardRef,
   OnDestroy,
   Input,
-  ComponentRef,
   ElementRef,
   Renderer2,
   ViewContainerRef,
@@ -11,8 +10,6 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  Inject,
-  afterNextRender,
 } from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
@@ -26,7 +23,7 @@ import { ColorInspector } from '../contracts/ColorInspector.enum';
 import { NgxInputColorComponent } from '../components/input-color.component';
 import { NgxColor } from '../utils/color-helper';
 import { OutputType } from '../contracts/OutputType';
-import { DOCUMENT } from '@angular/common';
+import { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';
 
 @Directive({
   selector: '[ngxInputColor]',
@@ -65,7 +62,7 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   private _targetInput?: HTMLInputElement;
 
   @Input('ngxInputColor') set ngxInputColor(
-    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | ''
+    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',
   ) {
     this.isHostInput = false;
     if (el instanceof ElementRef) {
@@ -83,9 +80,7 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   }
   @Output() change = new EventEmitter<string>();
   private color?: NgxColor;
-  private colorPickerComponentRef?: ComponentRef<NgxInputColorComponent>;
-  private backdrop?: HTMLDivElement;
-  private colorPickerEl?: HTMLElement;
+  private pickerRef?: DialogOverlayRef<NgxInputColorComponent>;
   private isHostInput = false;
   inValid: boolean = false;
   isDisabled = false;
@@ -94,10 +89,10 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   _onValidateChange = () => {};
 
   constructor(
-    @Inject(DOCUMENT) private _doc: Document,
     private el: ElementRef,
     private renderer: Renderer2,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private dialogService: DialogService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -171,83 +166,42 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   }
 
   private toggleColorPicker() {
-    if (this.colorPickerComponentRef) {
+    if (this.pickerRef) {
       this.destroyColorPicker();
       return;
     }
 
-    this.colorPickerComponentRef = this.viewContainerRef.createComponent(NgxInputColorComponent);
-    const instance = this.colorPickerComponentRef.instance;
+    this.pickerRef = this.dialogService.open({
+      anchor: this.el.nativeElement,
+      component: NgxInputColorComponent,
+      viewContainerRef: this.viewContainerRef,
+      alignment: 'start',
+      placement: 'auto',
+      backdropColor: '#5e5e5e1f',
+      configure: (instance, ref) => {
+        instance.defaultInspector = this.defaultInspector;
+        instance.simpleMode = this.simpleMode;
+        instance.outputType = this.outputType;
+        instance.setTheme = this.theme;
+        instance.setUseAlphaChannel = this.useAlphaChannel;
+        if (this.color?.isValid) instance.writeValue(this.color);
 
-    instance.defaultInspector = this.defaultInspector;
-    instance.simpleMode = this.simpleMode;
-    instance.outputType = this.outputType;
-    instance.setTheme = this.theme;
-    instance.setUseAlphaChannel = this.useAlphaChannel;
+        instance.change.subscribe((c: string) => {
+          this.color = new NgxColor(c);
+          this.emitChange(c);
+        });
 
-    if (this.color?.isValid) instance.initColor(this.color);
-    instance.change.subscribe((c: string) => {
-      this.color = new NgxColor(c);
-      this.emitChange(c);
+        // instance.closed.subscribe(() => ref.close());
+      },
+      onClosed: () => {
+        this.pickerRef = undefined;
+      },
     });
-
-    this.backdrop = this.renderer.createElement('div');
-    if (this.backdrop) {
-      this.backdrop.className = 'ngx-input-color-backdrop';
-      this.backdrop.style.cssText = `
-          background: #5e5e5e1e;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          overflow: auto;
-          transition: all 300ms;
-          z-index: 9998;
-        `;
-      this.backdrop.onclick = () => this.destroyColorPicker();
-    }
-    this.colorPickerEl = (this.colorPickerComponentRef.hostView as any).rootNodes[0] as HTMLElement;
-    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'hidden');
-    setTimeout(() => {
-      this.setPosition();
-    });
-  }
-
-  @HostListener('window:resize')
-  @HostListener('window:scroll')
-  setPosition() {
-    if (!this.colorPickerEl) return;
-    const hostRect = this.el.nativeElement.getBoundingClientRect();
-    const pickerRect = this.colorPickerEl.querySelector('.ngx-input-color-picker')?.getBoundingClientRect();
-    if (!pickerRect) return;
-    let left = hostRect.left + hostRect.width / 2 - pickerRect.width / 2;
-    let top = hostRect.bottom;
-
-    if (left + pickerRect.width > window.innerWidth) left = window.innerWidth - pickerRect.width - 8;
-    if (left < 8) left = 8;
-    if (top + pickerRect.height > window.innerHeight) top = hostRect.top - pickerRect.height;
-    if (top < 8) top = 8;
-
-    this.renderer.setStyle(this.colorPickerEl, 'position', 'absolute');
-    this.renderer.setStyle(this.colorPickerEl, 'z-index', '9999');
-    this.renderer.setStyle(this.colorPickerEl, 'top', `${top}px`);
-    this.renderer.setStyle(this.colorPickerEl, 'left', `${left}px`);
-    this.renderer.setStyle(this.colorPickerEl, 'visibility', 'visible');
-    this.renderer.appendChild(this.backdrop, this.colorPickerEl);
-    this.renderer.appendChild(this._doc.body, this.backdrop);
   }
 
   private destroyColorPicker() {
-    this.colorPickerComponentRef?.destroy();
-    this.colorPickerComponentRef = undefined;
-
-    if (this.backdrop) {
-      this.renderer.removeChild(this._doc.body, this.backdrop);
-      this.backdrop = undefined;
-    }
-
-    this.colorPickerEl = undefined;
+    this.pickerRef?.close();
+    this.pickerRef = undefined;
   }
 
   private async emitChange(c: string) {
