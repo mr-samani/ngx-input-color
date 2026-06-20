@@ -63,7 +63,7 @@
     }
 
     <div class="default-list">
-      @for (item of defaultGradients; track item; let i = $index) {
+      @for (item of defaultGradients; track $index; let i = $index) {
       <span [style.background]="item" (click)="onSelectDefault(item, i)"></span>
       }
     </div>
