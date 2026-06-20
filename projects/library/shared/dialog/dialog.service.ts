@@ -1,4 +1,4 @@
-import { Injectable, Inject, ComponentRef, ApplicationRef } from '@angular/core';
+import { Injectable, Inject, ComponentRef, ApplicationRef, OnDestroy, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { DialogOptions } from './dialog-options';
 import { DialogOverlayRef } from './dialog-overlay-ref';
@@ -9,35 +9,75 @@ interface DialogInstance {
   element: HTMLDialogElement;
   componentRef: ComponentRef<any>;
   options: DialogOptions<any>;
+  cleanup: () => void;
 }
 
 @Injectable({ providedIn: 'root' })
-export class DialogService {
+export class DialogService implements OnDestroy {
   private openDialogs = new Map<number, DialogInstance>();
   private idCounter = 0;
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private appRef: ApplicationRef,
-  ) {}
+  private globalKeyDownAdded = false;
+  private globalResizeAdded = false;
+  private globalClickAdded = false;
+
+  private globalKeyDownListener: (e: KeyboardEvent) => void;
+  private globalResizeListener: () => void;
+  private globalClickListener: (e: PointerEvent) => void;
+
+  private doc = inject(DOCUMENT);
+  constructor() {
+    this.globalKeyDownListener = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        const lastDialog = this.getLastDialog();
+        if (lastDialog) {
+          lastDialog.cleanup();
+        }
+      }
+    };
+
+    this.globalResizeListener = () => {
+      this.repositionAll();
+    };
+
+    this.globalClickListener = (e: PointerEvent) => {
+      this.handleClickOnBackdrop(e);
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.closeAll();
+  }
+
+  handleGlobalListeners() {
+    // مطمئن شویم لیسنرها فقط یک بار اضافه شده‌اند
+    if (!this.globalKeyDownAdded) {
+      this.doc.addEventListener('keydown', this.globalKeyDownListener);
+      this.globalKeyDownAdded = true;
+    }
+    if (!this.globalResizeAdded) {
+      window.addEventListener('resize', this.globalResizeListener);
+      this.globalResizeAdded = true;
+    }
+    if (!this.globalClickAdded) {
+      this.doc.addEventListener('click', this.globalClickListener);
+      this.globalClickAdded = true;
+    }
+  }
 
   open<T>(options: DialogOptions<T>): DialogOverlayRef<T> {
-    const {
-      anchor,
-      component,
-      viewContainerRef,
-      configure,
-      closeOnBackdropClick = true,
-      closeOnEscape = true,
-      onClosed,
-    } = options;
+    const { anchor, component, viewContainerRef, configure, onClosed } = options;
+
     if (!viewContainerRef) {
       throw new Error('ViewContainerRef is required to render dialog content.');
     }
 
+    this.handleGlobalListeners();
+
     const id = ++this.idCounter;
 
-    const dialogElement = this.document.createElement('dialog');
+    const dialogElement = this.doc.createElement('dialog');
+
     dialogElement.style.position = 'absolute';
     dialogElement.style.padding = '0';
     dialogElement.style.margin = '0';
@@ -45,44 +85,52 @@ export class DialogService {
     dialogElement.style.background = 'transparent';
     dialogElement.style.maxWidth = '100vw';
     dialogElement.style.maxHeight = '100vh';
-    this.document.body.appendChild(dialogElement);
+    dialogElement.style.zIndex = `${1000 + this.openDialogs.size}`;
+
+    this.doc.body.appendChild(dialogElement);
+
     const componentRef = viewContainerRef.createComponent(component);
 
     if (componentRef.location.nativeElement) {
       dialogElement.appendChild(componentRef.location.nativeElement);
     }
 
-    if (closeOnEscape) {
-      this.document.addEventListener('keydown', this.onKeyDown.bind(this));
-    }
-    if (window) window.addEventListener('resize', this.reposition.bind(this));
+    // تابع پاک‌سازی اختصاصی برای این دیالوگ
+    const cleanup = () => {
+      if (!this.openDialogs.has(id)) return; // جلوگیری از پاک‌سازی مجدد
+
+      this.openDialogs.delete(id);
+
+      if (componentRef.location.nativeElement?.parentNode) {
+        componentRef.location.nativeElement.remove();
+      }
+      componentRef.destroy();
+      dialogElement.remove();
+
+      onClosed?.();
+    };
 
     const instance: DialogInstance = {
       id,
       anchor,
       element: dialogElement,
       componentRef: componentRef as ComponentRef<T>,
-      options,
+      options: options,
+      cleanup,
     };
 
     this.openDialogs.set(id, instance);
     dialogElement.showModal();
-    if (closeOnBackdropClick) {
-      this.document.addEventListener('click', this.handleClickOnBackdrop.bind(this));
-    }
-    const cleanUp = () => {
-      this.close(id);
-    };
-    
+
     if (configure) {
-      configure(componentRef.instance, new DialogOverlayRef(componentRef, dialogElement, cleanUp));
+      const ref = new DialogOverlayRef(componentRef, dialogElement, cleanup);
+      configure(componentRef.instance, ref);
     }
 
     requestAnimationFrame(() => {
       this.positionDialog(instance);
     });
 
-    // فوکوس روی اولین المان فوکوس‌پذیر
     setTimeout(() => {
       const focusable = dialogElement.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
@@ -92,21 +140,31 @@ export class DialogService {
       }
     }, 0);
 
-    const ref = new DialogOverlayRef(componentRef, dialogElement, cleanUp);
+    const ref = new DialogOverlayRef(componentRef, dialogElement, cleanup);
     return ref;
+  }
+
+  private repositionAll() {
+    Array.from(this.openDialogs.values()).forEach((instance) => {
+      if (instance.anchor && instance.element.isConnected) {
+        this.positionDialog(instance);
+      }
+    });
   }
 
   private positionDialog(dialogInstance: DialogInstance) {
     const anchor = dialogInstance.anchor;
     const dialog = dialogInstance.element;
-    const { placement, alignment } = dialogInstance.options;
+    const { placement, alignment, margin = 8 } = dialogInstance.options;
+
     if (!anchor || !dialog) return;
-    const margin = dialogInstance.options.margin ?? 0;
+
     const anchorRect = anchor.getBoundingClientRect();
     const dialogRect = dialog.getBoundingClientRect();
+
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const isRTL = getComputedStyle(this.document.documentElement).direction === 'rtl';
+    const isRTL = getComputedStyle(this.doc.documentElement).direction === 'rtl';
 
     let top = 0;
     let left = 0;
@@ -114,9 +172,10 @@ export class DialogService {
     const spaceBelow = vh - anchorRect.bottom;
     const spaceAbove = anchorRect.top;
 
+    //  Top
     if (placement === 'bottom' || (placement === 'auto' && spaceBelow >= dialogRect.height + margin)) {
       top = anchorRect.bottom + margin;
-      if (top + dialogRect.height > vh) {
+      if (top + dialogRect.height > vh - margin) {
         top = vh - dialogRect.height - margin;
       }
     } else {
@@ -126,21 +185,14 @@ export class DialogService {
       }
     }
 
+    //  Left
     if (alignment === 'center') {
       left = anchorRect.left + anchorRect.width / 2 - dialogRect.width / 2;
     } else if (alignment === 'start') {
-      if (!isRTL) {
-        left = anchorRect.left;
-      } else {
-        left = anchorRect.right - dialogRect.width;
-      }
+      left = isRTL ? anchorRect.right - dialogRect.width : anchorRect.left;
     } else {
       // end
-      if (!isRTL) {
-        left = anchorRect.right - dialogRect.width;
-      } else {
-        left = anchorRect.left;
-      }
+      left = isRTL ? anchorRect.left : anchorRect.right - dialogRect.width;
     }
 
     if (left < margin) left = margin;
@@ -159,34 +211,17 @@ export class DialogService {
     return lastKey ? this.openDialogs.get(lastKey) : undefined;
   }
 
-  close(id: number) {
-    const finded = this.openDialogs.get(id);
-    if (!finded) return;
-    const { closeOnEscape } = finded.options;
-
-    finded.componentRef.destroy();
-    if (finded.element.parentNode) {
-      finded.element.remove();
-    }
-    finded.options?.onClosed?.();
-    this.openDialogs.delete(id);
-
-    if (this.openDialogs.size == 0) {
-      this.document.removeEventListener('keydown', this.onKeyDown.bind(this));
-      if (window) window.removeEventListener('resize', this.reposition.bind(this));
-    }
-  }
-
   closeAll(): void {
     const ids = Array.from(this.openDialogs.keys());
     ids.forEach((id) => {
-      this.close(id);
+      const instance = this.openDialogs.get(id);
+      instance?.cleanup();
     });
   }
 
   handleClickOnBackdrop(event: PointerEvent) {
     const target = event.target;
-    
+
     const lastDialog = this.getLastDialog();
     if (!lastDialog) return;
 
@@ -201,24 +236,7 @@ export class DialogService {
       rect.left <= event.clientX &&
       event.clientX <= rect.left + rect.width;
     if (!clickWasInsideDialog) {
-      this.close(lastDialog.id);
+      lastDialog.cleanup();
     }
   }
-
-  onKeyDown(e: KeyboardEvent) {
-    const lastDialog = this.getLastDialog();
-    if (!lastDialog) return;
-    if (e.key === 'Escape') {
-      this.close(lastDialog.id);
-    }
-  }
-
-  reposition = () => {
-    Array.from(this.openDialogs.keys()).forEach((id) => {
-      let dialog = this.openDialogs.get(id);
-      if (dialog && dialog.anchor && dialog.element.isConnected) {
-        this.positionDialog(dialog);
-      }
-    });
-  };
 }

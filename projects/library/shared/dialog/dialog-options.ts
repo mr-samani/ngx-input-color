@@ -14,7 +14,6 @@ export interface DialogOptions<T> {
   alignment?: 'start' | 'center' | 'end'; // default: center
 
   closeOnBackdropClick?: boolean; // default: true
-  closeOnEscape?: boolean; // default: true
 
   onClosed?: () => void;
 }
