@@ -9,8 +9,6 @@ export interface DialogOptions<T> {
   configure?: (instance: T, ref: DialogOverlayRef<T>) => void;
 
   margin?: number; // default: 8
-  zIndex?: number; // default: 1000
-  backdropColor?: string; // default: rgba(0,0,0,.18)
 
   placement?: 'auto' | 'top' | 'bottom'; // default: auto
   alignment?: 'start' | 'center' | 'end'; // default: center

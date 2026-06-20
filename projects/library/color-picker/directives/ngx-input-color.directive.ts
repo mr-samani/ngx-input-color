@@ -177,7 +177,6 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
       viewContainerRef: this.viewContainerRef,
       alignment: 'start',
       placement: 'auto',
-      backdropColor: '#5e5e5e1f',
       configure: (instance, ref) => {
         instance.defaultInspector = this.defaultInspector;
         instance.simpleMode = this.simpleMode;
@@ -200,7 +199,6 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   }
 
   private destroyColorPicker() {
-    this.pickerRef?.close();
     this.pickerRef = undefined;
   }
 

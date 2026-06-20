@@ -138,7 +138,6 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
       viewContainerRef: this.viewContainerRef,
       alignment: 'start',
       placement: 'auto',
-      backdropColor: '#5e5e5e1f',
       configure: (instance, ref) => {
         instance.setTheme = this.theme;
         instance.writeValue(this.value);
@@ -158,7 +157,6 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
 
   destroyPicker() {
     if (this.pickerRef) {
-      this.pickerRef.close();
       this.pickerRef = undefined;
     }
   }

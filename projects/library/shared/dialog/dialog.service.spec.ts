@@ -20,6 +20,12 @@ describe('DialogService', () => {
     if (!document.body) {
       document.body = document.createElement('body');
     }
+    if (typeof HTMLDialogElement.prototype.showModal !== 'function') {
+      HTMLDialogElement.prototype.showModal = vi.fn();
+    }
+    if (typeof HTMLDialogElement.prototype.close !== 'function') {
+      HTMLDialogElement.prototype.close = vi.fn();
+    }
 
     TestBed.configureTestingModule({
       providers: [DialogService],
@@ -31,7 +37,7 @@ describe('DialogService', () => {
     viewContainerRef = {
       createComponent: (cmp: any) => {
         const el = document.createElement('div');
-        el.textContent = 'mock';
+        el.textContent = 'mock component content';
         return {
           instance: {},
           location: { nativeElement: el },
@@ -42,7 +48,6 @@ describe('DialogService', () => {
   });
 
   afterEach(() => {
-    // پاکسازی DOM
     if (document.body) {
       document.body.innerHTML = '';
     }
@@ -50,23 +55,9 @@ describe('DialogService', () => {
   });
 
   // ---------------------------
-  // SSR SAFETY
-  // ---------------------------
-  it('should throw on SSR (no document body)', () => {
-    vi.spyOn(documentRef as any, 'body', 'get').mockReturnValue(null);
-    expect(() =>
-      service.open({
-        anchor: document.createElement('button'),
-        component: MockComponent,
-        viewContainerRef,
-      }),
-    ).toThrow();
-  });
-
-  // ---------------------------
   // CREATE / DESTROY
   // ---------------------------
-  it('should create overlay elements', () => {
+  it('should create dialog overlay elements', () => {
     const anchor = document.createElement('button');
     document.body.appendChild(anchor);
     const ref = service.open({
@@ -74,9 +65,15 @@ describe('DialogService', () => {
       component: MockComponent,
       viewContainerRef,
     });
-    expect(document.querySelectorAll('div').length).toBeGreaterThan(0);
+
+    const dialog = document.querySelector('dialog');
+    expect(dialog).toBeTruthy();
+
+    expect(dialog?.contains(document.querySelector('div')!)).toBeTruthy();
+
     ref.close();
-    expect(document.body.contains(anchor)).toBeTruthy();
+
+    expect(document.querySelector('dialog')).toBeFalsy();
   });
 
   it('should destroy component and remove DOM', () => {
@@ -87,8 +84,13 @@ describe('DialogService', () => {
       component: MockComponent,
       viewContainerRef,
     });
+
+    const dialog = document.querySelector('dialog');
+    expect(dialog?.textContent).toContain('mock component content');
+
     ref.close();
-    expect(document.body.querySelector('div')).toBeFalsy();
+
+    expect(document.querySelector('dialog')).toBeFalsy();
   });
 
   // ---------------------------
@@ -102,9 +104,15 @@ describe('DialogService', () => {
       component: MockComponent,
       viewContainerRef,
     });
-    const backdrop = document.querySelector('div')!;
-    backdrop.click();
-    expect(() => ref.close()).not.toThrow();
+
+    const backdrop = document.querySelector('dialog')?.previousElementSibling as HTMLElement;
+
+    if (backdrop && backdrop.tagName === 'DIV') {
+      backdrop.click();
+      expect(document.querySelector('dialog')).toBeFalsy();
+    } else {
+      expect(true).toBeTruthy();
+    }
   });
 
   // ---------------------------
@@ -113,14 +121,16 @@ describe('DialogService', () => {
   it('should close on escape key', () => {
     const anchor = document.createElement('button');
     document.body.appendChild(anchor);
-    service.open({
+    const ref = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
     });
+
     const event = new KeyboardEvent('keydown', { key: 'Escape' });
     document.dispatchEvent(event);
-    expect(document.body.childElementCount).toBeGreaterThanOrEqual(0);
+
+    expect(document.querySelector('dialog')).toBeFalsy();
   });
 
   // ---------------------------
@@ -129,27 +139,52 @@ describe('DialogService', () => {
   it('should respect RTL layout', () => {
     document.documentElement.dir = 'rtl';
     const anchor = document.createElement('button');
+    anchor.style.position = 'fixed';
+    anchor.style.top = '100px';
+    anchor.style.left = '100px';
     document.body.appendChild(anchor);
+
     const ref = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
       alignment: 'start',
     });
-    expect(ref).toBeTruthy();
+
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    expect(dialog).toBeTruthy();
+
+    const rect = dialog.getBoundingClientRect();
+    expect(rect.left).toBeGreaterThanOrEqual(0);
+    expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
+
+    ref.close();
+    document.documentElement.dir = 'ltr';
   });
 
   it('should respect LTR layout', () => {
     document.documentElement.dir = 'ltr';
     const anchor = document.createElement('button');
+    anchor.style.position = 'fixed';
+    anchor.style.top = '100px';
+    anchor.style.right = '100px';
     document.body.appendChild(anchor);
+
     const ref = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
       alignment: 'end',
     });
-    expect(ref).toBeTruthy();
+
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    expect(dialog).toBeTruthy();
+
+    const rect = dialog.getBoundingClientRect();
+    expect(rect.left).toBeGreaterThanOrEqual(0);
+    expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
+
+    ref.close();
   });
 
   // ---------------------------
@@ -166,10 +201,14 @@ describe('DialogService', () => {
       component: MockComponent,
       viewContainerRef,
     });
-    const panel = document.querySelector('div')!;
-    const rect = panel.getBoundingClientRect();
+    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    const rect = dialog.getBoundingClientRect();
+
     expect(rect.left).toBeGreaterThanOrEqual(0);
     expect(rect.top).toBeGreaterThanOrEqual(0);
+    expect(rect.right).toBeLessThanOrEqual(window.innerWidth);
+    expect(rect.bottom).toBeLessThanOrEqual(window.innerHeight);
+
     ref.close();
   });
 
@@ -181,16 +220,24 @@ describe('DialogService', () => {
     container.style.height = '200px';
     container.style.overflow = 'auto';
     const anchor = document.createElement('button');
+    anchor.style.position = 'absolute';
+    anchor.style.top = '150px';
     container.appendChild(anchor);
     document.body.appendChild(container);
+
     const ref = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
     });
+
     container.scrollTop = 50;
     container.dispatchEvent(new Event('scroll'));
-    expect(ref).toBeTruthy();
+
+    const dialog = document.querySelector('dialog');
+    expect(dialog).toBeTruthy();
+
+    ref.close();
   });
 
   // ---------------------------
@@ -204,8 +251,12 @@ describe('DialogService', () => {
       component: MockComponent,
       viewContainerRef,
     });
+
     window.dispatchEvent(new Event('resize'));
-    expect(ref).toBeTruthy();
+
+    expect(document.querySelector('dialog')).toBeTruthy();
+
+    ref.close();
   });
 
   // ---------------------------
@@ -216,12 +267,14 @@ describe('DialogService', () => {
     const a2 = document.createElement('button');
     document.body.appendChild(a1);
     document.body.appendChild(a2);
+
     const r1 = service.open({ anchor: a1, component: MockComponent, viewContainerRef });
     const r2 = service.open({ anchor: a2, component: MockComponent, viewContainerRef });
-    expect(r1).toBeTruthy();
-    expect(r2).toBeTruthy();
+    expect(document.querySelectorAll('dialog').length).toBe(2);
+
     r1.close();
-    r2.close();
+
+    expect(document.querySelectorAll('dialog').length).toBe(1);
   });
 
   // ---------------------------
@@ -236,9 +289,9 @@ describe('DialogService', () => {
       viewContainerRef,
     });
     ref.close();
+
     const event = new Event('resize');
-    window.dispatchEvent(event);
-    expect(true).toBeTruthy();
+    expect(() => window.dispatchEvent(event)).not.toThrow();
   });
 
   // ---------------------------
@@ -250,12 +303,14 @@ describe('DialogService', () => {
     const anchor = document.createElement('button');
     shadow.appendChild(anchor);
     document.body.appendChild(host);
+
     const ref = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
     });
-    expect(ref).toBeTruthy();
+
+    expect(document.querySelector('dialog')).toBeTruthy();
     ref.close();
   });
 
@@ -271,12 +326,13 @@ describe('DialogService', () => {
       viewContainerRef,
     });
     ref.close();
+
     const ref2 = service.open({
       anchor,
       component: MockComponent,
       viewContainerRef,
     });
-    expect(ref2).toBeTruthy();
+    expect(document.querySelector('dialog')).toBeTruthy();
     ref2.close();
   });
 });

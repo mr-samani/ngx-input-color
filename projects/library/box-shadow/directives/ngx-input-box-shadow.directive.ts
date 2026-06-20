@@ -92,7 +92,6 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
       viewContainerRef: this.viewContainerRef,
       alignment: 'start',
       placement: 'auto',
-      backdropColor: '#5e5e5e1f',
       configure: (instance, ref) => {
         instance.writeValue(this.value);
 
@@ -110,7 +109,6 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
 
   destroyPicker() {
     if (this.pickerRef) {
-      this.pickerRef.close();
       this.pickerRef = undefined;
     }
   }

@@ -1,161 +1,224 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, ComponentRef, ApplicationRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { DialogOptions } from './dialog-options';
 import { DialogOverlayRef } from './dialog-overlay-ref';
 
+interface DialogInstance {
+  id: number;
+  anchor: HTMLElement;
+  element: HTMLDialogElement;
+  componentRef: ComponentRef<any>;
+  options: DialogOptions<any>;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  constructor(@Inject(DOCUMENT) private readonly document: Document) {}
+  private openDialogs = new Map<number, DialogInstance>();
+  private idCounter = 0;
+
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private appRef: ApplicationRef,
+  ) {}
 
   open<T>(options: DialogOptions<T>): DialogOverlayRef<T> {
-    if (!this.document?.body) {
-      throw new Error('DialogService can only run in browser.');
-    }
-
     const {
       anchor,
       component,
       viewContainerRef,
       configure,
-      margin = 8,
-      zIndex = 1000,
-      backdropColor = 'rgba(0,0,0,.18)',
-      placement = 'auto',
-      alignment = 'center',
       closeOnBackdropClick = true,
       closeOnEscape = true,
       onClosed,
     } = options;
-
-    const componentRef = viewContainerRef.createComponent(component);
-
-    const backdropEl = this.document.createElement('div');
-    const panelEl = this.document.createElement('div');
-
-    backdropEl.style.cssText = `
-      position: fixed;
-      inset: 0;
-      background: ${backdropColor};
-      z-index: ${zIndex};
-      overflow: hidden;
-    `;
-
-    panelEl.style.cssText = `
-      position: fixed;
-      z-index: ${zIndex + 1};
-      visibility: hidden;
-      outline: none;
-    `;
-
-    // خود کامپوننت داخل panel قرار می‌گیرد
-    panelEl.appendChild(componentRef.location.nativeElement);
-
-    this.document.body.appendChild(backdropEl);
-    this.document.body.appendChild(panelEl);
-
-    let closed = false;
-    let rafId = 0;
-
-    const cleanup = () => {
-      if (closed) return;
-      closed = true;
-
-      cancelAnimationFrame(rafId);
-
-      window.removeEventListener('resize', reposition);
-      window.removeEventListener('scroll', reposition, true);
-      this.document.removeEventListener('keydown', onKeyDown);
-
-      backdropEl.removeEventListener('click', onBackdropClick);
-
-      componentRef.destroy();
-
-      panelEl.remove();
-      backdropEl.remove();
-
-      onClosed?.();
-    };
-
-    const ref = new DialogOverlayRef<T>(componentRef, backdropEl, panelEl, cleanup);
-
-    const onBackdropClick = (e: MouseEvent) => {
-      if (!closeOnBackdropClick) return;
-      if (e.target === backdropEl) {
-        ref.close();
-      }
-    };
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (!closeOnEscape) return;
-      if (e.key === 'Escape') {
-        ref.close();
-      }
-    };
-
-    backdropEl.addEventListener('click', onBackdropClick);
-    this.document.addEventListener('keydown', onKeyDown);
-
-    const reposition = () => {
-      if (closed) return;
-
-      const anchorRect = anchor.getBoundingClientRect();
-      const panelRect = panelEl.getBoundingClientRect();
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const isRTL = getComputedStyle(this.document.documentElement).direction === 'rtl';
-
-      let top: number;
-
-      const spaceBelow = vh - anchorRect.bottom;
-      const spaceAbove = anchorRect.top;
-
-      if (
-        placement === 'bottom' ||
-        (placement === 'auto' && (spaceBelow >= panelRect.height + margin || spaceBelow >= spaceAbove))
-      ) {
-        top = anchorRect.bottom + margin;
-
-        if (top + panelRect.height + margin > vh) {
-          top = Math.max(margin, vh - panelRect.height - margin);
-        }
-      } else {
-        top = anchorRect.top - panelRect.height - margin;
-
-        if (top < margin) {
-          top = margin;
-        }
-      }
-
-      let left: number;
-
-      if (alignment === 'center') {
-        left = anchorRect.left + anchorRect.width / 2 - panelRect.width / 2;
-      } else if (!isRTL) {
-        left = alignment === 'start' ? anchorRect.left : anchorRect.right - panelRect.width;
-      } else {
-        left = alignment === 'start' ? anchorRect.right - panelRect.width : anchorRect.left;
-      }
-
-      if (left < margin) left = margin;
-      if (left + panelRect.width + margin > vw) {
-        left = Math.max(margin, vw - panelRect.width - margin);
-      }
-
-      panelEl.style.top = `${Math.round(top)}px`;
-      panelEl.style.left = `${Math.round(left)}px`;
-      panelEl.style.visibility = 'visible';
-    };
-
-    window.addEventListener('resize', reposition);
-    window.addEventListener('scroll', reposition, true);
-
-    rafId = requestAnimationFrame(reposition);
-
-    if (configure) {
-      configure(componentRef.instance, ref);
+    if (!viewContainerRef) {
+      throw new Error('ViewContainerRef is required to render dialog content.');
     }
 
+    const id = ++this.idCounter;
+
+    const dialogElement = this.document.createElement('dialog');
+    dialogElement.style.position = 'absolute';
+    dialogElement.style.padding = '0';
+    dialogElement.style.margin = '0';
+    dialogElement.style.border = 'none';
+    dialogElement.style.background = 'transparent';
+    dialogElement.style.maxWidth = '100vw';
+    dialogElement.style.maxHeight = '100vh';
+    this.document.body.appendChild(dialogElement);
+    const componentRef = viewContainerRef.createComponent(component);
+
+    if (componentRef.location.nativeElement) {
+      dialogElement.appendChild(componentRef.location.nativeElement);
+    }
+
+    if (closeOnEscape) {
+      this.document.addEventListener('keydown', this.onKeyDown.bind(this));
+    }
+    if (window) window.addEventListener('resize', this.reposition.bind(this));
+
+    const instance: DialogInstance = {
+      id,
+      anchor,
+      element: dialogElement,
+      componentRef: componentRef as ComponentRef<T>,
+      options,
+    };
+
+    this.openDialogs.set(id, instance);
+    dialogElement.showModal();
+    if (closeOnBackdropClick) {
+      this.document.addEventListener('click', this.handleClickOnBackdrop.bind(this));
+    }
+    const cleanUp = () => {
+      this.close(id);
+    };
+    
+    if (configure) {
+      configure(componentRef.instance, new DialogOverlayRef(componentRef, dialogElement, cleanUp));
+    }
+
+    requestAnimationFrame(() => {
+      this.positionDialog(instance);
+    });
+
+    // فوکوس روی اولین المان فوکوس‌پذیر
+    setTimeout(() => {
+      const focusable = dialogElement.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable) {
+        (focusable as HTMLElement).focus();
+      }
+    }, 0);
+
+    const ref = new DialogOverlayRef(componentRef, dialogElement, cleanUp);
     return ref;
   }
+
+  private positionDialog(dialogInstance: DialogInstance) {
+    const anchor = dialogInstance.anchor;
+    const dialog = dialogInstance.element;
+    const { placement, alignment } = dialogInstance.options;
+    if (!anchor || !dialog) return;
+    const margin = dialogInstance.options.margin ?? 0;
+    const anchorRect = anchor.getBoundingClientRect();
+    const dialogRect = dialog.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const isRTL = getComputedStyle(this.document.documentElement).direction === 'rtl';
+
+    let top = 0;
+    let left = 0;
+
+    const spaceBelow = vh - anchorRect.bottom;
+    const spaceAbove = anchorRect.top;
+
+    if (placement === 'bottom' || (placement === 'auto' && spaceBelow >= dialogRect.height + margin)) {
+      top = anchorRect.bottom + margin;
+      if (top + dialogRect.height > vh) {
+        top = vh - dialogRect.height - margin;
+      }
+    } else {
+      top = anchorRect.top - dialogRect.height - margin;
+      if (top < margin) {
+        top = margin;
+      }
+    }
+
+    if (alignment === 'center') {
+      left = anchorRect.left + anchorRect.width / 2 - dialogRect.width / 2;
+    } else if (alignment === 'start') {
+      if (!isRTL) {
+        left = anchorRect.left;
+      } else {
+        left = anchorRect.right - dialogRect.width;
+      }
+    } else {
+      // end
+      if (!isRTL) {
+        left = anchorRect.right - dialogRect.width;
+      } else {
+        left = anchorRect.left;
+      }
+    }
+
+    if (left < margin) left = margin;
+    if (left + dialogRect.width > vw - margin) {
+      left = vw - dialogRect.width - margin;
+    }
+
+    dialog.style.top = `${top}px`;
+    dialog.style.left = `${left}px`;
+    dialog.style.transform = 'none';
+  }
+
+  private getLastDialog(): DialogInstance | undefined {
+    if (this.openDialogs.size === 0) return undefined;
+    const lastKey = Array.from(this.openDialogs.keys()).pop();
+    return lastKey ? this.openDialogs.get(lastKey) : undefined;
+  }
+
+  close(id: number) {
+    const finded = this.openDialogs.get(id);
+    if (!finded) return;
+    const { closeOnEscape } = finded.options;
+
+    finded.componentRef.destroy();
+    if (finded.element.parentNode) {
+      finded.element.remove();
+    }
+    finded.options?.onClosed?.();
+    this.openDialogs.delete(id);
+
+    if (this.openDialogs.size == 0) {
+      this.document.removeEventListener('keydown', this.onKeyDown.bind(this));
+      if (window) window.removeEventListener('resize', this.reposition.bind(this));
+    }
+  }
+
+  closeAll(): void {
+    const ids = Array.from(this.openDialogs.keys());
+    ids.forEach((id) => {
+      this.close(id);
+    });
+  }
+
+  handleClickOnBackdrop(event: PointerEvent) {
+    const target = event.target;
+    
+    const lastDialog = this.getLastDialog();
+    if (!lastDialog) return;
+
+    // The click target _must_ be the dialog element itself, and not elements underneath or inside.
+    if (target !== lastDialog.element || !lastDialog.element?.open) return;
+    // If the dialog contains a form, do not close the dialog when clicking outside of the dialog
+    if (lastDialog.element.querySelector('form')) return;
+    const rect = lastDialog.element.getBoundingClientRect();
+    const clickWasInsideDialog =
+      rect.top <= event.clientY &&
+      event.clientY <= rect.top + rect.height &&
+      rect.left <= event.clientX &&
+      event.clientX <= rect.left + rect.width;
+    if (!clickWasInsideDialog) {
+      this.close(lastDialog.id);
+    }
+  }
+
+  onKeyDown(e: KeyboardEvent) {
+    const lastDialog = this.getLastDialog();
+    if (!lastDialog) return;
+    if (e.key === 'Escape') {
+      this.close(lastDialog.id);
+    }
+  }
+
+  reposition = () => {
+    Array.from(this.openDialogs.keys()).forEach((id) => {
+      let dialog = this.openDialogs.get(id);
+      if (dialog && dialog.anchor && dialog.element.isConnected) {
+        this.positionDialog(dialog);
+      }
+    });
+  };
 }
