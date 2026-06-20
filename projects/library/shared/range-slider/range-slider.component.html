@@ -8,7 +8,7 @@
     [class.bg-transparent]="isBgTransparent"
     (mousedown)="addnewRangeOnSliderClick($event)"
     (touchstart)="addnewRangeOnSliderClick($event)">
-    @for (item of values; track item; let i = $index) {
+    @for (item of values; track $index; let i = $index) {
       <div
         class="thumb"
         [class.is-active]="selectedIndex == i"
