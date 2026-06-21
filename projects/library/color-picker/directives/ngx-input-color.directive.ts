@@ -56,6 +56,11 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
       });
     }
   }
+
+  @Input('value') set setValue(val: string) {
+    this.writeValue(val);
+  }
+
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
   };
@@ -75,7 +80,7 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
     }
 
     if (this._targetInput) {
-      this._targetInput.addEventListener('input', this.boundInputHandler);
+      this._targetInput.addEventListener('input', this.boundInputHandler.bind(this));
     }
   }
   @Output() change = new EventEmitter<string>();

@@ -1,6 +1,3 @@
-
-
-
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -23,7 +20,6 @@ import {
   NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
-  Validators,
 } from '@angular/forms';
 
 export interface IValue {
@@ -41,10 +37,10 @@ export class ValueModel {
 @Component({
   selector: 'range-slider',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './range-slider.component.html',
   styleUrls: ['./range-slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
