@@ -1,0 +1,10 @@
+<div class="ngx-input-angle-selector">
+  <div #selectorContainer class="angle-selector">
+    <div class="center-dot"></div>
+    <div #hand class="hand" [style.transform]="'rotate(' + currentAngle() + 'deg)'"></div>
+
+    @for (angle of tickes; track $index) {
+      <div [style.transform]="'translateX(-50%) rotate(' + angle + 'deg)'" class="tick"></div>
+    }
+  </div>
+</div>

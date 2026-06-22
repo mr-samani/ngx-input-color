@@ -1,0 +1,113 @@
+:host {
+  --ngx-color-bg: #e5e5e5;
+  --ngx-color-text: #000;
+  --border-color: #c8c8c8;
+  --ngx-size: 100px;
+  --handle-color: #007ac6;
+  --tick-color: #444444;
+}
+
+:host-context(.dark) {
+  --ngx-color-bg: #6d6e6e;
+  --ngx-color-text: #fff;
+  --border-color: #a4a4a4;
+  --tick-color: #9f9f9f;
+}
+
+.ngx-input-angle-selector {
+  width: var(--ngx-size);
+  height: var(--ngx-size);
+  border: calc(8 * var(--ngx-size) / 100) var(--border-color) solid;
+  border-radius: 15px;
+  background: var(--ngx-color-bg);
+  color: var(--ngx-color-text);
+  overflow: hidden;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.366);
+  margin: 14px 4px;
+  border-radius: 50%;
+  direction: ltr;
+  font-family: arial, tahoma;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.angle-selector {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  box-shadow: inset 0px 0px 20px 0px rgba(0, 0, 0, 0.64);
+}
+
+.center-dot {
+  width: 15px;
+  height: 15px;
+  background: var(--handle-color);
+  border-radius: 50%;
+  z-index: 10;
+  box-shadow: 0 0 20px #303030;
+}
+
+.hand {
+  position: absolute;
+  width: 4px;
+  height: calc(var(--ngx-size) * 0.6);
+  box-shadow: 0 0 20px #303030;
+  background: var(--handle-color);
+  bottom: 50%;
+  transform-origin: bottom center;
+  border-radius: 4px;
+
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tick {
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: var(--tick-color);
+  left: 50%;
+  top: 0;
+  transform-origin: 0 calc(var(--ngx-size) / 2 - calc(8 * var(--ngx-size) / 100));
+}
+
+/*-----------------------------------------------------------------------------*/
+
+::ng-deep {
+  dialog .ngx-input-angle-selector::before {
+    content: ' ';
+    border: 14px var(--border-color) solid;
+    position: absolute;
+    z-index: 1;
+    filter: drop-shadow(0px -3px 2px rgba(0, 0, 0, 0.2));
+
+    box-sizing: border-box;
+  }
+
+  dialog.tips-above .ngx-input-angle-selector::before {
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    top: -12px;
+
+    left: calc(50% - 14px);
+  }
+
+  dialog.tips-bottom .ngx-input-angle-selector::before {
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    bottom: -10px;
+    left: calc(50% - 14px);
+    filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.2));
+  }
+}

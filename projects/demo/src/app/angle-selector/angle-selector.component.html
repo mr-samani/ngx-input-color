@@ -1,0 +1,5 @@
+<!-- <ngx-input-angle [(ngModel)]="angle"></ngx-input-angle> -->
+
+<input type="number" name="test1" [(ngModel)]="angle" ngxInputAngle #xyz="ngModel" [size]="120" />
+{{ angle }}
+<pre>{{ xyz.errors | json }}</pre>

@@ -14,4 +14,8 @@ export const routes: Routes = [
     path: 'box-shadow',
     loadComponent: () => import('./box-shadow/box-shadow.component').then((c) => c.BoxShadowComponent),
   },
+  {
+    path: 'angle-selector',
+    loadComponent: () => import('./angle-selector/angle-selector.component').then((c) => c.AngleSelectorComponent),
+  },
 ];

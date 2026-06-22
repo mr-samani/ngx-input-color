@@ -18,6 +18,7 @@
     "color-picker",
     "gradient-picker",
     "box-shadow",
+    "angle-selector",
     "input",
     "ngx",
     "hsl",
