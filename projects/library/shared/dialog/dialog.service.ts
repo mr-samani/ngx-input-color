@@ -79,12 +79,14 @@ export class DialogService implements OnDestroy {
     const dialogElement = this.doc.createElement('dialog');
 
     dialogElement.style.position = 'absolute';
+    dialogElement.style.outline = 'none';
     dialogElement.style.padding = '0';
     dialogElement.style.margin = '0';
     dialogElement.style.border = 'none';
     dialogElement.style.background = 'transparent';
     dialogElement.style.maxWidth = '100vw';
     dialogElement.style.maxHeight = '100vh';
+    dialogElement.style.overflow = 'visible';
     dialogElement.style.zIndex = `${1000 + this.openDialogs.size}`;
 
     this.doc.body.appendChild(dialogElement);
@@ -167,41 +169,57 @@ export class DialogService implements OnDestroy {
     const isRTL = getComputedStyle(this.doc.documentElement).direction === 'rtl';
 
     let top = 0;
-    let left = 0;
+    let left: number | 'auto' = 'auto';
+    let right: number | 'auto' = 'auto';
 
     const spaceBelow = vh - anchorRect.bottom;
     const spaceAbove = anchorRect.top;
+    let verticalPos: 'above' | 'bottom' = 'above';
 
-    //  Top
+    //  vertical position
     if (placement === 'bottom' || (placement === 'auto' && spaceBelow >= dialogRect.height + margin)) {
       top = anchorRect.bottom + margin;
+      verticalPos = 'above';
       if (top + dialogRect.height > vh - margin) {
         top = vh - dialogRect.height - margin;
+        verticalPos = 'bottom';
       }
     } else {
       top = anchorRect.top - dialogRect.height - margin;
-      if (top < margin) {
-        top = margin;
+      verticalPos = 'bottom';
+      if (top < spaceAbove) {
+        top = anchorRect.top + anchorRect.height + margin;
+        verticalPos = 'above';
       }
     }
 
-    //  Left
+    //  horizontal position
     if (alignment === 'center') {
       left = anchorRect.left + anchorRect.width / 2 - dialogRect.width / 2;
     } else if (alignment === 'start') {
-      left = isRTL ? anchorRect.right - dialogRect.width : anchorRect.left;
+      if (isRTL) {
+        left = 'auto';
+        right = vw - anchorRect.right;
+      } else {
+        left = anchorRect.left;
+      }
     } else {
       // end
       left = isRTL ? anchorRect.left : anchorRect.right - dialogRect.width;
     }
 
-    if (left < margin) left = margin;
-    if (left + dialogRect.width > vw - margin) {
+    if (left != 'auto' && left < margin) {
+      left = margin;
+    }
+    if (left != 'auto' && left + dialogRect.width > vw - margin) {
       left = vw - dialogRect.width - margin;
     }
 
+    dialog.className = `tips-${verticalPos}`;
+
     dialog.style.top = `${top}px`;
-    dialog.style.left = `${left}px`;
+    dialog.style.left = left != 'auto' ? `${left}px` : left;
+    dialog.style.right = right != 'auto' ? `${right}px` : right;
     dialog.style.transform = 'none';
   }
 
