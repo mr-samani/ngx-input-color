@@ -62,7 +62,7 @@ export function parseGradient(value: string): {
   valid: boolean;
 } {
   let type: GradientType = 'linear';
-  let rotation = 90;
+  let rotation = 180;
   let shape: string | undefined;
   let stops: GradientStop[] = [];
   let valid = false;
