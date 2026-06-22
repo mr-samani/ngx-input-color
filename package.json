@@ -16,8 +16,8 @@
     "copyScreenShot": "copy projects\\storybook\\src\\assets\\screenshot.jpg docs\\screenshot.jpg",
     "test": "ng test --ui",
     "test:demo": "ng test demo --ui",
-    "test:coverage": "vitest run --coverage",
-    "test:ci": "vitest run --coverage --reporter=junit --outputFile=./coverage/junit.xml"
+    "test:coverage": "ng test --coverage",
+    "test:ci": "ng test --coverage --reporter=junit --outputFile=./coverage/junit.xml"
   },
   "private": true,
   "dependencies": {

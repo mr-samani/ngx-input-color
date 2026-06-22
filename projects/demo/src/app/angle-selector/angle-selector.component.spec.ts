@@ -1,12 +1,12 @@
 /* tslint:disable:no-unused-variable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { NgxInputGradientComponent, NgxInputGradient } from 'ngx-input-color/gradient-picker';
-import { GradientPickerComponent } from './gradient-picker.component';
+ import { FormsModule } from '@angular/forms';
+import { AngleSelectorComponent } from './angle-selector.component';
+import { NgxAngleSelectorComponent, NgxInputAngle } from 'ngx-input-color/angle-selector';
 
-describe('GradientPickerComponent', () => {
-  let component: GradientPickerComponent;
-  let fixture: ComponentFixture<GradientPickerComponent>;
+describe('AngleSelectorComponent', () => {
+  let component: AngleSelectorComponent;
+  let fixture: ComponentFixture<AngleSelectorComponent>;
 
   beforeEach(async () => {
     Object.defineProperty(window, 'matchMedia', {
@@ -25,9 +25,9 @@ describe('GradientPickerComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [],
-      imports: [GradientPickerComponent, FormsModule, NgxInputGradient, NgxInputGradientComponent],
+      imports: [AngleSelectorComponent, FormsModule, NgxInputAngle, NgxAngleSelectorComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(GradientPickerComponent);
+    fixture = TestBed.createComponent(AngleSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

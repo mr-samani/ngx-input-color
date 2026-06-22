@@ -5,7 +5,7 @@ import { DialogService } from './dialog.service';
 
 @Component({
   template: `
-    <div>test component</div>
+    <div style="width:200px;height:300px">test component</div>
   `,
 })
 class MockComponent {}
@@ -68,8 +68,8 @@ describe('DialogService', () => {
 
     const dialog = document.querySelector('dialog');
     expect(dialog).toBeTruthy();
-
     expect(dialog?.contains(document.querySelector('div')!)).toBeTruthy();
+    expect(ref.nativeElement).toBe(dialog);
 
     ref.close();
 
@@ -334,5 +334,63 @@ describe('DialogService', () => {
     });
     expect(document.querySelector('dialog')).toBeTruthy();
     ref2.close();
+  });
+
+  // ---------------------------
+  // BACKDROP CLICK
+  // ---------------------------
+  it('should view dialog in viewport', () => {
+    const anchor = document.createElement('button');
+    document.body.appendChild(anchor);
+    anchor.style.cssText = `
+    position: absolute;
+    bottom: 50px;
+    `;
+    const ref = service.open({
+      anchor,
+      component: MockComponent,
+      viewContainerRef,
+      alignment: 'center',
+      placement: 'bottom',
+    });
+    setTimeout(() => {
+      const dialogRect = document.querySelector('dialog')?.getBoundingClientRect();
+      console.log(dialogRect);
+      expect(dialogRect?.top).toBeGreaterThan(0);
+      expect(dialogRect?.right).toBeGreaterThan(0);
+      expect(dialogRect?.bottom).toBeGreaterThan(0);
+      expect(dialogRect?.left).toBeGreaterThan(0);
+    }, 100);
+  });
+  // ---------------------------
+  // viewContainerRef
+  // ---------------------------
+  it('should throw when viewContainerRef is missing', () => {
+    expect(() =>
+      service.open({
+        anchor: document.createElement('button'),
+        component: MockComponent,
+        viewContainerRef: undefined as any,
+      }),
+    ).toThrow('ViewContainerRef is required to render dialog content.');
+  });
+
+  // ---------------------------
+  // Resize window
+  // ---------------------------
+  it('should call globalResizeListener on window resize', () => {
+    const spy = vi.spyOn(service as any, 'repositionAll');
+    const spy2 = vi.spyOn(service as any, 'globalResizeListener');
+    const anchor = document.createElement('button');
+    var ref = service.open({
+      anchor: anchor,
+      viewContainerRef: viewContainerRef,
+      component: MockComponent,
+    });
+    window.resizeTo(500, 500);
+    window.dispatchEvent(new Event('resize'));
+
+    expect(spy2).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });
