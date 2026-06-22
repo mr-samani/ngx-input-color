@@ -26,7 +26,8 @@ export const Default: Story = {
     },
     template: `
       <ngx-box-shadow
-        [(ngModel)]="model">
+        [(ngModel)]="model"
+        name="boxShadow">
       </ngx-box-shadow>
       <p>{{model}}</p>
     `,

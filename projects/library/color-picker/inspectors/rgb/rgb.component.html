@@ -1,5 +1,6 @@
 <slider
   [(ngModel)]="red"
+  name="red"
   [min]="0"
   [max]="255"
   [step]="1"
@@ -7,11 +8,12 @@
   [background]="redSliderBackground">
   <div class="slider-title">
     <span>Red</span>
-    <input type="number" [(ngModel)]="red" min="0" max="255" step="1" />
+    <input type="number" [(ngModel)]="red" name="inputRed" min="0" max="255" step="1" />
   </div>
 </slider>
 <slider
   [(ngModel)]="green"
+  name="green"
   [min]="0"
   [max]="255"
   [step]="1"
@@ -19,11 +21,12 @@
   [background]="greenSliderBackground">
   <div class="slider-title">
     <span>Green</span>
-    <input type="number" [(ngModel)]="green" min="0" max="255" step="1" />
+    <input type="number" [(ngModel)]="green" name="inputGreen" min="0" max="255" step="1" />
   </div>
 </slider>
 <slider
   [(ngModel)]="blue"
+  name="blue"
   [min]="0"
   [max]="255"
   [step]="1"
@@ -31,21 +34,22 @@
   [background]="blueSliderBackground">
   <div class="slider-title">
     <span>Blue</span>
-    <input type="number" [(ngModel)]="blue" min="0" max="255" step="1" />
+    <input type="number" [(ngModel)]="blue" name="inputBlue" min="0" max="255" step="1" />
   </div>
 </slider>
-@if(useAlphaChannel){
-<slider
-  [(ngModel)]="alpha"
-  [min]="0"
-  [max]="1"
-  [step]="0.1"
-  (change)="generateColor()"
-  [isBgTransparent]="true"
-  [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
-  <div class="slider-title">
-    <span>Alpha</span>
-    <input type="number" [(ngModel)]="alpha" min="0" max="1" step="0.1" />
-  </div>
-</slider>
+@if (useAlphaChannel) {
+  <slider
+    [(ngModel)]="alpha"
+    name="alpha"
+    [min]="0"
+    [max]="1"
+    [step]="0.1"
+    (change)="generateColor()"
+    [isBgTransparent]="true"
+    [background]="'linear-gradient(to right,transparent,' + baseColor + ')'">
+    <div class="slider-title">
+      <span>Alpha</span>
+      <input type="number" [(ngModel)]="alpha" name="inputAlpha" min="0" max="1" step="0.1" />
+    </div>
+  </slider>
 }

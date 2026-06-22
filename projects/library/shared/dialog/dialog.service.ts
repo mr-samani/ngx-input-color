@@ -187,7 +187,7 @@ export class DialogService implements OnDestroy {
     } else {
       top = anchorRect.top - dialogRect.height - margin;
       verticalPos = 'bottom';
-      if (top < spaceAbove) {
+      if (top > spaceAbove) {
         top = anchorRect.top + anchorRect.height + margin;
         verticalPos = 'above';
       }

@@ -22,12 +22,13 @@
     <div class="ngx-setting-item">
       <div class="ngx-row">
         <span>Offset X</span>
-        <input type="number" id="offsetX" [(ngModel)]="value.x" (ngModelChange)="onChangeValue()" />
+        <input type="number" id="offsetX" [(ngModel)]="value.x" name="offsetX" (ngModelChange)="onChangeValue()" />
       </div>
       <input
         type="range"
         id="offsetX"
         [(ngModel)]="value.x"
+        name="rangeOffsetX"
         (ngModelChange)="onChangeValue()"
         step="1"
         [min]="-maxRange"
@@ -36,12 +37,13 @@
     <div class="ngx-setting-item">
       <div class="ngx-row">
         <span>Offset Y</span>
-        <input type="number" id="offsetY" [(ngModel)]="value.y" (ngModelChange)="onChangeValue()" />
+        <input type="number" id="offsetY" [(ngModel)]="value.y" name="offsetY" (ngModelChange)="onChangeValue()" />
       </div>
       <input
         type="range"
         id="offsetY"
         [(ngModel)]="value.y"
+        name="rangeOffsetY"
         (ngModelChange)="onChangeValue()"
         step="1"
         [min]="-maxRange"
@@ -50,29 +52,36 @@
     <div class="ngx-setting-item">
       <div class="ngx-row">
         <span>Blur</span>
-        <input type="number" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeValue()" />
+        <input type="number" id="blur" [(ngModel)]="blur" name="blur" (ngModelChange)="onChangeValue()" />
       </div>
-      <input type="range" id="blur" [(ngModel)]="blur" (ngModelChange)="onChangeValue()" step="1" />
+      <input type="range" id="blur" [(ngModel)]="blur" name="rangeBlur" (ngModelChange)="onChangeValue()" step="1" />
     </div>
     <div class="ngx-setting-item">
       <div class="ngx-row">
         <span>Spread</span>
-        <input type="number" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeValue()" />
+        <input type="number" id="spread" [(ngModel)]="spread" name="spread" (ngModelChange)="onChangeValue()" />
       </div>
-      <input type="range" id="spread" [(ngModel)]="spread" (ngModelChange)="onChangeValue()" step="1" />
+      <input
+        type="range"
+        id="spread"
+        [(ngModel)]="spread"
+        name="rangeSpread"
+        (ngModelChange)="onChangeValue()"
+        step="1" />
     </div>
     <div class="ngx-setting-item">
       <div class="ngx-row">
         <span>color</span>
-     <input
+        <input
           type="text"
           readonly
           id="color"
           [(ngModel)]="color"
+          name="color"
           ngxInputColor
           [simpleMode]="true"
           (ngModelChange)="onChangeData()"
-          autocomplete="off" /> 
+          autocomplete="off" />
       </div>
     </div>
   </div>

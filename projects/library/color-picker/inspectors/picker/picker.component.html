@@ -1,6 +1,7 @@
 <saturation
   [height]="simpleMode ? 150 : 160"
   [(ngModel)]="board"
+  name="board"
   [min]="{ x: 0, y: 0 }"
   [max]="{ x: 100, y: 100 }"
   [step]="1"
@@ -8,18 +9,20 @@
   (change)="generateColor()"></saturation>
 <slider
   [(ngModel)]="hue"
+  name="hue"
   [min]="0"
   [max]="360"
   [step]="1"
   (change)="generateColor()"
   background="linear-gradient(to right,red 0%,#ff0 17%,lime 33%,cyan 50%,blue 66%,#f0f 83%,red 100%)"></slider>
-@if(useAlphaChannel){
-<slider
-  [(ngModel)]="alpha"
-  [min]="0"
-  [max]="1"
-  [step]="0.1"
-  (change)="generateColor()"
-  [isBgTransparent]="true"
-  [background]="'linear-gradient(to right,transparent,' + alphaBgColor + ')'"></slider>
+@if (useAlphaChannel) {
+  <slider
+    [(ngModel)]="alpha"
+    name="alpha"
+    [min]="0"
+    [max]="1"
+    [step]="0.1"
+    (change)="generateColor()"
+    [isBgTransparent]="true"
+    [background]="'linear-gradient(to right,transparent,' + alphaBgColor + ')'"></slider>
 }

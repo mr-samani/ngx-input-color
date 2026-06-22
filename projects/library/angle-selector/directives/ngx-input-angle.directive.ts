@@ -154,8 +154,8 @@ export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAcce
       anchor: this.el.nativeElement,
       component: NgxAngleSelectorComponent,
       viewContainerRef: this.viewContainerRef,
-      alignment: 'end',
-      placement: 'top',
+      alignment: 'center',
+      placement: 'bottom',
       margin: 2,
       configure: (instance, ref) => {
         instance.size = this.size;

@@ -1,5 +1,6 @@
 <slider
   [(ngModel)]="cyan"
+  name="cyan"
   [min]="0"
   [max]="100"
   [step]="1"
@@ -7,11 +8,12 @@
   [background]="cyanSliderBackground">
   <div class="slider-title">
     <span>Cyan</span>
-    <input type="number" [(ngModel)]="cyan" min="0" max="100" step="1" />
+    <input type="number" [(ngModel)]="cyan" name="inputCyan" min="0" max="100" step="1" />
   </div>
 </slider>
 <slider
   [(ngModel)]="magenta"
+  name="magenta"
   [min]="0"
   [max]="100"
   [step]="1"
@@ -19,11 +21,12 @@
   [background]="magentaSliderBackground">
   <div class="slider-title">
     <span>Magenta</span>
-    <input type="number" [(ngModel)]="magenta" min="0" max="100" step="1" />
+    <input type="number" [(ngModel)]="magenta" name="inputMagenta" min="0" max="100" step="1" />
   </div>
 </slider>
 <slider
   [(ngModel)]="yellow"
+  name="yellow"
   [min]="0"
   [max]="100"
   [step]="1"
@@ -31,11 +34,12 @@
   [background]="yellowSliderBackground">
   <div class="slider-title">
     <span>Yellow</span>
-    <input type="number" [(ngModel)]="yellow" min="0" max="100" step="1" />
+    <input type="number" [(ngModel)]="yellow" name="inputYellow" min="0" max="100" step="1" />
   </div>
 </slider>
 <slider
   [(ngModel)]="key"
+  name="key"
   [min]="0"
   [max]="100"
   [step]="1"
@@ -43,6 +47,6 @@
   [background]="keySliderBackground">
   <div class="slider-title">
     <span>Key</span>
-    <input type="number" [(ngModel)]="key" min="0" max="100" step="1" />
+    <input type="number" [(ngModel)]="key" name="inputKey" min="0" max="100" step="1" />
   </div>
 </slider>

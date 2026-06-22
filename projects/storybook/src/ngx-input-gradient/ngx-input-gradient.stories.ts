@@ -30,6 +30,7 @@ export const Default: Story = {
     template: `
       <ngx-input-gradient
         [(ngModel)]="model"
+        name="gradient"
         (ngModelChange)="onChange($event)">
       </ngx-input-gradient>
     `,
@@ -42,7 +43,11 @@ export const InputGradient: Story = {
       model: 'linear-gradient(90deg, #f00 0%, #00f 100%)',
     },
     template: `
-    <input ngxInputGradient  [(ngModel)]="model" class="form-control" />
+    <input
+    ngxInputGradient  
+    [(ngModel)]="model" 
+    name="inputGradient"
+    class="form-control" />
     <p>{{model}}</p>
           `,
   }),
