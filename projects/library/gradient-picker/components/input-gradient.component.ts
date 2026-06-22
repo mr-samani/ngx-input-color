@@ -25,6 +25,7 @@ import { buildGradientFromStops, generateRandomColor, isValidGradient, parseGrad
 import { DefaultGradients } from '../contracts/default-gradients';
 import { BrowserService, RangeSliderComponent } from 'ngx-input-color/shared';
 import { NgxInputColor } from 'ngx-input-color/color-picker';
+import { NgxInputAngle } from 'ngx-input-color/angle-selector';
 
 @Component({
   selector: 'ngx-input-gradient',
@@ -42,10 +43,11 @@ import { NgxInputColor } from 'ngx-input-color/color-picker';
   host: {
     '[class.dark]': 'theme=="dark"',
   },
-  imports: [FormsModule, RangeSliderComponent, NgxInputColor],
+  imports: [FormsModule, RangeSliderComponent, NgxInputColor, NgxInputAngle],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-  theme: 'light' | 'dark' | 'auto' = 'auto';
+  browserService = inject(BrowserService);
+  theme: 'light' | 'dark' = this.browserService.prefersDarkMode ? 'dark' : 'light';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
       this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
@@ -62,7 +64,6 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   rangeValues: GradientStop[] = [];
   type: GradientType = 'linear';
   rotation: number = 90;
-  rotationList = [0, 45, 90, 135, 180, 225, 270, 315, 360];
   selectedIndex = 0;
 
   isDisabled = false;
@@ -71,7 +72,6 @@ export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValu
   _onValidateChange = () => {};
 
   @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;
-  browserService = inject(BrowserService);
 
   constructor(private cd: ChangeDetectorRef) {}
 

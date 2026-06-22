@@ -42,12 +42,15 @@ import { BrowserService } from 'ngx-input-color/shared';
     },
   ],
   imports: [FormsModule, NgxInputColor],
+  host: {
+    '[class.dark]': 'theme=="dark"',
+  },
 })
 export class NgxBoxShadowComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
   theme: 'light' | 'dark' | 'auto' = 'light';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
-      this.theme = this.browserService.prefersDarkMode  ? 'dark' : 'light';
+      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
     } else {
       this.theme = val;
     }

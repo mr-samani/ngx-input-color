@@ -16,9 +16,11 @@ import {
   ChangeDetectionStrategy,
   input,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { BrowserService } from 'ngx-input-color/shared';
 import { Subject, fromEvent, merge, tap, map, filter, switchMap, takeUntil, repeat } from 'rxjs';
 
 @Component({
@@ -36,13 +38,23 @@ import { Subject, fromEvent, merge, tap, map, filter, switchMap, takeUntil, repe
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    '[class.dark]': 'theme=="dark"',
     '[style.--ngx-size]': 'size()+"px"',
   },
 })
 export class NgxAngleSelectorComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+  browserService = inject(BrowserService);
+  theme: 'light' | 'dark' = this.browserService.prefersDarkMode ? 'dark' : 'light';
+  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
+    if (!val || val == 'auto') {
+      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
+    } else {
+      this.theme = val;
+    }
+  }
+  size = input<number>(90);
   private minAngle = signal<number>(0);
   private maxAngle = signal<number>(360);
-  size = input<number>(90);
 
   isDisabled = signal(false);
 
@@ -66,8 +78,6 @@ export class NgxAngleSelectorComponent implements OnInit, AfterViewInit, Control
   private destroyRef = inject(DestroyRef);
 
   chdr = inject(ChangeDetectorRef);
-  constructor() {}
-
   ngOnInit(): void {
     // const clampedInitial = this.clamp(this.initialAngle(), this.minAngle(), this.maxAngle());
     // this.currentAngle.set(clampedInitial);

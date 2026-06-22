@@ -32,9 +32,6 @@ import { RgbComponent } from '../inspectors/rgb/rgb.component';
 import { BrowserService } from 'ngx-input-color/shared';
 declare const EyeDropper: any;
 
-
-
-
 @Component({
   standalone: true,
   selector: 'ngx-input-color',
@@ -55,7 +52,8 @@ declare const EyeDropper: any;
   imports: [CommonModule, FormsModule, EnumToArrayPipe, PickerComponent, CmykComponent, HslComponent, RgbComponent],
 })
 export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-  theme: 'light' | 'dark' | 'auto' = 'auto';
+  browserService = inject(BrowserService);
+  theme: 'light' | 'dark' = this.browserService.prefersDarkMode ? 'dark' : 'light';
   @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {
     if (!val || val == 'auto') {
       this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';
@@ -119,7 +117,6 @@ export class NgxInputColorComponent implements OnInit, OnDestroy, ControlValueAc
   private _onTouched = () => {};
   /**@ignore */
   private _onValidateChange = () => {};
-  browserService = inject(BrowserService);
 
   constructor(private cd: ChangeDetectorRef) {
     this.isSupportedEyeDrop = 'EyeDropper' in window;

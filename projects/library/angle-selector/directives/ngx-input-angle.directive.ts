@@ -39,7 +39,9 @@ import { NgxAngleSelectorComponent } from '../components/input-angle.component';
   ],
 })
 export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
   size = input<number>(90);
+
   @Input('value') set setValue(val: string) {
     this.writeValue(val);
   }
@@ -157,6 +159,7 @@ export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAcce
       margin: 2,
       configure: (instance, ref) => {
         instance.size = this.size;
+        instance.setTheme = this.theme;
         instance.writeValue(this.value);
 
         instance.change.subscribe((c: number) => {

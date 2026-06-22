@@ -5,13 +5,15 @@
   --ngx-size: 100px;
   --handle-color: #007ac6;
   --tick-color: #444444;
+  --inner-shadow-color: #000000a3;
 }
 
 :host-context(.dark) {
-  --ngx-color-bg: #6d6e6e;
+  --ngx-color-bg: #222222;
   --ngx-color-text: #fff;
-  --border-color: #a4a4a4;
-  --tick-color: #9f9f9f;
+  --border-color: #3a3a3a;
+  --tick-color: #595959;
+  --inner-shadow-color: #000;
 }
 
 .ngx-input-angle-selector {
@@ -44,7 +46,7 @@
   cursor: pointer;
   user-select: none;
   touch-action: none;
-  box-shadow: inset 0px 0px 20px 0px rgba(0, 0, 0, 0.64);
+  box-shadow: inset 0px 0px 20px 0px var(--inner-shadow-color);
 }
 
 .center-dot {
@@ -73,7 +75,7 @@
 .tick {
   position: absolute;
   width: 2px;
-  height: 10px;
+  height: 12%;
   background: var(--tick-color);
   left: 50%;
   top: 0;
