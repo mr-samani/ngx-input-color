@@ -52,6 +52,7 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
     }
 
     if (this._targetInput) {
+      this._targetInput.removeEventListener('input', this.boundInputHandler);
       this._targetInput.addEventListener('input', this.boundInputHandler);
     }
   }
@@ -62,7 +63,6 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
   };
   private isHostInput = false;
   private pickerRef?: DialogOverlayRef<NgxInputGradientComponent>;
-  isDisabled = false;
 
   value = '';
 
@@ -70,7 +70,7 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
   _onTouched = () => {};
   _onValidateChange = () => {};
   constructor(
-    private el: ElementRef,
+    private el: ElementRef<HTMLInputElement>,
     private renderer: Renderer2,
     private viewContainerRef: ViewContainerRef,
     private dialogService: DialogService,
@@ -82,11 +82,9 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
     this.toggleColorPicker();
   }
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
-        this.writeValue(this._targetInput.value);
-      }
-    });
+    if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
+      this.writeValue(this._targetInput.value);
+    }
   }
   registerOnChange(fn: any): void {
     this._onChange = fn;
@@ -95,7 +93,11 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
     this._onTouched = fn;
   }
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    if (disabled) {
+      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);
+    } else {
+      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+    }
   }
   registerOnValidatorChange(fn: () => void): void {
     this._onValidateChange = fn;
@@ -108,17 +110,15 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
     this.destroyPicker();
   }
 
-  writeValue(value: any): void {
-    this.value = value;
-    if (value && isValidGradient(value)) {
-      const parsed = parseGradient(value);
+  writeValue(val: any): void {
+    this.value = val;
+    if (val && isValidGradient(val)) {
+      // const parsed = parseGradient(val);
       if (this.setInputBackground) {
-        this.renderer.setStyle(this.el.nativeElement, 'background', value);
+        this.renderer.setStyle(this.el.nativeElement, 'background', val);
       }
-      // اگر دایرکتیو روی input باشه (ControlValueAccessor)
       if (this.isHostInput) {
-        const input = this.el.nativeElement as HTMLInputElement;
-        input.value = this.value;
+        this.el.nativeElement.value = this.value;
       }
       this._onValidateChange();
     } else {
@@ -157,6 +157,7 @@ export class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueA
 
   destroyPicker() {
     if (this.pickerRef) {
+      this.pickerRef.close();
       this.pickerRef = undefined;
     }
   }

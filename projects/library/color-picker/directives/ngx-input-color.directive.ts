@@ -57,10 +57,6 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
     }
   }
 
-  @Input('value') set setValue(val: string) {
-    this.writeValue(val);
-  }
-
   private boundInputHandler = (e: Event) => {
     this.writeValue((e.target as HTMLInputElement).value);
   };
@@ -80,7 +76,8 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
     }
 
     if (this._targetInput) {
-      this._targetInput.addEventListener('input', this.boundInputHandler.bind(this));
+      this._targetInput.removeEventListener('input', this.boundInputHandler);
+      this._targetInput.addEventListener('input', this.boundInputHandler);
     }
   }
   @Output() change = new EventEmitter<string>();
@@ -88,7 +85,6 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   private pickerRef?: DialogOverlayRef<NgxInputColorComponent>;
   private isHostInput = false;
   inValid: boolean = false;
-  isDisabled = false;
   _onChange = (value: string) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
@@ -101,11 +97,9 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   ) {}
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
-        this.writeValue(this._targetInput.value);
-      }
-    });
+    if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
+      this.writeValue(this._targetInput.value);
+    }
   }
   ngOnDestroy(): void {
     this.destroyColorPicker();
@@ -156,7 +150,11 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   }
 
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    if (disabled) {
+      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);
+    } else {
+      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+    }
   }
 
   registerOnValidatorChange(fn: () => void): void {
@@ -204,6 +202,7 @@ export class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAcce
   }
 
   private destroyColorPicker() {
+    this.pickerRef?.close();
     this.pickerRef = undefined;
   }
 

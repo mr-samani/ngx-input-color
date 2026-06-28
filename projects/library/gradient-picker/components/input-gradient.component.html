@@ -33,7 +33,7 @@
               [style.backgroundColor]="rangeValues[selectedIndex].color"
               [ngxInputColor]="inputColor"
               [theme]="theme"
-              [value]="rangeValues[selectedIndex].color"
+              [ngModel]="rangeValues[selectedIndex].color"
               [simpleMode]="true"
               (change)="generateGradient($event)"></span>
           </div>

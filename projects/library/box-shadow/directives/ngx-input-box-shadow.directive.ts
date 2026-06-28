@@ -37,7 +37,6 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
   @Input() setInputBackground = true;
 
   private pickerRef?: DialogOverlayRef<NgxBoxShadowComponent>;
-  isDisabled = false;
 
   value = '';
 
@@ -47,7 +46,7 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
   constructor(
     private el: ElementRef,
     private viewContainerRef: ViewContainerRef,
-
+    private renderer: Renderer2,
     private dialogService: DialogService,
   ) {}
 
@@ -64,7 +63,11 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
     this._onTouched = fn;
   }
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    if (disabled) {
+      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);
+    } else {
+      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+    }
   }
   registerOnValidatorChange(fn: () => void): void {
     this._onValidateChange = fn;
@@ -109,6 +112,7 @@ export class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Valid
 
   destroyPicker() {
     if (this.pickerRef) {
+      this.pickerRef.close();
       this.pickerRef = undefined;
     }
   }
