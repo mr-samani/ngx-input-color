@@ -4574,7 +4574,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<!-- <ngx-input-angle [(ngModel)]=\"angle\"></ngx-input-angle> -->\r\n\r\n<input\r\n  type=\"number\"\r\n  name=\"test1\"\r\n  [(ngModel)]=\"angle\"\r\n  ngxInputAngle\r\n  theme=\"light\"\r\n  #xyz=\"ngModel\"\r\n  [size]=\"120\"\r\n  [disabled]=\"false\" />\r\n<pre>value:{{ angle }}</pre>\r\n<pre>error:{{ xyz.errors | json }}</pre>\r\n<button (click)=\"angle = angle + 10\">Change</button>\r\n<ngx-input-angle theme=\"auto\" [size]=\"250\"></ngx-input-angle>\r\n\r\n<div class=\"input-group\">\r\n  <input type=\"text\" [(ngModel)]=\"angle\" name=\"angle\" ngxInputAngle #myAngle=\"ngxInputAngle\" [openOnCLick]=\"false\" />\r\n  <span (click)=\"myAngle.toggle()\">A</span>\r\n</div>\r\n"
+            "templateData": "<!-- <ngx-input-angle [(ngModel)]=\"angle\"></ngx-input-angle> -->\r\n\r\n<input\r\n  type=\"number\"\r\n  name=\"test1\"\r\n  [(ngModel)]=\"angle\"\r\n  ngxInputAngle\r\n  theme=\"light\"\r\n  #xyz=\"ngModel\"\r\n  [size]=\"120\"\r\n  [disabled]=\"false\" />\r\n<pre>value:{{ angle }}</pre>\r\n<pre>error:{{ xyz.errors | json }}</pre>\r\n\r\n<ngx-input-angle theme=\"auto\" [size]=\"250\"></ngx-input-angle>\r\n\r\n<div class=\"input-group\">\r\n  <input type=\"text\" [(ngModel)]=\"angle\" name=\"angle\" ngxInputAngle #myAngle=\"ngxInputAngle\" [openOnCLick]=\"false\" />\r\n  <span (click)=\"myAngle.toggle()\">A</span>\r\n</div>\r\n"
         },
         {
             "name": "AppComponent",
@@ -6239,7 +6239,7 @@
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ":host {\r\n  --ngx-color-bg: #e5e5e5;\r\n  --ngx-color-text: #000;\r\n  --border-color: #c8c8c8;\r\n  --ngx-size: 100px;\r\n  --handle-color: #007ac6;\r\n  --tick-color: #444444;\r\n  --inner-shadow-color: #000000a3;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222222;\r\n  --ngx-color-text: #fff;\r\n  --border-color: #3a3a3a;\r\n  --tick-color: #595959;\r\n  --inner-shadow-color: #000;\r\n}\r\n\r\n.ngx-input-angle-selector {\r\n  width: var(--ngx-size);\r\n  height: var(--ngx-size);\r\n  border: calc(8 * var(--ngx-size) / 100) var(--border-color) solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.366);\r\n  margin: 14px 4px;\r\n  border-radius: 50%;\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.angle-selector {\r\n  position: relative;\r\n  width: 100%;\r\n  height: 100%;\r\n  border-radius: 50%;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  user-select: none;\r\n  touch-action: none;\r\n  box-shadow: inset 0px 0px 20px 0px var(--inner-shadow-color);\r\n}\r\n\r\n.center-dot {\r\n  width: 15px;\r\n  height: 15px;\r\n  background: var(--handle-color);\r\n  border-radius: 50%;\r\n  z-index: 10;\r\n  box-shadow: 0 0 20px #303030;\r\n}\r\n\r\n.hand {\r\n  position: absolute;\r\n  width: 4px;\r\n  height: calc(var(--ngx-size) * 0.6);\r\n  box-shadow: 0 0 20px #303030;\r\n  background: var(--handle-color);\r\n  bottom: 50%;\r\n  transform-origin: bottom center;\r\n  border-radius: 4px;\r\n\r\n  pointer-events: none;\r\n  z-index: 1;\r\n}\r\n\r\n.tick {\r\n  position: absolute;\r\n  width: 2px;\r\n  height: 12%;\r\n  background: var(--tick-color);\r\n  left: 50%;\r\n  top: 0;\r\n  transform-origin: 0 calc(var(--ngx-size) / 2 - calc(8 * var(--ngx-size) / 100));\r\n}\r\n\r\n/*-----------------------------------------------------------------------------*/\r\n\r\n::ng-deep {\r\n  dialog .ngx-input-angle-selector::before {\r\n    content: ' ';\r\n    border: 14px var(--border-color) solid;\r\n    position: absolute;\r\n    z-index: 1;\r\n    filter: drop-shadow(0px -3px 2px rgba(0, 0, 0, 0.2));\r\n\r\n    box-sizing: border-box;\r\n  }\r\n\r\n  dialog.tips-above .ngx-input-angle-selector::before {\r\n    border-top-color: transparent;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent;\r\n    top: -12px;\r\n\r\n    left: calc(50% - 14px);\r\n  }\r\n\r\n  dialog.tips-bottom .ngx-input-angle-selector::before {\r\n    border-bottom-color: transparent;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent;\r\n    bottom: -10px;\r\n    left: calc(50% - 14px);\r\n    filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.2));\r\n  }\r\n}\r\n",
+                    "data": ":host {\r\n  --ngx-color-bg: #e5e5e5;\r\n  --ngx-color-text: #000;\r\n  --border-color: #c8c8c8;\r\n  --ngx-size: 100px;\r\n  --handle-color: #007ac6;\r\n  --tick-color: #444444;\r\n  --inner-shadow-color: #000000a3;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222222;\r\n  --ngx-color-text: #fff;\r\n  --border-color: #3a3a3a;\r\n  --tick-color: #595959;\r\n  --inner-shadow-color: #000;\r\n}\r\n\r\n.ngx-input-angle-selector {\r\n  width: var(--ngx-size, 100);\r\n  height: var(--ngx-size, 100);\r\n  border: calc(8 * var(--ngx-size, 100) / 100) var(--border-color) solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.366);\r\n  margin: 14px 4px;\r\n  border-radius: 50%;\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  box-sizing: border-box;\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.angle-selector {\r\n  position: relative;\r\n  width: 100%;\r\n  height: 100%;\r\n  border-radius: 50%;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  user-select: none;\r\n  touch-action: none;\r\n  box-shadow: inset 0px 0px 20px 0px var(--inner-shadow-color);\r\n}\r\n\r\n.center-dot {\r\n  width: 15px;\r\n  height: 15px;\r\n  background: var(--handle-color);\r\n  border-radius: 50%;\r\n  z-index: 10;\r\n  box-shadow: 0 0 20px #303030;\r\n}\r\n\r\n.hand {\r\n  position: absolute;\r\n  width: 4px;\r\n  height: calc(var(--ngx-size, 100) * 0.6);\r\n  box-shadow: 0 0 20px #303030;\r\n  background: var(--handle-color);\r\n  bottom: 50%;\r\n  transform-origin: bottom center;\r\n  border-radius: 4px;\r\n\r\n  pointer-events: none;\r\n  z-index: 1;\r\n}\r\n\r\n.tick {\r\n  position: absolute;\r\n  width: 2px;\r\n  height: 12%;\r\n  background: var(--tick-color);\r\n  left: 50%;\r\n  top: 0;\r\n  transform-origin: 50% calc(var(--ngx-size, 100px) / 2 - calc(8 * var(--ngx-size, 100) / 100));\r\n}\r\n\r\n/*-----------------------------------------------------------------------------*/\r\n\r\n::ng-deep {\r\n  dialog .ngx-input-angle-selector::before {\r\n    content: ' ';\r\n    border: 14px var(--border-color) solid;\r\n    position: absolute;\r\n    z-index: 1;\r\n    filter: drop-shadow(0px -3px 2px rgba(0, 0, 0, 0.2));\r\n\r\n    box-sizing: border-box;\r\n  }\r\n\r\n  dialog.tips-above .ngx-input-angle-selector::before {\r\n    border-top-color: transparent;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent;\r\n    top: -12px;\r\n\r\n    left: calc(50% - 14px);\r\n  }\r\n\r\n  dialog.tips-bottom .ngx-input-angle-selector::before {\r\n    border-bottom-color: transparent;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent;\r\n    bottom: -10px;\r\n    left: calc(50% - 14px);\r\n    filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.2));\r\n  }\r\n}\r\n",
                     "styleUrl": "./input-angle.component.scss"
                 }
             ],
@@ -6286,7 +6286,7 @@
                     }
                 }
             },
-            "templateData": "<div class=\"ngx-input-angle-selector\">\r\n  <div #selectorContainer class=\"angle-selector\">\r\n    <div class=\"center-dot\"></div>\r\n    <div #hand class=\"hand\" [style.transform]=\"'rotate(' + currentAngle() + 'deg)'\"></div>\r\n\r\n    @for (angle of tickes; track $index) {\r\n      <div [style.transform]=\"'translateX(-50%) rotate(' + angle + 'deg)'\" class=\"tick\"></div>\r\n    }\r\n  </div>\r\n</div>"
+            "templateData": "<div class=\"ngx-input-angle-selector\">\r\n  <div #selectorContainer class=\"angle-selector\">\r\n    <div class=\"center-dot\"></div>\r\n    <div #hand class=\"hand\" [style.transform]=\"'rotate(' + currentAngle() + 'deg)'\"></div>\r\n\r\n    @for (angle of tickes; track $index) {\r\n      <div [style.transform]=\"'rotate(' + angle + 'deg)'\" class=\"tick\"></div>\r\n    }\r\n  </div>\r\n</div>"
         },
         {
             "name": "NgxBoxShadowComponent",
@@ -7705,7 +7705,7 @@
         },
         {
             "name": "NgxInputGradientComponent",
-            "id": "component-NgxInputGradientComponent-0ea2a2d57a344d66da132c592f3b5b967ee87606ae17b973157ad1d1371e288bdc7f4476bd500658933aaa7e44fb6e5f3ea22f82a4026676ea9e8767ed4a7aa9",
+            "id": "component-NgxInputGradientComponent-2e78403755f9691f494ebaee0349ae6f76bcf4040f04191b165ac430cfefe30dddc4b2ec54b9abdffa0f3d57abbfd24b172ffe2a653643cf744636a9af4d5c59",
             "file": "projects/library/gradient-picker/components/input-gradient.component.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -7737,7 +7737,7 @@
                     "name": "theme",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 51,
+                    "line": 52,
                     "type": "\"light\" | \"dark\" | \"auto\"",
                     "decorators": []
                 }
@@ -7748,7 +7748,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 58,
+                    "line": 59,
                     "type": "EventEmitter"
                 }
             ],
@@ -7762,7 +7762,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 70
+                    "line": 71
                 },
                 {
                     "name": "_onTouched",
@@ -7773,7 +7773,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 71
+                    "line": 72
                 },
                 {
                     "name": "_onValidateChange",
@@ -7784,7 +7784,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 72
+                    "line": 73
                 },
                 {
                     "name": "baseBg",
@@ -7795,7 +7795,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 63
+                    "line": 64
                 },
                 {
                     "name": "browserService",
@@ -7806,7 +7806,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 49
+                    "line": 50
                 },
                 {
                     "name": "defaultGradients",
@@ -7817,7 +7817,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 60
+                    "line": 61
                 },
                 {
                     "name": "isDisabled",
@@ -7828,7 +7828,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 69
+                    "line": 70
                 },
                 {
                     "name": "rangeSlider",
@@ -7838,7 +7838,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 74,
+                    "line": 75,
                     "decorators": [
                         {
                             "name": "ViewChild",
@@ -7858,7 +7858,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 64
+                    "line": 65
                 },
                 {
                     "name": "resultGradient",
@@ -7869,7 +7869,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 62
+                    "line": 63
                 },
                 {
                     "name": "rotation",
@@ -7880,7 +7880,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 66
+                    "line": 67
                 },
                 {
                     "name": "selectedIndex",
@@ -7891,7 +7891,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 67
+                    "line": 68
                 },
                 {
                     "name": "theme",
@@ -7902,7 +7902,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 50
+                    "line": 51
                 },
                 {
                     "name": "type",
@@ -7913,7 +7913,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 65
+                    "line": 66
                 }
             ],
             "methodsClass": [
@@ -7923,7 +7923,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 167,
+                    "line": 168,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -7942,7 +7942,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 150,
+                    "line": 151,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -7965,7 +7965,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 130,
+                    "line": 131,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -7978,7 +7978,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 81,
+                    "line": 82,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -7988,7 +7988,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 78,
+                    "line": 79,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -8015,7 +8015,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 180,
+                    "line": 181,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8058,7 +8058,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 82,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8090,7 +8090,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 85,
+                    "line": 86,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8123,7 +8123,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 91,
+                    "line": 92,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8147,7 +8147,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 142,
+                    "line": 143,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -8157,7 +8157,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 172,
+                    "line": 173,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -8176,7 +8176,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 88,
+                    "line": 89,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8208,7 +8208,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 138,
+                    "line": 139,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8231,7 +8231,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 162,
+                    "line": 163,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -8250,7 +8250,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 94,
+                    "line": 95,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8282,7 +8282,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 102,
+                    "line": 103,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -8307,6 +8307,10 @@
             "standalone": false,
             "imports": [
                 {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
                     "name": "FormsModule",
                     "type": "module"
                 },
@@ -8324,11 +8328,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  inject,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewChild,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n  FormsModule,\r\n} from '@angular/forms';\r\nimport { GradientStop, GradientType } from '../contracts/GradientStop';\r\nimport { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../utils/build-gradient';\r\nimport { DefaultGradients } from '../contracts/default-gradients';\r\nimport { BrowserService, RangeSliderComponent } from 'ngx-input-color/shared';\r\nimport { NgxInputColor } from 'ngx-input-color/color-picker';\r\nimport { NgxInputAngle } from 'ngx-input-color/angle-selector';\r\n\r\n@Component({\r\n  selector: 'ngx-input-gradient',\r\n  templateUrl: './input-gradient.component.html',\r\n  styleUrls: ['./input-gradient.component.scss'],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientComponent,\r\n    },\r\n  ],\r\n  host: {\r\n    '[class.dark]': 'theme==\"dark\"',\r\n  },\r\n  imports: [FormsModule, RangeSliderComponent, NgxInputColor, NgxInputAngle],\r\n})\r\nexport class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  browserService = inject(BrowserService);\r\n  theme: 'light' | 'dark' = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {\r\n    if (!val || val == 'auto') {\r\n      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n    } else {\r\n      this.theme = val;\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  defaultGradients: string[] = [];\r\n\r\n  resultGradient = '';\r\n  baseBg = '';\r\n  rangeValues: GradientStop[] = [];\r\n  type: GradientType = 'linear';\r\n  rotation: number = 90;\r\n  selectedIndex = 0;\r\n\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;\r\n\r\n  constructor(private cd: ChangeDetectorRef) {}\r\n\r\n  ngOnInit(): void {\r\n    this.setDefaultGradients();\r\n  }\r\n  ngOnDestroy(): void {}\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (!this.resultGradient) return { required: true };\r\n    const parsed = parseGradient(this.resultGradient);\r\n    if (!parsed.valid) return { invalid: true };\r\n    if (parsed.stops.length < 2) return { stops: 'at least 2 color stops required' };\r\n    return null;\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value && isValidGradient(value)) {\r\n      const parsed = parseGradient(value);\r\n      if (parsed.valid) {\r\n        this.resultGradient = value;\r\n        this.type = parsed.type;\r\n        this.rotation = +parsed.rotation;\r\n        this.rangeValues = parsed.stops;\r\n      } else {\r\n        this.resultGradient = '';\r\n        this.rangeValues = [\r\n          { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n          { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n        ];\r\n        this.type = 'linear';\r\n        this.rotation = 90;\r\n      }\r\n    } else {\r\n      this.resultGradient = '';\r\n      this.rangeValues = [\r\n        { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n        { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n      ];\r\n      this.type = 'linear';\r\n      this.rotation = 90;\r\n    }\r\n    this.generateGradient();\r\n  }\r\n  private generateId(): string {\r\n    let id = 'ngx-thumb-' + Math.random().toString(36).substring(2, 9);\r\n    if (this.rangeValues.findIndex((x) => x.id == id) >= 0) {\r\n      return this.generateId();\r\n    }\r\n    return id;\r\n  }\r\n\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  remove() {\r\n    if (this.rangeValues.length > 2) {\r\n      this.rangeValues.splice(this.selectedIndex, 1);\r\n      this.selectedIndex = 0;\r\n      this.generateGradient();\r\n    }\r\n  }\r\n\r\n  generateGradient(ev?: string) {\r\n    if (ev && this.rangeValues[this.selectedIndex]) {\r\n      this.rangeValues[this.selectedIndex].color = ev;\r\n    }\r\n    for (let item of this.rangeValues) {\r\n      item.color ??= generateRandomColor();\r\n    }\r\n    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);\r\n    this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, +this.rotation);\r\n    this.emitChange();\r\n  }\r\n\r\n  updateRangeSlider() {\r\n    if (this.rangeSlider) {\r\n      this.rangeSlider.writeValue(this.rangeValues);\r\n    }\r\n  }\r\n  emitChange() {\r\n    this._onChange(this.resultGradient);\r\n    this.change.emit(this.resultGradient);\r\n  }\r\n\r\n  setDefaultGradients() {\r\n    this.defaultGradients = [];\r\n\r\n    for (let item of DefaultGradients) {\r\n      this.defaultGradients.push(buildGradientFromStops(item, 'linear', 90));\r\n    }\r\n  }\r\n\r\n  onSelectDefault(item: string, i: number) {\r\n    // console.log('onSelectDefault', item, i);\r\n    this.writeValue(item);\r\n    this.emitChange();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ChangeDetectionStrategy,\r\n  ChangeDetectorRef,\r\n  Component,\r\n  EventEmitter,\r\n  forwardRef,\r\n  inject,\r\n  Input,\r\n  OnDestroy,\r\n  OnInit,\r\n  Output,\r\n  ViewChild,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n  FormsModule,\r\n} from '@angular/forms';\r\nimport { GradientStop, GradientType } from '../contracts/GradientStop';\r\nimport { buildGradientFromStops, generateRandomColor, isValidGradient, parseGradient } from '../utils/build-gradient';\r\nimport { DefaultGradients } from '../contracts/default-gradients';\r\nimport { BrowserService, RangeSliderComponent } from 'ngx-input-color/shared';\r\nimport { NgxInputColor } from 'ngx-input-color/color-picker';\r\nimport { NgxInputAngle } from 'ngx-input-color/angle-selector';\r\nimport { CommonModule } from '@angular/common';\r\n\r\n@Component({\r\n  selector: 'ngx-input-gradient',\r\n  templateUrl: './input-gradient.component.html',\r\n  styleUrls: ['./input-gradient.component.scss'],\r\n  changeDetection: ChangeDetectionStrategy.OnPush,\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradientComponent), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradientComponent,\r\n    },\r\n  ],\r\n  host: {\r\n    '[class.dark]': 'theme==\"dark\"',\r\n  },\r\n  imports: [CommonModule, FormsModule, RangeSliderComponent, NgxInputColor, NgxInputAngle],\r\n})\r\nexport class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {\r\n  browserService = inject(BrowserService);\r\n  theme: 'light' | 'dark' = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n  @Input('theme') set setTheme(val: 'light' | 'dark' | 'auto') {\r\n    if (!val || val == 'auto') {\r\n      this.theme = this.browserService.prefersDarkMode ? 'dark' : 'light';\r\n    } else {\r\n      this.theme = val;\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  defaultGradients: string[] = [];\r\n\r\n  resultGradient = '';\r\n  baseBg = '';\r\n  rangeValues: GradientStop[] = [];\r\n  type: GradientType = 'linear';\r\n  rotation: number = 90;\r\n  selectedIndex = 0;\r\n\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  @ViewChild('rangeSlider', { static: true }) rangeSlider?: RangeSliderComponent;\r\n\r\n  constructor(private cd: ChangeDetectorRef) {}\r\n\r\n  ngOnInit(): void {\r\n    this.setDefaultGradients();\r\n  }\r\n  ngOnDestroy(): void {}\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (!this.resultGradient) return { required: true };\r\n    const parsed = parseGradient(this.resultGradient);\r\n    if (!parsed.valid) return { invalid: true };\r\n    if (parsed.stops.length < 2) return { stops: 'at least 2 color stops required' };\r\n    return null;\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    if (value && isValidGradient(value)) {\r\n      const parsed = parseGradient(value);\r\n      if (parsed.valid) {\r\n        this.resultGradient = value;\r\n        this.type = parsed.type;\r\n        this.rotation = +parsed.rotation;\r\n        this.rangeValues = parsed.stops;\r\n      } else {\r\n        this.resultGradient = '';\r\n        this.rangeValues = [\r\n          { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n          { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n        ];\r\n        this.type = 'linear';\r\n        this.rotation = 90;\r\n      }\r\n    } else {\r\n      this.resultGradient = '';\r\n      this.rangeValues = [\r\n        { color: generateRandomColor(), value: 0, id: this.generateId() },\r\n        { color: generateRandomColor(), value: 100, id: this.generateId() },\r\n      ];\r\n      this.type = 'linear';\r\n      this.rotation = 90;\r\n    }\r\n    this.generateGradient();\r\n  }\r\n  private generateId(): string {\r\n    let id = 'ngx-thumb-' + Math.random().toString(36).substring(2, 9);\r\n    if (this.rangeValues.findIndex((x) => x.id == id) >= 0) {\r\n      return this.generateId();\r\n    }\r\n    return id;\r\n  }\r\n\r\n  stopPropagation(ev: Event) {\r\n    ev.stopPropagation();\r\n  }\r\n\r\n  remove() {\r\n    if (this.rangeValues.length > 2) {\r\n      this.rangeValues.splice(this.selectedIndex, 1);\r\n      this.selectedIndex = 0;\r\n      this.generateGradient();\r\n    }\r\n  }\r\n\r\n  generateGradient(ev?: string) {\r\n    if (ev && this.rangeValues[this.selectedIndex]) {\r\n      this.rangeValues[this.selectedIndex].color = ev;\r\n    }\r\n    for (let item of this.rangeValues) {\r\n      item.color ??= generateRandomColor();\r\n    }\r\n    this.baseBg = buildGradientFromStops(this.rangeValues, 'linear', 90);\r\n    this.resultGradient = buildGradientFromStops(this.rangeValues, this.type, +this.rotation);\r\n    this.emitChange();\r\n  }\r\n\r\n  updateRangeSlider() {\r\n    if (this.rangeSlider) {\r\n      this.rangeSlider.writeValue(this.rangeValues);\r\n    }\r\n  }\r\n  emitChange() {\r\n    this._onChange(this.resultGradient);\r\n    this.change.emit(this.resultGradient);\r\n  }\r\n\r\n  setDefaultGradients() {\r\n    this.defaultGradients = [];\r\n\r\n    for (let item of DefaultGradients) {\r\n      this.defaultGradients.push(buildGradientFromStops(item, 'linear', 90));\r\n    }\r\n  }\r\n\r\n  onSelectDefault(item: string, i: number) {\r\n    // console.log('onSelectDefault', item, i);\r\n    this.writeValue(item);\r\n    this.emitChange();\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-gradient-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .ngx-c-inner {\r\n    padding: 0 12px 12px;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n\r\n  &:after {\r\n    content: ' ';\r\n    position: absolute;\r\n    background: var(--ngx-color-bg);\r\n    bottom: 0;\r\n    width: 100%;\r\n    left: 0;\r\n    right: 0;\r\n    height: 15px;\r\n    border-radius: 18px 18px 0 0;\r\n  }\r\n  &::before {\r\n    content: ' ';\r\n    background-image:\r\n      linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position:\r\n      0 0,\r\n      0 8px,\r\n      8px -8px,\r\n      -8px 0px;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    z-index: -1;\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n\r\n.ngx-row {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 12px;\r\n  .ngx-col-6 {\r\n    width: 47%;\r\n  }\r\n  .ngx-input-group {\r\n    display: flex;\r\n    .ngx-input-prefix {\r\n      width: 14px;\r\n      margin-left: -28px;\r\n      margin-top: 6px;\r\n      pointer-events: none;\r\n      svg {\r\n        max-width: 100%;\r\n        max-height: 100%;\r\n        fill: var(--ngx-color-text);\r\n      }\r\n    }\r\n  }\r\n  .input-color {\r\n    position: relative;\r\n    input {\r\n      padding-right: 26px;\r\n    }\r\n    .color {\r\n      position: absolute;\r\n      top: 4px;\r\n      right: 5px;\r\n      cursor: pointer;\r\n      display: inline-block;\r\n      width: 24px;\r\n      height: 24px;\r\n      border-radius: 4px;\r\n      border: 1px solid #ccc;\r\n      transition: all 300ms;\r\n      &:hover {\r\n        border-color: #8db6e4;\r\n      }\r\n    }\r\n  }\r\n\r\n  select,\r\n  input {\r\n    outline: none;\r\n    border: 1px solid #ececec;\r\n    border-radius: 4px;\r\n    padding: 8px 10px;\r\n    background: none;\r\n    width: 100%;\r\n    color: var(--ngx-color-text);\r\n    appearance: none;\r\n    // &:focus {\r\n    //   cursor: pointer;\r\n    //   background: hsl(216, 100%, 95%);\r\n    //   color: hsl(216, 100%, 50%);\r\n    // }\r\n    option {\r\n      padding: 10px 20px;\r\n      background-color: #fff;\r\n      transition: all 300ms;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      &:hover {\r\n        background: #f0f0f0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n.text-end {\r\n  text-align: end;\r\n}\r\n.remove-btn {\r\n  background: none;\r\n  border: none;\r\n  outline: none;\r\n  color: #0077ff;\r\n  transition: color 300ms;\r\n  &:hover {\r\n    color: #0462cc;\r\n  }\r\n}\r\n\r\n.default-list {\r\n  display: flex;\r\n  gap: 6px;\r\n  flex-wrap: wrap;\r\n  margin: 16px 0;\r\n  span {\r\n    width: 36px;\r\n    height: 26px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    transition: transform 300ms;\r\n    &:hover {\r\n      transform: scale(1.2);\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ":host {\r\n  --ngx-color-bg: #fff;\r\n  --ngx-color-text: #000;\r\n}\r\n\r\n:host-context(.dark) {\r\n  --ngx-color-bg: #222;\r\n  --ngx-color-text: #fff;\r\n}\r\n\r\n.ngx-input-gradient-picker {\r\n  width: 270px;\r\n  max-width: 100%;\r\n  border: 1px #bfbfbf solid;\r\n  border-radius: 15px;\r\n  background: var(--ngx-color-bg);\r\n  color: var(--ngx-color-text);\r\n  overflow: hidden;\r\n  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 31%);\r\n  direction: ltr;\r\n  font-family: arial, tahoma;\r\n  .ngx-c-inner {\r\n    padding: 0 12px 12px;\r\n  }\r\n  * {\r\n    box-sizing: border-box;\r\n  }\r\n}\r\n\r\n.ngx-color-preview {\r\n  min-height: 100px;\r\n  padding: 10px 36px;\r\n  line-height: 1.6;\r\n  font-size: 14px;\r\n  font-family: arial, tahoma;\r\n  font-weight: 700;\r\n  position: relative;\r\n  color: #353535;\r\n  background-color: #fff;\r\n  &.is-dark-color {\r\n    color: #ffff;\r\n  }\r\n  &:after,\r\n  &:before {\r\n    content: ' ';\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n  }\r\n  &::before {\r\n    background-image:\r\n      linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%),\r\n      linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);\r\n    background-size: 16px 16px;\r\n    background-position:\r\n      0 0,\r\n      0 8px,\r\n      8px -8px,\r\n      -8px 0px;\r\n  }\r\n  &:after {\r\n    background: var(--ngx-selected-gradient);\r\n  }\r\n}\r\n\r\n/*------ button groups ---------*/\r\n\r\n.ngx-row {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 12px;\r\n  .ngx-col-6 {\r\n    width: 47%;\r\n  }\r\n  .ngx-input-group {\r\n    display: flex;\r\n    .ngx-input-prefix {\r\n      width: 14px;\r\n      margin-left: -28px;\r\n      margin-top: 6px;\r\n      pointer-events: none;\r\n      svg {\r\n        max-width: 100%;\r\n        max-height: 100%;\r\n        fill: var(--ngx-color-text);\r\n      }\r\n    }\r\n  }\r\n  .input-color {\r\n    position: relative;\r\n    input {\r\n      padding-right: 26px;\r\n    }\r\n    .color {\r\n      position: absolute;\r\n      top: 4px;\r\n      right: 5px;\r\n      cursor: pointer;\r\n      display: inline-block;\r\n      width: 24px;\r\n      height: 24px;\r\n      border-radius: 4px;\r\n      border: 1px solid #ccc;\r\n      transition: all 300ms;\r\n      &:hover {\r\n        border-color: #8db6e4;\r\n      }\r\n    }\r\n  }\r\n\r\n  select,\r\n  input {\r\n    outline: none;\r\n    border: 1px solid #ececec;\r\n    border-radius: 4px;\r\n    padding: 8px 10px;\r\n    background: none;\r\n    width: 100%;\r\n    color: var(--ngx-color-text);\r\n    appearance: none;\r\n    // &:focus {\r\n    //   cursor: pointer;\r\n    //   background: hsl(216, 100%, 95%);\r\n    //   color: hsl(216, 100%, 50%);\r\n    // }\r\n    option {\r\n      padding: 10px 20px;\r\n      background-color: #fff;\r\n      transition: all 300ms;\r\n      background: var(--ngx-color-bg);\r\n      color: var(--ngx-color-text);\r\n      &:hover {\r\n        background: #f0f0f0;\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n.text-end {\r\n  text-align: end;\r\n}\r\n.remove-btn {\r\n  background: none;\r\n  border: none;\r\n  outline: none;\r\n  color: #0077ff;\r\n  transition: color 300ms;\r\n  &:hover {\r\n    color: #0462cc;\r\n  }\r\n}\r\n\r\n.default-list {\r\n  display: flex;\r\n  gap: 6px;\r\n  flex-wrap: wrap;\r\n  margin: 16px 0;\r\n  span {\r\n    width: 36px;\r\n    height: 26px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    transition: transform 300ms;\r\n    &:hover {\r\n      transform: scale(1.2);\r\n    }\r\n  }\r\n}\r\n",
                     "styleUrl": "./input-gradient.component.scss"
                 }
             ],
@@ -8348,7 +8352,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 74,
+                "line": 75,
                 "jsdoctags": [
                     {
                         "name": "cd",
@@ -8389,7 +8393,7 @@
                             }
                         ],
                         "returnType": "void",
-                        "line": 51,
+                        "line": 52,
                         "jsdoctags": [
                             {
                                 "name": "val",
@@ -8406,7 +8410,7 @@
                     }
                 }
             },
-            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [style.background]=\"resultGradient\"></div>\r\n  <div class=\"ngx-c-inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      name=\"rangeCalues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n      #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n      <div class=\"ngx-row\">\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Color</div>\r\n          <div class=\"input-color\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n              name=\"color\"\r\n              #inputColor\r\n              (ngModelChange)=\"generateGradient(); updateRangeSlider()\" />\r\n            <span\r\n              #ngxGradColor\r\n              class=\"color\"\r\n              [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n              [ngxInputColor]=\"inputColor\"\r\n              [theme]=\"theme\"\r\n              [ngModel]=\"rangeValues[selectedIndex].color\"\r\n              [simpleMode]=\"true\"\r\n              (change)=\"generateGradient($event)\"></span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Position</div>\r\n          <input\r\n            type=\"number\"\r\n            [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n            min=\"0\"\r\n            max=\"100\"\r\n            name=\"posiition\"\r\n            (change)=\"generateGradient(); updateRangeSlider()\" />\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Rotation</div>\r\n          <div class=\"ngx-input-group\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rotation\"\r\n              ngxInputAngle\r\n              [theme]=\"theme\"\r\n              (change)=\"generateGradient()\"\r\n              name=\"rotation\"\r\n              [disabled]=\"type == 'radial'\" />\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Type</div>\r\n          <div class=\"ngx-input-group\">\r\n            <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n              <option value=\"linear\">linear</option>\r\n              <option value=\"radial\">radial</option>\r\n            </select>\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    }\r\n\r\n    <div class=\"default-list\">\r\n      @for (item of defaultGradients; track $index; let i = $index) {\r\n        <span [style.background]=\"item\" (click)=\"onSelectDefault(item, i)\"></span>\r\n      }\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [ngStyle]=\"{ '--ngx-selected-gradient': resultGradient }\"></div>\r\n  <div class=\"ngx-c-inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      name=\"rangeCalues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n      #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n      <div class=\"ngx-row\">\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Color</div>\r\n          <div class=\"input-color\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n              name=\"color\"\r\n              #inputColor\r\n              (ngModelChange)=\"generateGradient(); updateRangeSlider()\" />\r\n            <span\r\n              #ngxGradColor\r\n              class=\"color\"\r\n              [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n              [ngxInputColor]=\"inputColor\"\r\n              [theme]=\"theme\"\r\n              [ngModel]=\"rangeValues[selectedIndex].color\"\r\n              [simpleMode]=\"true\"\r\n              (change)=\"generateGradient($event)\"></span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Position</div>\r\n          <input\r\n            type=\"number\"\r\n            [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n            min=\"0\"\r\n            max=\"100\"\r\n            name=\"posiition\"\r\n            (change)=\"generateGradient(); updateRangeSlider()\" />\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Rotation</div>\r\n          <div class=\"ngx-input-group\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rotation\"\r\n              ngxInputAngle\r\n              [theme]=\"theme\"\r\n              (change)=\"generateGradient()\"\r\n              name=\"rotation\"\r\n              [disabled]=\"type == 'radial'\" />\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Type</div>\r\n          <div class=\"ngx-input-group\">\r\n            <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n              <option value=\"linear\">linear</option>\r\n              <option value=\"radial\">radial</option>\r\n            </select>\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    }\r\n\r\n    <div class=\"default-list\">\r\n      @for (item of defaultGradients; track $index; let i = $index) {\r\n        <span [style.background]=\"item\" (click)=\"onSelectDefault(item, i)\"></span>\r\n      }\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "PickerComponent",
