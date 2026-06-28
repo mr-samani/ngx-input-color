@@ -1972,12 +1972,12 @@
     "directives": [
         {
             "name": "NgxInputAngle",
-            "id": "directive-NgxInputAngle-9cb864425feb65a40f8caad33dfac9d43fc452c1dcb14a511e1bac75ce1fd3d6333f5b24b0e101ebcc4263d32114e93a74bbc9d6fa2ac76ce6cc01eef566d03b",
+            "id": "directive-NgxInputAngle-d4e30789ad6f0dc7e51d2c3073aaf47319f4484cfabe7d19af49707b6e03969fc869b8c389401229120cdc490053cd79cb402e3bf1bde151952d1ea035a4f084",
             "file": "projects/library/angle-selector/directives/ngx-input-angle.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\nimport { NgxAngleSelectorComponent } from '../components/input-angle.component';\r\n\r\n@Directive({\r\n  selector: '[ngxInputAngle]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputAngle),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputAngle),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  size = input<number>(90);\r\n\r\n  @Input('value') set setValue(val: string) {\r\n    this.writeValue(val);\r\n  }\r\n\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('NgxInputAngle') set NgxInputAngle(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler.bind(this));\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<number>();\r\n  private value?: number;\r\n  private pickerRef?: DialogOverlayRef<NgxAngleSelectorComponent>;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: number) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(val: any): void {\r\n    try {\r\n      this.value = Number.parseInt(val);\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this.renderer.setProperty(this._targetInput, 'value', this.value);\r\n      } else {\r\n        this.renderer.setProperty(this.el.nativeElement, 'value', this.value);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.value = 0; // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxAngleSelectorComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'center',\r\n      placement: 'bottom',\r\n      margin: 2,\r\n      configure: (instance, ref) => {\r\n        instance.size = this.size;\r\n        instance.setTheme = this.theme;\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: number) => {\r\n          this.value = c;\r\n          console.log('v', c);\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.pickerRef = undefined;\r\n  }\r\n\r\n  private async emitChange(c: number) {\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this.renderer.setProperty(this.el.nativeElement, 'value', c);\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    } else {\r\n      this.renderer.setProperty(this.el.nativeElement, 'value', c);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  Output,\r\n  EventEmitter,\r\n  input,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\nimport { NgxAngleSelectorComponent } from '../components/input-angle.component';\r\n\r\n@Directive({\r\n  selector: '[ngxInputAngle]',\r\n  exportAs: 'ngxInputAngle',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputAngle),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputAngle),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputAngle implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  size = input<number>(90);\r\n  openOnCLick = input<boolean>(true);\r\n  @Output() change = new EventEmitter<number>();\r\n  private value?: number | null;\r\n  private pickerRef?: DialogOverlayRef<NgxAngleSelectorComponent>;\r\n  inValid: boolean = false;\r\n  _onChange = (value?: number | null) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    private el: ElementRef<HTMLInputElement>,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyAnglePicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    if (this.openOnCLick()) {\r\n      ev.stopPropagation();\r\n      ev.preventDefault();\r\n      this.toggle();\r\n    }\r\n  }\r\n\r\n  @HostListener('input', ['$event'])\r\n  onInput(event: Event) {\r\n    const input = event.target as HTMLInputElement;\r\n    this.parseInput(input.value);\r\n    this._onChange(this.value);\r\n  }\r\n\r\n  @HostListener('blur')\r\n  onBlur() {\r\n    this._onTouched();\r\n  }\r\n\r\n  writeValue(val: any): void {\r\n    this.parseInput(val);\r\n    this.renderer.setProperty(this.el.nativeElement, 'value', this.value);\r\n\r\n    this.inValid = false;\r\n    if (this.pickerRef) {\r\n      this.pickerRef.componentRef.instance.writeValue(this.value);\r\n    }\r\n    this._onValidateChange();\r\n  }\r\n\r\n  parseInput(val: any) {\r\n    try {\r\n      this.inValid = false;\r\n      this.value = val != null && val != undefined ? Number.parseInt(val) : val;\r\n    } catch {\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    if (disabled) {\r\n      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);\r\n    } else {\r\n      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');\r\n    }\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if (this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    if (this.value && this.value > 360) return { max: true };\r\n    if (this.value && this.value < 0) return { min: true };\r\n    return null;\r\n  }\r\n\r\n  public toggle() {\r\n    if (this.pickerRef) {\r\n      this.destroyAnglePicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxAngleSelectorComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'center',\r\n      placement: 'bottom',\r\n      margin: 2,\r\n      configure: (instance, ref) => {\r\n        instance.size = this.size;\r\n        instance.setTheme = this.theme;\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: number) => {\r\n          this.value = c;\r\n          console.log('v', c);\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  private destroyAnglePicker() {\r\n    this.pickerRef?.close();\r\n    this.pickerRef = undefined;\r\n  }\r\n\r\n  private async emitChange(c: number) {\r\n    this.renderer.setProperty(this.el.nativeElement, 'value', c);\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputAngle]",
             "providers": [
                 {
@@ -1987,17 +1987,10 @@
                     "name": ")"
                 }
             ],
+            "exportAs": "ngxInputAngle",
             "hostDirectives": [],
             "standalone": false,
             "inputsClass": [
-                {
-                    "name": "NgxInputAngle",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 54,
-                    "type": "HTMLInputElement | ElementRef | null | undefined | string",
-                    "decorators": []
-                },
                 {
                     "name": "theme",
                     "defaultValue": "'auto'",
@@ -2008,12 +2001,16 @@
                     "decorators": []
                 },
                 {
-                    "name": "value",
+                    "name": "openOnCLick",
+                    "defaultValue": "true",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 45,
-                    "type": "string",
-                    "decorators": []
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 44,
+                    "required": false
                 },
                 {
                     "name": "size",
@@ -2034,7 +2031,7 @@
                     "defaultValue": "new EventEmitter<number>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 71,
+                    "line": 45,
                     "type": "EventEmitter"
                 }
             ],
@@ -2042,6 +2039,14 @@
             "deprecationMessage": "",
             "hostBindings": [],
             "hostListeners": [
+                {
+                    "name": "blur",
+                    "args": [],
+                    "argsDecorator": [],
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 81
+                },
                 {
                     "name": "click",
                     "args": [
@@ -2059,7 +2064,26 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 100
+                    "line": 65
+                },
+                {
+                    "name": "input",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "argsDecorator": [
+                        "$event"
+                    ],
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 74
                 }
             ],
             "propertiesClass": [
@@ -2072,7 +2096,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 77
+                    "line": 49
                 },
                 {
                     "name": "_onTouched",
@@ -2083,7 +2107,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 78
+                    "line": 50
                 },
                 {
                     "name": "_onValidateChange",
@@ -2094,34 +2118,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 79
-                },
-                {
-                    "name": "_targetInput",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "HTMLInputElement",
-                    "indexKey": "",
-                    "optional": true,
-                    "description": "",
-                    "line": 52,
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "boundInputHandler",
-                    "defaultValue": "() => {...}",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 49,
-                    "modifierKind": [
-                        123
-                    ]
+                    "line": 51
                 },
                 {
                     "name": "inValid",
@@ -2132,32 +2129,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 75
-                },
-                {
-                    "name": "isDisabled",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 76
-                },
-                {
-                    "name": "isHostInput",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 74,
-                    "modifierKind": [
-                        123
-                    ]
+                    "line": 48
                 },
                 {
                     "name": "pickerRef",
@@ -2167,7 +2139,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 73,
+                    "line": 47,
                     "modifierKind": [
                         123
                     ]
@@ -2176,11 +2148,11 @@
                     "name": "value",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "number",
+                    "type": "number | null",
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 72,
+                    "line": 46,
                     "modifierKind": [
                         123
                     ]
@@ -2188,12 +2160,12 @@
             ],
             "methodsClass": [
                 {
-                    "name": "destroyColorPicker",
+                    "name": "destroyAnglePicker",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 179,
+                    "line": 166,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2215,7 +2187,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 183,
+                    "line": 171,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2237,24 +2209,33 @@
                     ]
                 },
                 {
-                    "name": "ngAfterViewInit",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 88,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
                     "name": "ngOnDestroy",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 95,
+                    "line": 60,
                     "deprecated": false,
                     "deprecationMessage": ""
+                },
+                {
+                    "name": "onBlur",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 81,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "decorators": [
+                        {
+                            "name": "HostListener",
+                            "stringifiedArguments": "'blur'"
+                        }
+                    ],
+                    "modifierKind": [
+                        171
+                    ]
                 },
                 {
                     "name": "onClick",
@@ -2271,7 +2252,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 100,
+                    "line": 65,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2298,6 +2279,79 @@
                     ]
                 },
                 {
+                    "name": "onInput",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 74,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "decorators": [
+                        {
+                            "name": "HostListener",
+                            "stringifiedArguments": "'input', ['$event']"
+                        }
+                    ],
+                    "modifierKind": [
+                        171
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "parseInput",
+                    "args": [
+                        {
+                            "name": "val",
+                            "type": "any",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 96,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "val",
+                            "type": "any",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "registerOnChange",
                     "args": [
                         {
@@ -2312,7 +2366,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 124,
+                    "line": 105,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2344,7 +2398,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 128,
+                    "line": 109,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2377,7 +2431,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 136,
+                    "line": 121,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2410,7 +2464,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 132,
+                    "line": 113,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2428,16 +2482,16 @@
                     ]
                 },
                 {
-                    "name": "toggleColorPicker",
+                    "name": "toggle",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 147,
+                    "line": 134,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
-                        123
+                        125
                     ]
                 },
                 {
@@ -2455,7 +2509,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 140,
+                    "line": 125,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2487,7 +2541,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 106,
+                    "line": 85,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2507,7 +2561,6 @@
             ],
             "extends": [],
             "implements": [
-                "AfterViewInit",
                 "OnDestroy",
                 "ControlValueAccessor",
                 "Validator"
@@ -2520,7 +2573,7 @@
                 "args": [
                     {
                         "name": "el",
-                        "type": "ElementRef",
+                        "type": "ElementRef<HTMLInputElement>",
                         "optional": false,
                         "dotDotDotToken": false,
                         "deprecated": false,
@@ -2551,11 +2604,11 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 79,
+                "line": 51,
                 "jsdoctags": [
                     {
                         "name": "el",
-                        "type": "ElementRef",
+                        "type": "ElementRef<HTMLInputElement>",
                         "optional": false,
                         "dotDotDotToken": false,
                         "deprecated": false,
@@ -2598,86 +2651,16 @@
                         }
                     }
                 ]
-            },
-            "accessors": {
-                "setValue": {
-                    "name": "setValue",
-                    "setSignature": {
-                        "name": "setValue",
-                        "type": "void",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "args": [
-                            {
-                                "name": "val",
-                                "type": "string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": ""
-                            }
-                        ],
-                        "returnType": "void",
-                        "line": 45,
-                        "jsdoctags": [
-                            {
-                                "name": "val",
-                                "type": "string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": "",
-                                "tagName": {
-                                    "text": "param"
-                                }
-                            }
-                        ]
-                    }
-                },
-                "NgxInputAngle": {
-                    "name": "NgxInputAngle",
-                    "setSignature": {
-                        "name": "NgxInputAngle",
-                        "type": "void",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "args": [
-                            {
-                                "name": "el",
-                                "type": "HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": ""
-                            }
-                        ],
-                        "returnType": "void",
-                        "line": 54,
-                        "jsdoctags": [
-                            {
-                                "name": "el",
-                                "type": "HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": "",
-                                "tagName": {
-                                    "text": "param"
-                                }
-                            }
-                        ]
-                    }
-                }
             }
         },
         {
             "name": "NgxInputBoxShadow",
-            "id": "directive-NgxInputBoxShadow-27f5fbbe535c685a43f07d35e33338d3b9cd71df69a5880974502092ae74916accdd1353c82cb4b71e368cfebd1065f3e7ccabac3f0810233605604e933f650a",
+            "id": "directive-NgxInputBoxShadow-734d6c183ac6c2fae21768e61f310143aee42d4242216798c63b96c2caa22a5f6f8085f44d27ee3c5fb4ae236327a57532957187e88ce875a7adb3f6491ba633",
             "file": "projects/library/box-shadow/directives/ngx-input-box-shadow.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Inject,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { DOCUMENT } from '@angular/common';\r\nimport { NgxBoxShadowComponent } from '../components/box-shadow.component';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputBoxShadow]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputBoxShadow), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputBoxShadow,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackground = true;\r\n\r\n  private pickerRef?: DialogOverlayRef<NgxBoxShadowComponent>;\r\n  isDisabled = false;\r\n\r\n  value = '';\r\n\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    private el: ElementRef,\r\n    private viewContainerRef: ViewContainerRef,\r\n\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    this.value = value;\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyPicker();\r\n      return;\r\n    }\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxBoxShadowComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this._onChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  destroyPicker() {\r\n    if (this.pickerRef) {\r\n      this.pickerRef = undefined;\r\n    }\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  ComponentRef,\r\n  Directive,\r\n  ElementRef,\r\n  HostListener,\r\n  Inject,\r\n  Input,\r\n  OnDestroy,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { DOCUMENT } from '@angular/common';\r\nimport { NgxBoxShadowComponent } from '../components/box-shadow.component';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputBoxShadow]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputBoxShadow), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputBoxShadow,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputBoxShadow implements OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackground = true;\r\n\r\n  private pickerRef?: DialogOverlayRef<NgxBoxShadowComponent>;\r\n\r\n  value = '';\r\n\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    private el: ElementRef,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private renderer: Renderer2,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    if (disabled) {\r\n      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);\r\n    } else {\r\n      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');\r\n    }\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    this.value = value;\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyPicker();\r\n      return;\r\n    }\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxBoxShadowComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this._onChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  destroyPicker() {\r\n    if (this.pickerRef) {\r\n      this.pickerRef.close();\r\n      this.pickerRef = undefined;\r\n    }\r\n  }\r\n}\r\n",
             "selector": "[ngxInputBoxShadow]",
             "providers": [
                 {
@@ -2722,7 +2705,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 54
+                    "line": 53
                 }
             ],
             "propertiesClass": [
@@ -2735,7 +2718,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 44
+                    "line": 43
                 },
                 {
                     "name": "_onTouched",
@@ -2746,7 +2729,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 45
+                    "line": 44
                 },
                 {
                     "name": "_onValidateChange",
@@ -2757,18 +2740,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46
-                },
-                {
-                    "name": "isDisabled",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 40
+                    "line": 45
                 },
                 {
                     "name": "pickerRef",
@@ -2792,7 +2764,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 42
+                    "line": 41
                 }
             ],
             "methodsClass": [
@@ -2802,7 +2774,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 110,
+                    "line": 113,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2812,7 +2784,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 76,
+                    "line": 79,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2831,7 +2803,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 54,
+                    "line": 53,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -2872,7 +2844,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 60,
+                    "line": 59,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2904,7 +2876,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 63,
+                    "line": 62,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2937,7 +2909,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 69,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2970,7 +2942,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 66,
+                    "line": 65,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2993,7 +2965,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 84,
+                    "line": 87,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3012,7 +2984,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 72,
+                    "line": 75,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3044,7 +3016,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 80,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3091,6 +3063,14 @@
                         "deprecationMessage": ""
                     },
                     {
+                        "name": "renderer",
+                        "type": "Renderer2",
+                        "optional": false,
+                        "dotDotDotToken": false,
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
                         "name": "dialogService",
                         "type": "DialogService",
                         "optional": false,
@@ -3099,7 +3079,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 46,
+                "line": 45,
                 "jsdoctags": [
                     {
                         "name": "el",
@@ -3124,6 +3104,17 @@
                         }
                     },
                     {
+                        "name": "renderer",
+                        "type": "Renderer2",
+                        "optional": false,
+                        "dotDotDotToken": false,
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
                         "name": "dialogService",
                         "type": "DialogService",
                         "optional": false,
@@ -3139,12 +3130,12 @@
         },
         {
             "name": "NgxInputColor",
-            "id": "directive-NgxInputColor-518475c5a1837d49dd368091d9352734a7b849e683b94def384b776278df3ed357afd65c140d734f9e0f2cac727c244b531ccb04bf742da537474bdf858a0b7d",
+            "id": "directive-NgxInputColor-2489d51c151c2c450f8661e7a514844a6194f1218ededbf006428be01f5dbd5098d2ad3388e2e93b4bb66137d9681803de8dd4b379e7c6d8e9bb611d041a63f6",
             "file": "projects/library/color-picker/directives/ngx-input-color.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../components/input-color.component';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n  @Input() simpleMode = false;\r\n  @Input() outputType: OutputType = 'HEX';\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private useAlphaChannel: boolean = true;\r\n  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {\r\n    this.useAlphaChannel = val == true;\r\n    if (!this.useAlphaChannel && this.color) {\r\n      this.color.removeAlphaChannel();\r\n      this.color.getOutputResult(this.outputType).then((c) => {\r\n        this.emitChange(c);\r\n      });\r\n    }\r\n  }\r\n\r\n  @Input('value') set setValue(val: string) {\r\n    this.writeValue(val);\r\n  }\r\n\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler.bind(this));\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  private color?: NgxColor;\r\n  private pickerRef?: DialogOverlayRef<NgxInputColorComponent>;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  isDisabled = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxInputColorComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.defaultInspector = this.defaultInspector;\r\n        instance.simpleMode = this.simpleMode;\r\n        instance.outputType = this.outputType;\r\n        instance.setTheme = this.theme;\r\n        instance.setUseAlphaChannel = this.useAlphaChannel;\r\n        if (this.color?.isValid) instance.writeValue(this.color);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this.color = new NgxColor(c);\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.pickerRef = undefined;\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  Directive,\r\n  forwardRef,\r\n  OnDestroy,\r\n  Input,\r\n  ElementRef,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  HostListener,\r\n  AfterViewInit,\r\n  Output,\r\n  EventEmitter,\r\n} from '@angular/core';\r\nimport {\r\n  NG_VALUE_ACCESSOR,\r\n  NG_VALIDATORS,\r\n  ControlValueAccessor,\r\n  Validator,\r\n  AbstractControl,\r\n  ValidationErrors,\r\n} from '@angular/forms';\r\nimport { ColorInspector } from '../contracts/ColorInspector.enum';\r\nimport { NgxInputColorComponent } from '../components/input-color.component';\r\nimport { NgxColor } from '../utils/color-helper';\r\nimport { OutputType } from '../contracts/OutputType';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputColor]',\r\n  providers: [\r\n    {\r\n      provide: NG_VALUE_ACCESSOR,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      useExisting: forwardRef(() => NgxInputColor),\r\n      multi: true,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputColor implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackgroundColor = true;\r\n  @Input() defaultInspector: ColorInspector = ColorInspector.Picker;\r\n  @Input() simpleMode = false;\r\n  @Input() outputType: OutputType = 'HEX';\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private useAlphaChannel: boolean = true;\r\n  @Input('useAlphaChannel') set setUseAlphaChannel(val: boolean) {\r\n    this.useAlphaChannel = val == true;\r\n    if (!this.useAlphaChannel && this.color) {\r\n      this.color.removeAlphaChannel();\r\n      this.color.getOutputResult(this.outputType).then((c) => {\r\n        this.emitChange(c);\r\n      });\r\n    }\r\n  }\r\n\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private _targetInput?: HTMLInputElement;\r\n\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.removeEventListener('input', this.boundInputHandler);\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n  private color?: NgxColor;\r\n  private pickerRef?: DialogOverlayRef<NgxInputColorComponent>;\r\n  private isHostInput = false;\r\n  inValid: boolean = false;\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n\r\n  constructor(\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  ngAfterViewInit(): void {\r\n    if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n      this.writeValue(this._targetInput.value);\r\n    }\r\n  }\r\n  ngOnDestroy(): void {\r\n    this.destroyColorPicker();\r\n  }\r\n\r\n  @HostListener('click', ['$event'])\r\n  onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    try {\r\n      this.color = value ? new NgxColor(value) : undefined;\r\n\r\n      const colorStr = this.color?.toHexString() ?? '';\r\n\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = colorStr;\r\n      }\r\n\r\n      // اگر input خارجی مشخص شده\r\n      if (this._targetInput instanceof HTMLInputElement) {\r\n        this._targetInput.value = colorStr;\r\n      }\r\n\r\n      if (this.setInputBackgroundColor) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', colorStr);\r\n      }\r\n\r\n      this.inValid = false;\r\n      this._onValidateChange();\r\n    } catch (e) {\r\n      this.color = new NgxColor('#000'); // مقدار پیش‌فرض\r\n      this.inValid = true;\r\n    }\r\n  }\r\n\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n\r\n  setDisabledState(disabled: boolean): void {\r\n    if (disabled) {\r\n      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);\r\n    } else {\r\n      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');\r\n    }\r\n  }\r\n\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    if ((this.color && this.color.isValid === false) || this.inValid === true) {\r\n      return { invalid: true };\r\n    }\r\n    return null;\r\n  }\r\n\r\n  private toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyColorPicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxInputColorComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.defaultInspector = this.defaultInspector;\r\n        instance.simpleMode = this.simpleMode;\r\n        instance.outputType = this.outputType;\r\n        instance.setTheme = this.theme;\r\n        instance.setUseAlphaChannel = this.useAlphaChannel;\r\n        if (this.color?.isValid) instance.writeValue(this.color);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this.color = new NgxColor(c);\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  private destroyColorPicker() {\r\n    this.pickerRef?.close();\r\n    this.pickerRef = undefined;\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackgroundColor) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputColor]",
             "providers": [
                 {
@@ -3170,7 +3161,7 @@
                     "name": "ngxInputColor",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 69,
+                    "line": 65,
                     "type": "HTMLInputElement | ElementRef | null | undefined | string",
                     "decorators": []
                 },
@@ -3217,14 +3208,6 @@
                     "line": 50,
                     "type": "boolean",
                     "decorators": []
-                },
-                {
-                    "name": "value",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 60,
-                    "type": "string",
-                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -3233,7 +3216,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 86,
+                    "line": 83,
                     "type": "EventEmitter"
                 }
             ],
@@ -3258,7 +3241,7 @@
                     ],
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 115
+                    "line": 109
                 }
             ],
             "propertiesClass": [
@@ -3271,7 +3254,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 92
+                    "line": 88
                 },
                 {
                     "name": "_onTouched",
@@ -3282,7 +3265,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 93
+                    "line": 89
                 },
                 {
                     "name": "_onValidateChange",
@@ -3293,7 +3276,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 94
+                    "line": 90
                 },
                 {
                     "name": "_targetInput",
@@ -3303,7 +3286,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 67,
+                    "line": 63,
                     "modifierKind": [
                         123
                     ]
@@ -3317,7 +3300,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 64,
+                    "line": 60,
                     "modifierKind": [
                         123
                     ]
@@ -3330,7 +3313,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 87,
+                    "line": 84,
                     "modifierKind": [
                         123
                     ]
@@ -3344,18 +3327,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 90
-                },
-                {
-                    "name": "isDisabled",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 91
+                    "line": 87
                 },
                 {
                     "name": "isHostInput",
@@ -3366,7 +3338,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 89,
+                    "line": 86,
                     "modifierKind": [
                         123
                     ]
@@ -3379,7 +3351,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 88,
+                    "line": 85,
                     "modifierKind": [
                         123
                     ]
@@ -3406,7 +3378,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 206,
+                    "line": 204,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -3428,7 +3400,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 210,
+                    "line": 209,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -3455,7 +3427,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 103,
+                    "line": 99,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3465,7 +3437,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 110,
+                    "line": 104,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -3484,7 +3456,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 115,
+                    "line": 109,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "decorators": [
@@ -3525,7 +3497,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 150,
+                    "line": 144,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3557,7 +3529,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 154,
+                    "line": 148,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3590,7 +3562,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 162,
+                    "line": 160,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3623,7 +3595,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 158,
+                    "line": 152,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3646,7 +3618,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 173,
+                    "line": 171,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -3668,7 +3640,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 166,
+                    "line": 164,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3700,7 +3672,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 121,
+                    "line": 115,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3764,7 +3736,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 94,
+                "line": 90,
                 "jsdoctags": [
                     {
                         "name": "el",
@@ -3847,40 +3819,6 @@
                         ]
                     }
                 },
-                "setValue": {
-                    "name": "setValue",
-                    "setSignature": {
-                        "name": "setValue",
-                        "type": "void",
-                        "deprecated": false,
-                        "deprecationMessage": "",
-                        "args": [
-                            {
-                                "name": "val",
-                                "type": "string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": ""
-                            }
-                        ],
-                        "returnType": "void",
-                        "line": 60,
-                        "jsdoctags": [
-                            {
-                                "name": "val",
-                                "type": "string",
-                                "optional": false,
-                                "dotDotDotToken": false,
-                                "deprecated": false,
-                                "deprecationMessage": "",
-                                "tagName": {
-                                    "text": "param"
-                                }
-                            }
-                        ]
-                    }
-                },
                 "ngxInputColor": {
                     "name": "ngxInputColor",
                     "setSignature": {
@@ -3899,7 +3837,7 @@
                             }
                         ],
                         "returnType": "void",
-                        "line": 69,
+                        "line": 65,
                         "jsdoctags": [
                             {
                                 "name": "el",
@@ -3919,12 +3857,12 @@
         },
         {
             "name": "NgxInputGradient",
-            "id": "directive-NgxInputGradient-f13441f6734d45642b7a303dcd3e58fe9c2e01925a74eca73b83b3c85f5514d9d72d6cddd43b0406a13925a568b1f00679c3bae84299a259a50f9dd055754c46",
+            "id": "directive-NgxInputGradient-85d52f637038fbb6cf52f5c2a60c6710e9eeba35a5a716ed7eb3496b43280ef17d01799e90ef4d87646c83d4233867cc2e062894cb7f74c6a4fff96b163323c4",
             "file": "projects/library/gradient-picker/directives/ngx-input-gradient.directive.ts",
             "type": "directive",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {\r\n  AfterViewInit,\r\n  Directive,\r\n  ElementRef,\r\n  EventEmitter,\r\n  HostListener,\r\n  Input,\r\n  OnDestroy,\r\n  Output,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { NgxInputGradientComponent } from '../components/input-gradient.component';\r\nimport { isValidGradient, parseGradient } from '../utils/build-gradient';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradient), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradient,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackground = true;\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private _targetInput?: HTMLInputElement;\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private isHostInput = false;\r\n  private pickerRef?: DialogOverlayRef<NgxInputGradientComponent>;\r\n  isDisabled = false;\r\n\r\n  value = '';\r\n\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    private el: ElementRef,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n  ngAfterViewInit(): void {\r\n    setTimeout(() => {\r\n      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n        this.writeValue(this._targetInput.value);\r\n      }\r\n    });\r\n  }\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    this.isDisabled = disabled;\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyPicker();\r\n  }\r\n\r\n  writeValue(value: any): void {\r\n    this.value = value;\r\n    if (value && isValidGradient(value)) {\r\n      const parsed = parseGradient(value);\r\n      if (this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', value);\r\n      }\r\n      // اگر دایرکتیو روی input باشه (ControlValueAccessor)\r\n      if (this.isHostInput) {\r\n        const input = this.el.nativeElement as HTMLInputElement;\r\n        input.value = this.value;\r\n      }\r\n      this._onValidateChange();\r\n    } else {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', '');\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyPicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxInputGradientComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.setTheme = this.theme;\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this.value = c;\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  destroyPicker() {\r\n    if (this.pickerRef) {\r\n      this.pickerRef = undefined;\r\n    }\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\r\n  AfterViewInit,\r\n  Directive,\r\n  ElementRef,\r\n  EventEmitter,\r\n  HostListener,\r\n  Input,\r\n  OnDestroy,\r\n  Output,\r\n  Renderer2,\r\n  ViewContainerRef,\r\n  forwardRef,\r\n} from '@angular/core';\r\nimport {\r\n  AbstractControl,\r\n  ControlValueAccessor,\r\n  NG_VALIDATORS,\r\n  NG_VALUE_ACCESSOR,\r\n  ValidationErrors,\r\n  Validator,\r\n} from '@angular/forms';\r\nimport { NgxInputGradientComponent } from '../components/input-gradient.component';\r\nimport { isValidGradient, parseGradient } from '../utils/build-gradient';\r\nimport { DialogOverlayRef, DialogService } from 'ngx-input-color/shared';\r\n\r\n@Directive({\r\n  selector: '[ngxInputGradient]',\r\n  providers: [\r\n    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgxInputGradient), multi: true },\r\n    {\r\n      provide: NG_VALIDATORS,\r\n      multi: true,\r\n      useExisting: NgxInputGradient,\r\n    },\r\n  ],\r\n})\r\nexport class NgxInputGradient implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {\r\n  @Input() setInputBackground = true;\r\n  @Input() theme: 'light' | 'dark' | 'auto' = 'auto';\r\n  private _targetInput?: HTMLInputElement;\r\n  @Input('ngxInputColor') set ngxInputColor(\r\n    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',\r\n  ) {\r\n    this.isHostInput = false;\r\n    if (el instanceof ElementRef) {\r\n      this._targetInput = el.nativeElement;\r\n    } else if (el instanceof HTMLInputElement) {\r\n      this.isHostInput = true;\r\n      this._targetInput = el;\r\n    } else {\r\n      this._targetInput = undefined;\r\n    }\r\n\r\n    if (this._targetInput) {\r\n      this._targetInput.removeEventListener('input', this.boundInputHandler);\r\n      this._targetInput.addEventListener('input', this.boundInputHandler);\r\n    }\r\n  }\r\n  @Output() change = new EventEmitter<string>();\r\n\r\n  private boundInputHandler = (e: Event) => {\r\n    this.writeValue((e.target as HTMLInputElement).value);\r\n  };\r\n  private isHostInput = false;\r\n  private pickerRef?: DialogOverlayRef<NgxInputGradientComponent>;\r\n\r\n  value = '';\r\n\r\n  _onChange = (value: string) => {};\r\n  _onTouched = () => {};\r\n  _onValidateChange = () => {};\r\n  constructor(\r\n    private el: ElementRef<HTMLInputElement>,\r\n    private renderer: Renderer2,\r\n    private viewContainerRef: ViewContainerRef,\r\n    private dialogService: DialogService,\r\n  ) {}\r\n\r\n  @HostListener('click', ['$event']) onClick(ev: Event) {\r\n    ev.stopPropagation();\r\n    ev.preventDefault();\r\n    this.toggleColorPicker();\r\n  }\r\n  ngAfterViewInit(): void {\r\n    if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {\r\n      this.writeValue(this._targetInput.value);\r\n    }\r\n  }\r\n  registerOnChange(fn: any): void {\r\n    this._onChange = fn;\r\n  }\r\n  registerOnTouched(fn: any): void {\r\n    this._onTouched = fn;\r\n  }\r\n  setDisabledState(disabled: boolean): void {\r\n    if (disabled) {\r\n      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);\r\n    } else {\r\n      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');\r\n    }\r\n  }\r\n  registerOnValidatorChange(fn: () => void): void {\r\n    this._onValidateChange = fn;\r\n  }\r\n  validate(control: AbstractControl): ValidationErrors | null {\r\n    return null;\r\n  }\r\n\r\n  ngOnDestroy(): void {\r\n    this.destroyPicker();\r\n  }\r\n\r\n  writeValue(val: any): void {\r\n    this.value = val;\r\n    if (val && isValidGradient(val)) {\r\n      // const parsed = parseGradient(val);\r\n      if (this.setInputBackground) {\r\n        this.renderer.setStyle(this.el.nativeElement, 'background', val);\r\n      }\r\n      if (this.isHostInput) {\r\n        this.el.nativeElement.value = this.value;\r\n      }\r\n      this._onValidateChange();\r\n    } else {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', '');\r\n    }\r\n  }\r\n\r\n  toggleColorPicker() {\r\n    if (this.pickerRef) {\r\n      this.destroyPicker();\r\n      return;\r\n    }\r\n\r\n    this.pickerRef = this.dialogService.open({\r\n      anchor: this.el.nativeElement,\r\n      component: NgxInputGradientComponent,\r\n      viewContainerRef: this.viewContainerRef,\r\n      alignment: 'start',\r\n      placement: 'auto',\r\n      configure: (instance, ref) => {\r\n        instance.setTheme = this.theme;\r\n        instance.writeValue(this.value);\r\n\r\n        instance.change.subscribe((c: string) => {\r\n          this.value = c;\r\n          this.emitChange(c);\r\n        });\r\n\r\n        // instance.closed.subscribe(() => ref.close());\r\n      },\r\n      onClosed: () => {\r\n        this.pickerRef = undefined;\r\n      },\r\n    });\r\n  }\r\n\r\n  destroyPicker() {\r\n    if (this.pickerRef) {\r\n      this.pickerRef.close();\r\n      this.pickerRef = undefined;\r\n    }\r\n  }\r\n\r\n  private async emitChange(c: string) {\r\n    if (this.setInputBackground) {\r\n      this.renderer.setStyle(this.el.nativeElement, 'background', c);\r\n    }\r\n\r\n    // اگر روی input باشیم، مقدار رو در input قرار بده\r\n    if (this.isHostInput) {\r\n      const input = this.el.nativeElement as HTMLInputElement;\r\n      input.value = c;\r\n    }\r\n\r\n    // اگر targetInput وجود داره، در اونم مقدار ست کن\r\n    if (this._targetInput instanceof HTMLInputElement) {\r\n      this._targetInput.value = c;\r\n      const event = new Event('input', { bubbles: true });\r\n      this._targetInput.dispatchEvent(event);\r\n    }\r\n\r\n    this._onChange(c);\r\n    this.change.emit(c);\r\n    this._onTouched();\r\n  }\r\n}\r\n",
             "selector": "[ngxInputGradient]",
             "providers": [
                 {
@@ -3970,7 +3908,7 @@
                     "defaultValue": "new EventEmitter<string>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 58,
+                    "line": 59,
                     "type": "EventEmitter"
                 }
             ],
@@ -4054,21 +3992,10 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 60,
+                    "line": 61,
                     "modifierKind": [
                         123
                     ]
-                },
-                {
-                    "name": "isDisabled",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 65
                 },
                 {
                     "name": "isHostInput",
@@ -4079,7 +4006,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 63,
+                    "line": 64,
                     "modifierKind": [
                         123
                     ]
@@ -4092,7 +4019,7 @@
                     "indexKey": "",
                     "optional": true,
                     "description": "",
-                    "line": 64,
+                    "line": 65,
                     "modifierKind": [
                         123
                     ]
@@ -4135,7 +4062,7 @@
                     "optional": false,
                     "returnType": "any",
                     "typeParameters": [],
-                    "line": 164,
+                    "line": 165,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -4172,7 +4099,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 107,
+                    "line": 109,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -4232,7 +4159,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 91,
+                    "line": 89,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4264,7 +4191,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 94,
+                    "line": 92,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4297,7 +4224,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 100,
+                    "line": 102,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4330,7 +4257,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 97,
+                    "line": 95,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4372,7 +4299,7 @@
                     "optional": false,
                     "returnType": "ValidationErrors | null",
                     "typeParameters": [],
-                    "line": 103,
+                    "line": 105,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -4393,7 +4320,7 @@
                     "name": "writeValue",
                     "args": [
                         {
-                            "name": "value",
+                            "name": "val",
                             "type": "any",
                             "optional": false,
                             "dotDotDotToken": false,
@@ -4404,12 +4331,12 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 111,
+                    "line": 113,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
                         {
-                            "name": "value",
+                            "name": "val",
                             "type": "any",
                             "optional": false,
                             "dotDotDotToken": false,
@@ -4437,7 +4364,7 @@
                 "args": [
                     {
                         "name": "el",
-                        "type": "ElementRef",
+                        "type": "ElementRef<HTMLInputElement>",
                         "optional": false,
                         "dotDotDotToken": false,
                         "deprecated": false,
@@ -4472,7 +4399,7 @@
                 "jsdoctags": [
                     {
                         "name": "el",
-                        "type": "ElementRef",
+                        "type": "ElementRef<HTMLInputElement>",
                         "optional": false,
                         "dotDotDotToken": false,
                         "deprecated": false,
@@ -4647,7 +4574,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<!-- <ngx-input-angle [(ngModel)]=\"angle\"></ngx-input-angle> -->\r\n\r\n<input type=\"number\" name=\"test1\" [(ngModel)]=\"angle\" ngxInputAngle theme=\"light\" #xyz=\"ngModel\" [size]=\"120\" />\r\n{{ angle }}\r\n<pre>{{ xyz.errors | json }}</pre>\r\n\r\n<ngx-input-angle theme=\"auto\" [size]=\"250\"></ngx-input-angle>\r\n"
+            "templateData": "<!-- <ngx-input-angle [(ngModel)]=\"angle\"></ngx-input-angle> -->\r\n\r\n<input\r\n  type=\"number\"\r\n  name=\"test1\"\r\n  [(ngModel)]=\"angle\"\r\n  ngxInputAngle\r\n  theme=\"light\"\r\n  #xyz=\"ngModel\"\r\n  [size]=\"120\"\r\n  [disabled]=\"false\" />\r\n<pre>value:{{ angle }}</pre>\r\n<pre>error:{{ xyz.errors | json }}</pre>\r\n<button (click)=\"angle = angle + 10\">Change</button>\r\n<ngx-input-angle theme=\"auto\" [size]=\"250\"></ngx-input-angle>\r\n\r\n<div class=\"input-group\">\r\n  <input type=\"text\" [(ngModel)]=\"angle\" name=\"angle\" ngxInputAngle #myAngle=\"ngxInputAngle\" [openOnCLick]=\"false\" />\r\n  <span (click)=\"myAngle.toggle()\">A</span>\r\n</div>\r\n"
         },
         {
             "name": "AppComponent",
@@ -8479,7 +8406,7 @@
                     }
                 }
             },
-            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [style.background]=\"resultGradient\"></div>\r\n  <div class=\"ngx-c-inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      name=\"rangeCalues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n      #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n      <div class=\"ngx-row\">\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Color</div>\r\n          <div class=\"input-color\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n              name=\"color\"\r\n              #inputColor\r\n              (ngModelChange)=\"generateGradient(); updateRangeSlider()\" />\r\n            <span\r\n              #ngxGradColor\r\n              class=\"color\"\r\n              [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n              [ngxInputColor]=\"inputColor\"\r\n              [theme]=\"theme\"\r\n              [value]=\"rangeValues[selectedIndex].color\"\r\n              [simpleMode]=\"true\"\r\n              (change)=\"generateGradient($event)\"></span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Position</div>\r\n          <input\r\n            type=\"number\"\r\n            [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n            min=\"0\"\r\n            max=\"100\"\r\n            name=\"posiition\"\r\n            (change)=\"generateGradient(); updateRangeSlider()\" />\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Rotation</div>\r\n          <div class=\"ngx-input-group\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rotation\"\r\n              ngxInputAngle\r\n              [theme]=\"theme\"\r\n              (change)=\"generateGradient()\"\r\n              name=\"rotation\"\r\n              [disabled]=\"type == 'radial'\" />\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Type</div>\r\n          <div class=\"ngx-input-group\">\r\n            <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n              <option value=\"linear\">linear</option>\r\n              <option value=\"radial\">radial</option>\r\n            </select>\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    }\r\n\r\n    <div class=\"default-list\">\r\n      @for (item of defaultGradients; track $index; let i = $index) {\r\n        <span [style.background]=\"item\" (click)=\"onSelectDefault(item, i)\"></span>\r\n      }\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+            "templateData": "<div class=\"ngx-input-gradient-picker\" (click)=\"stopPropagation($event)\">\r\n  <div class=\"ngx-color-preview\" [style.background]=\"resultGradient\"></div>\r\n  <div class=\"ngx-c-inner\">\r\n    <range-slider\r\n      [(ngModel)]=\"rangeValues\"\r\n      name=\"rangeCalues\"\r\n      [min]=\"0\"\r\n      [max]=\"100\"\r\n      [step]=\"1\"\r\n      [addNewRangeOnClick]=\"true\"\r\n      [background]=\"baseBg\"\r\n      [(selectedIndex)]=\"selectedIndex\"\r\n      (change)=\"generateGradient()\"\r\n      #rangeSlider></range-slider>\r\n\r\n    <div class=\"text-end\">\r\n      <button class=\"remove-btn\" type=\"button\" (click)=\"remove()\">remove</button>\r\n    </div>\r\n    @if (rangeValues[selectedIndex]) {\r\n      <div class=\"ngx-row\">\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Color</div>\r\n          <div class=\"input-color\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rangeValues[selectedIndex].color\"\r\n              name=\"color\"\r\n              #inputColor\r\n              (ngModelChange)=\"generateGradient(); updateRangeSlider()\" />\r\n            <span\r\n              #ngxGradColor\r\n              class=\"color\"\r\n              [style.backgroundColor]=\"rangeValues[selectedIndex].color\"\r\n              [ngxInputColor]=\"inputColor\"\r\n              [theme]=\"theme\"\r\n              [ngModel]=\"rangeValues[selectedIndex].color\"\r\n              [simpleMode]=\"true\"\r\n              (change)=\"generateGradient($event)\"></span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Position</div>\r\n          <input\r\n            type=\"number\"\r\n            [(ngModel)]=\"rangeValues[selectedIndex].value\"\r\n            min=\"0\"\r\n            max=\"100\"\r\n            name=\"posiition\"\r\n            (change)=\"generateGradient(); updateRangeSlider()\" />\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Rotation</div>\r\n          <div class=\"ngx-input-group\">\r\n            <input\r\n              type=\"text\"\r\n              [(ngModel)]=\"rotation\"\r\n              ngxInputAngle\r\n              [theme]=\"theme\"\r\n              (change)=\"generateGradient()\"\r\n              name=\"rotation\"\r\n              [disabled]=\"type == 'radial'\" />\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n        <div class=\"ngx-col-6\">\r\n          <div class=\"label\">Type</div>\r\n          <div class=\"ngx-input-group\">\r\n            <select [(ngModel)]=\"type\" (change)=\"generateGradient()\" name=\"type\">\r\n              <option value=\"linear\">linear</option>\r\n              <option value=\"radial\">radial</option>\r\n            </select>\r\n            <span class=\"ngx-input-prefix\">\r\n              <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\">\r\n                <path\r\n                  d=\"M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z\" />\r\n              </svg>\r\n            </span>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    }\r\n\r\n    <div class=\"default-list\">\r\n      @for (item of defaultGradients; track $index; let i = $index) {\r\n        <span [style.background]=\"item\" (click)=\"onSelectDefault(item, i)\"></span>\r\n      }\r\n    </div>\r\n  </div>\r\n</div>\r\n"
         },
         {
             "name": "PickerComponent",
@@ -15235,7 +15162,7 @@
                 "linktype": "directive",
                 "name": "NgxInputAngle",
                 "coveragePercent": 0,
-                "coverageCount": "0/30",
+                "coverageCount": "0/29",
                 "status": "low"
             },
             {
@@ -15262,7 +15189,7 @@
                 "linktype": "directive",
                 "name": "NgxInputBoxShadow",
                 "coveragePercent": 0,
-                "coverageCount": "0/20",
+                "coverageCount": "0/19",
                 "status": "low"
             },
             {
@@ -15393,7 +15320,7 @@
                 "linktype": "directive",
                 "name": "NgxInputColor",
                 "coveragePercent": 0,
-                "coverageCount": "0/35",
+                "coverageCount": "0/33",
                 "status": "low"
             },
             {
@@ -15793,7 +15720,7 @@
                 "linktype": "directive",
                 "name": "NgxInputGradient",
                 "coveragePercent": 0,
-                "coverageCount": "0/28",
+                "coverageCount": "0/27",
                 "status": "low"
             },
             {

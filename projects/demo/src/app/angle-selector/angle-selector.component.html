@@ -1,7 +1,20 @@
 <!-- <ngx-input-angle [(ngModel)]="angle"></ngx-input-angle> -->
 
-<input type="number" name="test1" [(ngModel)]="angle" ngxInputAngle theme="light" #xyz="ngModel" [size]="120" />
-{{ angle }}
-<pre>{{ xyz.errors | json }}</pre>
+<input
+  type="number"
+  name="test1"
+  [(ngModel)]="angle"
+  ngxInputAngle
+  theme="light"
+  #xyz="ngModel"
+  [size]="120"
+  [disabled]="false" />
+<pre>value:{{ angle }}</pre>
+<pre>error:{{ xyz.errors | json }}</pre>
 
 <ngx-input-angle theme="auto" [size]="250"></ngx-input-angle>
+
+<div class="input-group">
+  <input type="text" [(ngModel)]="angle" name="angle" ngxInputAngle #myAngle="ngxInputAngle" [openOnCLick]="false" />
+  <span (click)="myAngle.toggle()">A</span>
+</div>

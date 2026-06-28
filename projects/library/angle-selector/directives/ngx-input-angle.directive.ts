@@ -7,7 +7,6 @@ import {
   Renderer2,
   ViewContainerRef,
   HostListener,
-  AfterViewInit,
   Output,
   EventEmitter,
   input,
@@ -25,6 +24,7 @@ import { NgxAngleSelectorComponent } from '../components/input-angle.component';
 
 @Directive({
   selector: '[ngxInputAngle]',
+  exportAs: 'ngxInputAngle',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -38,85 +38,66 @@ import { NgxAngleSelectorComponent } from '../components/input-angle.component';
     },
   ],
 })
-export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+export class NgxInputAngle implements OnDestroy, ControlValueAccessor, Validator {
   @Input() theme: 'light' | 'dark' | 'auto' = 'auto';
   size = input<number>(90);
-
-  @Input('value') set setValue(val: string) {
-    this.writeValue(val);
-  }
-
-  private boundInputHandler = (e: Event) => {
-    this.writeValue((e.target as HTMLInputElement).value);
-  };
-  private _targetInput?: HTMLInputElement;
-
-  @Input('NgxInputAngle') set NgxInputAngle(
-    el: HTMLInputElement | ElementRef<HTMLInputElement> | null | undefined | '',
-  ) {
-    this.isHostInput = false;
-    if (el instanceof ElementRef) {
-      this._targetInput = el.nativeElement;
-    } else if (el instanceof HTMLInputElement) {
-      this.isHostInput = true;
-      this._targetInput = el;
-    } else {
-      this._targetInput = undefined;
-    }
-
-    if (this._targetInput) {
-      this._targetInput.addEventListener('input', this.boundInputHandler.bind(this));
-    }
-  }
+  openOnCLick = input<boolean>(true);
   @Output() change = new EventEmitter<number>();
-  private value?: number;
+  private value?: number | null;
   private pickerRef?: DialogOverlayRef<NgxAngleSelectorComponent>;
-  private isHostInput = false;
   inValid: boolean = false;
-  isDisabled = false;
-  _onChange = (value: number) => {};
+  _onChange = (value?: number | null) => {};
   _onTouched = () => {};
   _onValidateChange = () => {};
 
   constructor(
-    private el: ElementRef,
+    private el: ElementRef<HTMLInputElement>,
     private renderer: Renderer2,
     private viewContainerRef: ViewContainerRef,
     private dialogService: DialogService,
   ) {}
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this._targetInput && this._targetInput.tagName.toLowerCase() === 'input') {
-        this.writeValue(this._targetInput.value);
-      }
-    });
-  }
   ngOnDestroy(): void {
-    this.destroyColorPicker();
+    this.destroyAnglePicker();
   }
 
   @HostListener('click', ['$event'])
   onClick(ev: Event) {
-    ev.stopPropagation();
-    ev.preventDefault();
-    this.toggleColorPicker();
+    if (this.openOnCLick()) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      this.toggle();
+    }
+  }
+
+  @HostListener('input', ['$event'])
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.parseInput(input.value);
+    this._onChange(this.value);
+  }
+
+  @HostListener('blur')
+  onBlur() {
+    this._onTouched();
   }
 
   writeValue(val: any): void {
-    try {
-      this.value = Number.parseInt(val);
-      // اگر input خارجی مشخص شده
-      if (this._targetInput instanceof HTMLInputElement) {
-        this.renderer.setProperty(this._targetInput, 'value', this.value);
-      } else {
-        this.renderer.setProperty(this.el.nativeElement, 'value', this.value);
-      }
+    this.parseInput(val);
+    this.renderer.setProperty(this.el.nativeElement, 'value', this.value);
 
+    this.inValid = false;
+    if (this.pickerRef) {
+      this.pickerRef.componentRef.instance.writeValue(this.value);
+    }
+    this._onValidateChange();
+  }
+
+  parseInput(val: any) {
+    try {
       this.inValid = false;
-      this._onValidateChange();
-    } catch (e) {
-      this.value = 0; // مقدار پیش‌فرض
+      this.value = val != null && val != undefined ? Number.parseInt(val) : val;
+    } catch {
       this.inValid = true;
     }
   }
@@ -130,7 +111,11 @@ export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAcce
   }
 
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    if (disabled) {
+      this.renderer.setProperty(this.el.nativeElement, 'disabled', disabled);
+    } else {
+      this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+    }
   }
 
   registerOnValidatorChange(fn: () => void): void {
@@ -141,12 +126,14 @@ export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAcce
     if (this.inValid === true) {
       return { invalid: true };
     }
+    if (this.value && this.value > 360) return { max: true };
+    if (this.value && this.value < 0) return { min: true };
     return null;
   }
 
-  private toggleColorPicker() {
+  public toggle() {
     if (this.pickerRef) {
-      this.destroyColorPicker();
+      this.destroyAnglePicker();
       return;
     }
 
@@ -176,19 +163,13 @@ export class NgxInputAngle implements AfterViewInit, OnDestroy, ControlValueAcce
     });
   }
 
-  private destroyColorPicker() {
+  private destroyAnglePicker() {
+    this.pickerRef?.close();
     this.pickerRef = undefined;
   }
 
   private async emitChange(c: number) {
-    // اگر targetInput وجود داره، در اونم مقدار ست کن
-    if (this._targetInput instanceof HTMLInputElement) {
-      this.renderer.setProperty(this.el.nativeElement, 'value', c);
-      const event = new Event('input', { bubbles: true });
-      this._targetInput.dispatchEvent(event);
-    } else {
-      this.renderer.setProperty(this.el.nativeElement, 'value', c);
-    }
+    this.renderer.setProperty(this.el.nativeElement, 'value', c);
 
     this._onChange(c);
     this.change.emit(c);

@@ -17,9 +17,9 @@
 }
 
 .ngx-input-angle-selector {
-  width: var(--ngx-size);
-  height: var(--ngx-size);
-  border: calc(8 * var(--ngx-size) / 100) var(--border-color) solid;
+  width: var(--ngx-size, 100);
+  height: var(--ngx-size, 100);
+  border: calc(8 * var(--ngx-size, 100) / 100) var(--border-color) solid;
   border-radius: 15px;
   background: var(--ngx-color-bg);
   color: var(--ngx-color-text);
@@ -29,7 +29,7 @@
   border-radius: 50%;
   direction: ltr;
   font-family: arial, tahoma;
-
+  box-sizing: border-box;
   * {
     box-sizing: border-box;
   }
@@ -61,7 +61,7 @@
 .hand {
   position: absolute;
   width: 4px;
-  height: calc(var(--ngx-size) * 0.6);
+  height: calc(var(--ngx-size, 100) * 0.6);
   box-shadow: 0 0 20px #303030;
   background: var(--handle-color);
   bottom: 50%;
@@ -79,7 +79,7 @@
   background: var(--tick-color);
   left: 50%;
   top: 0;
-  transform-origin: 0 calc(var(--ngx-size) / 2 - calc(8 * var(--ngx-size) / 100));
+  transform-origin: 50% calc(var(--ngx-size, 100px) / 2 - calc(8 * var(--ngx-size, 100) / 100));
 }
 
 /*-----------------------------------------------------------------------------*/
