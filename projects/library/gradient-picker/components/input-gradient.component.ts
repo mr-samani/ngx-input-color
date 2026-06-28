@@ -26,6 +26,7 @@ import { DefaultGradients } from '../contracts/default-gradients';
 import { BrowserService, RangeSliderComponent } from 'ngx-input-color/shared';
 import { NgxInputColor } from 'ngx-input-color/color-picker';
 import { NgxInputAngle } from 'ngx-input-color/angle-selector';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'ngx-input-gradient',
@@ -43,7 +44,7 @@ import { NgxInputAngle } from 'ngx-input-color/angle-selector';
   host: {
     '[class.dark]': 'theme=="dark"',
   },
-  imports: [FormsModule, RangeSliderComponent, NgxInputColor, NgxInputAngle],
+  imports: [CommonModule, FormsModule, RangeSliderComponent, NgxInputColor, NgxInputAngle],
 })
 export class NgxInputGradientComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
   browserService = inject(BrowserService);

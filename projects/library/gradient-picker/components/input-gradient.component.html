@@ -1,5 +1,5 @@
 <div class="ngx-input-gradient-picker" (click)="stopPropagation($event)">
-  <div class="ngx-color-preview" [style.background]="resultGradient"></div>
+  <div class="ngx-color-preview" [ngStyle]="{ '--ngx-selected-gradient': resultGradient }"></div>
   <div class="ngx-c-inner">
     <range-slider
       [(ngModel)]="rangeValues"
